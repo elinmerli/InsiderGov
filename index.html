@@ -1,50 +1,458 @@
 
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1020">
 <title>InsiderGov — Political Finance Tracker</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#0b1020;color:#e8edf7;font:15px Arial,sans-serif}
-header{padding:24px 6%;background:#111a2e;border-bottom:1px solid #26334d}
-h1{margin:0;color:#70a5ff;font-size:27px}
-header p,.muted{color:#aab8d0}
-main{max-width:1150px;margin:auto;padding:25px 18px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:18px 0}
-.card,.panel{background:#141e32;border:1px solid #293751;border-radius:12px;padding:18px}
-.card span{color:#9eacc4;font-size:13px}
-.card strong{display:block;font-size:23px;margin-top:10px}
-nav,.filters{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
-button{background:#243552;color:#eaf1ff;border:0;border-radius:8px;padding:11px 15px;cursor:pointer}
-button.active,button:hover{background:#3269bd}
-input,select{background:#0d1628;color:white;border:1px solid #34435f;padding:11px;border-radius:8px}
-table{width:100%;border-collapse:collapse;margin-top:15px}
-th,td{text-align:left;padding:12px 9px;border-bottom:1px solid #293751}
-th{color:#91a6c8;font-size:13px}
-.hidden{display:none}
-.notice{background:#342d1c;color:#f5d58b;padding:12px;border-radius:8px;margin:16px 0}
-.status{padding:12px;background:#101b30;border-radius:8px;margin:12px 0;color:#aab8d0}
-a{color:#83b5ff}
-@media(max-width:650px){table{font-size:12px}th,td{padding:8px 5px}}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0b1020;
+  color: #e8edf7;
+  font: 15px Arial, sans-serif;
+}
+
+header {
+  padding: 28px 6%;
+  background: #111a2e;
+  border-bottom: 1px solid #293751;
+}
+
+h1 {
+  margin: 0;
+  color: #70a5ff;
+  font-size: 30px;
+}
+
+header p,
+.muted {
+  color: #aab8d0;
+}
+
+main {
+  max-width: 1250px;
+  margin: auto;
+  padding: 25px 18px;
+}
+
+.notice {
+  background: #342d1c;
+  color: #f5d58b;
+  padding: 14px;
+  border-radius: 10px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.card,
+.panel {
+  background: #141e32;
+  border: 1px solid #293751;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.card span {
+  color: #9eacc4;
+  font-size: 13px;
+}
+
+.card strong {
+  display: block;
+  font-size: 23px;
+  margin-top: 10px;
+  overflow-wrap: anywhere;
+}
+
+nav,
+.filters {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+button {
+  background: #243552;
+  color: #eaf1ff;
+  border: 0;
+  border-radius: 8px;
+  padding: 11px 16px;
+  cursor: pointer;
+}
+
+button:hover,
+button.active {
+  background: #3269bd;
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+input,
+select {
+  background: #0d1628;
+  color: white;
+  border: 1px solid #34435f;
+  border-radius: 8px;
+  padding: 11px;
+  min-width: 150px;
+}
+
+input {
+  flex: 1;
+}
+
+.status {
+  padding: 13px;
+  background: #101b30;
+  border-radius: 8px;
+  margin: 12px 0;
+  color: #aab8d0;
+  line-height: 1.5;
+}
+
+.status.success {
+  border-left: 3px solid #54c78a;
+}
+
+.status.error {
+  border-left: 3px solid #e06b6b;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  min-width: 720px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 12px 9px;
+  border-bottom: 1px solid #293751;
+}
+
+th {
+  color: #91a6c8;
+  font-size: 13px;
+}
+
+.small {
+  color: #91a6c8;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.changed {
+  color: #70d99b;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.hidden {
+  display: none;
+}
+
+a {
+  color: #83b5ff;
+}
+
+.footer {
+  color: #8190a9;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 22px;
+}
+
+@media(max-width:650px) {
+  header {
+    padding: 22px 18px;
+  }
+
+  h1 {
+    font-size: 25px;
+  }
+
+  main {
+    padding: 18px 12px;
+  }
+
+  input,
+  select {
+    width: 100%;
+  }
+
+  nav button {
+    flex: 1;
+  }
+}
 </style>
 </head>
+
 <body>
+
 <header>
-<h1>InsiderGov</h1>
-<p>U.S. Political Finance & Congressional Disclosure Tracker</p>
+  <h1>InsiderGov</h1>
+  <p>U.S. Political Finance & Congressional Disclosure Tracker</p>
 </header>
 
+<main>
+
+<div class="notice">
+  InsiderGov использует публичные данные Федеральной избирательной комиссии США (FEC).
+  Данные могут поступать с задержкой и исправляться самим источником.
+</div>
+
+<section class="stats">
+
+  <div class="card">
+    <span>Транзакции Конгресса</span>
+    <strong>0</strong>
+  </div>
+
+  <div class="card">
+    <span>Кандидатов в выборке</span>
+    <strong id="campaignCount">—</strong>
+  </div>
+
+  <div class="card">
+    <span>Сборы выбранных кандидатов</span>
+    <strong id="totalReceipts">—</strong>
+  </div>
+
+  <div class="card">
+    <span>Расходы выбранных кандидатов</span>
+    <strong id="totalSpent">—</strong>
+  </div>
+
+</section>
+
+<nav>
+  <button class="active" onclick="showTab('trades',this)">
+    Transactions
+  </button>
+
+  <button onclick="showTab('campaigns',this)">
+    Campaigns
+  </button>
+
+  <button onclick="showTab('watch',this)">
+    Watchlist
+  </button>
+
+  <button onclick="showTab('about',this)">
+    About
+  </button>
+</nav>
+
+<!-- TRANSACTIONS -->
+
+<section id="trades" class="panel">
+
+  <h2>Disclosed transactions</h2>
+
+  <p class="muted">
+    Публичные финансовые раскрытия членов Конгресса США.
+  </p>
+
+  <p>
+    Автоматическая загрузка раскрытий House и Senate пока не подключена.
+  </p>
+
+  <p>
+    <a href="https://disclosures-clerk.house.gov/"
+       target="_blank" rel="noopener">
+      House disclosures
+    </a>
+    ·
+    <a href="https://efdsearch.senate.gov/"
+       target="_blank" rel="noopener">
+      Senate disclosures
+    </a>
+  </p>
+
+</section>
+
+<!-- CAMPAIGNS -->
+
+<section id="campaigns" class="panel hidden">
+
+  <h2>U.S. Campaign Finance</h2>
+
+  <p class="muted">
+    Официальная информация FEC о финансировании федеральных кампаний.
+  </p>
+
+  <div class="filters">
+
+    <select id="cycle" onchange="loadCampaigns()">
+      <option value="2026">Избирательный цикл 2026</option>
+      <option value="2028">Избирательный цикл 2028</option>
+      <option value="2024">Избирательный цикл 2024</option>
+    </select>
+
+    <button id="refreshButton" onclick="loadCampaigns()">
+      Обновить данные
+    </button>
+
+  </div>
+
+  <div class="filters">
+
+    <input
+      id="candidateSearch"
+      type="search"
+      placeholder="Поиск по имени или FEC ID..."
+      oninput="renderCampaigns()"
+    >
+
+    <select
+      id="partyFilter"
+      onchange="renderCampaigns()"
+    >
+      <option value="">Все партии</option>
+    </select>
+
+    <select
+      id="officeFilter"
+      onchange="renderCampaigns()"
+    >
+      <option value="">Все типы выборов</option>
+      <option value="P">Президент</option>
+      <option value="S">Сенат</option>
+      <option value="H">Палата представителей</option>
+    </select>
+
+  </div>
+
+  <div id="status" class="status">
+    Ожидание загрузки данных...
+  </div>
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Кандидат / FEC ID</th>
+          <th>Выборы</th>
+          <th>Партия</th>
+          <th>Собрано</th>
+          <th>Потрачено</th>
+          <th>Отчётность на дату</th>
+        </tr>
+      </thead>
+
+      <tbody id="campaignRows">
+        <tr>
+          <td colspan="6">Загрузка...</td>
+        </tr>
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <div class="footer">
+    Показываются первые 100 записей каждого типа выборов.
+    Это не полный список всех кандидатов.
+
+    <p>
+      Источники:
+      <a href="https://www.fec.gov/data/"
+         target="_blank" rel="noopener">
+        FEC Data
+      </a>
+      ·
+      <a href="https://api.open.fec.gov/developers/"
+         target="_blank" rel="noopener">
+        FEC API Documentation
+      </a>
+    </p>
+  </div>
+
+</section>
+
+<!-- WATCHLIST -->
+
+<section id="watch" class="panel hidden">
+
+  <h2>Watchlist</h2>
+
+  <p class="muted">
+    Список наблюдения за политиками и кампаниями.
+  </p>
+
+  <p>
+    Функция добавления и сохранения кандидатов пока находится в разработке.
+  </p>
+
+</section>
+
+<!-- ABOUT -->
+
+<section id="about" class="panel hidden">
+
+  <h2>О проекте InsiderGov</h2>
+
+  <p>
+    InsiderGov — независимый информационный проект,
+    посвящённый публичным финансовым данным американских политиков
+    и политических кампаний.
+  </p>
+
+  <p>
+    Данные о кампаниях загружаются из открытого API FEC.
+  </p>
+
+  <p>
+    Раскрытия House и Senate пока не подключены к автоматической загрузке.
+  </p>
+
+  <p>
+    InsiderGov не является государственным сайтом США
+    и не заменяет официальные источники.
+  </p>
+
+</section>
+
+</main>
 
 <script>
+
 const API_KEY = "DEMO_KEY";
 const API_BASE = "https://api.open.fec.gov/v1";
+
 const REFRESH_INTERVAL = 60 * 60 * 1000;
 
 let campaigns = [];
 let previousSnapshot = new Map();
 let changedCandidateIds = new Set();
+
 let lastSuccessfulLoad = 0;
 let loadVersion = 0;
 let currentCycle = "";
@@ -55,91 +463,116 @@ const offices = [
   {code:"H",name:"Палата представителей"}
 ];
 
-function money(value){
-  if(value===null || value===undefined || !Number.isFinite(Number(value))) return "—";
-  return new Intl.NumberFormat("en-US",{
-    style:"currency",
-    currency:"USD",
-    maximumFractionDigits:0
+function money(value) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    !Number.isFinite(Number(value))
+  ) {
+    return "—";
+  }
+
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0
   }).format(Number(value));
 }
 
-function escapeHTML(value){
+function escapeHTML(value) {
+
   return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
   })[c]);
+
 }
 
-function showTab(id,button){
+function showTab(id, button) {
+
   document.querySelectorAll("main>section.panel")
-    .forEach(s=>s.classList.add("hidden"));
+    .forEach(section => section.classList.add("hidden"));
 
   document.getElementById(id).classList.remove("hidden");
 
   document.querySelectorAll("nav button")
-    .forEach(b=>b.classList.remove("active"));
+    .forEach(b => b.classList.remove("active"));
 
   button.classList.add("active");
 
-  if(id==="campaigns" && campaigns.length===0){
+  if (id === "campaigns" && campaigns.length === 0) {
     loadCampaigns();
   }
+
 }
 
-async function getOfficeData(office,cycle){
-  const url = new URL(API_BASE + "/candidates/totals/");
+async function getOfficeData(office, cycle) {
 
-  url.searchParams.set("api_key",API_KEY);
-  url.searchParams.set("office",office);
-  url.searchParams.set("cycle",cycle);
-  url.searchParams.set("per_page","100");
-  url.searchParams.set("sort","-receipts");
-  url.searchParams.set("has_raised_funds","true");
+  const url = new URL(
+    API_BASE + "/candidates/totals/"
+  );
+
+  url.searchParams.set("api_key", API_KEY);
+  url.searchParams.set("office", office);
+  url.searchParams.set("cycle", cycle);
+  url.searchParams.set("per_page", "100");
+  url.searchParams.set("page", "1");
+  url.searchParams.set("sort", "-receipts");
+  url.searchParams.set("has_raised_funds", "true");
 
   const response = await fetch(url);
 
-  if(!response.ok){
-    throw new Error("FEC ответил с кодом " + response.status);
+  if (!response.ok) {
+    throw new Error(
+      "Ошибка FEC: HTTP " + response.status
+    );
   }
 
   const data = await response.json();
 
-  if(!Array.isArray(data.results)){
+  if (!Array.isArray(data.results)) {
     throw new Error("Неожиданный формат ответа FEC");
   }
 
-  return data.results.map(item=>({
+  return data.results.map(item => ({
     ...item,
-    office_code:office,
-    office_name:offices.find(o=>o.code===office).name
+    office_code: office,
+    office_name: offices.find(o => o.code === office).name
   }));
+
 }
 
-function updatePartyOptions(){
+function updatePartyOptions() {
+
   const select = document.getElementById("partyFilter");
   const previous = select.value;
 
   const parties = [...new Set(
-    campaigns.map(c=>c.party).filter(Boolean)
+    campaigns
+      .map(c => c.party)
+      .filter(Boolean)
   )].sort();
 
   select.innerHTML =
     '<option value="">Все партии</option>' +
-    parties.map(p=>
+    parties.map(p =>
       '<option value="' + escapeHTML(p) + '">' +
-      escapeHTML(p) + '</option>'
+      escapeHTML(p) +
+      '</option>'
     ).join("");
 
-  if(parties.includes(previous)){
+  if (parties.includes(previous)) {
     select.value = previous;
   }
+
 }
 
-function renderCampaigns(){
+function renderCampaigns() {
+
   const rows = document.getElementById("campaignRows");
 
   const search = (
@@ -149,24 +582,39 @@ function renderCampaigns(){
   const party = document.getElementById("partyFilter").value;
   const office = document.getElementById("officeFilter").value;
 
-  const filtered = campaigns.filter(c=>{
+  const filtered = campaigns.filter(c => {
+
     const name = String(
       c.name || c.candidate_name || ""
     ).toLowerCase();
 
-    const id = String(c.candidate_id || "").toLowerCase();
+    const id = String(
+      c.candidate_id || ""
+    ).toLowerCase();
 
-    return (!search || name.includes(search) || id.includes(search))
-      && (!party || c.party === party)
-      && (!office || c.office_code === office);
+    const matchesSearch =
+      !search ||
+      name.includes(search) ||
+      id.includes(search);
+
+    const matchesParty =
+      !party || c.party === party;
+
+    const matchesOffice =
+      !office || c.office_code === office;
+
+    return matchesSearch && matchesParty && matchesOffice;
+
   });
 
   const receipts = filtered.reduce(
-    (sum,c)=>sum+Number(c.receipts||0),0
+    (sum, c) => sum + Number(c.receipts || 0),
+    0
   );
 
   const spent = filtered.reduce(
-    (sum,c)=>sum+Number(c.disbursements||0),0
+    (sum, c) => sum + Number(c.disbursements || 0),
+    0
   );
 
   document.getElementById("campaignCount").textContent =
@@ -178,103 +626,158 @@ function renderCampaigns(){
   document.getElementById("totalSpent").textContent =
     money(spent);
 
-  if(filtered.length===0){
+  if (filtered.length === 0) {
+
     rows.innerHTML =
       '<tr><td colspan="6">Ничего не найдено.</td></tr>';
+
     return;
+
   }
 
-  rows.innerHTML = filtered.map(c=>{
-    const name = c.name || c.candidate_name || "Без имени";
-    const id = c.candidate_id || "ID не указан";
+  rows.innerHTML = filtered.map(c => {
 
-    const changed = changedCandidateIds.has(id)
-      ? '<span style="color:#70d99b;font-size:11px"> ● ИЗМЕНЕНИЕ</span>'
-      : "";
+    const name =
+      c.name || c.candidate_name || "Без имени";
+
+    const id =
+      c.candidate_id || "ID не указан";
+
+    const changed =
+      changedCandidateIds.has(id)
+        ? '<span class="changed"> ● ИЗМЕНИЛИСЬ ДАННЫЕ</span>'
+        : "";
 
     return `
       <tr>
+
         <td>
           ${escapeHTML(name)} ${changed}
-          <div style="font-size:12px;color:#91a6c8">
+          <div class="small">
             ${escapeHTML(id)}
           </div>
         </td>
-        <td>${escapeHTML(c.office_name)}</td>
-        <td>${escapeHTML(c.party || "—")}</td>
-        <td>${money(c.receipts)}</td>
-        <td>${money(c.disbursements)}</td>
-        <td>${escapeHTML(c.coverage_end_date || "—")}</td>
+
+        <td>
+          ${escapeHTML(c.office_name)}
+        </td>
+
+        <td>
+          ${escapeHTML(c.party || "—")}
+        </td>
+
+        <td>
+          ${money(c.receipts)}
+        </td>
+
+        <td>
+          ${money(c.disbursements)}
+        </td>
+
+        <td>
+          ${escapeHTML(c.coverage_end_date || "—")}
+        </td>
+
       </tr>
     `;
+
   }).join("");
+
 }
 
-async function loadCampaigns(){
-  const version = ++loadVersion;
-  const cycle = document.getElementById("cycle").value;
-  const status = document.getElementById("status");
-  const rows = document.getElementById("campaignRows");
+async function loadCampaigns() {
 
-  if(currentCycle !== cycle){
+  const version = ++loadVersion;
+
+  const cycle =
+    document.getElementById("cycle").value;
+
+  const status =
+    document.getElementById("status");
+
+  const rows =
+    document.getElementById("campaignRows");
+
+  const refreshButton =
+    document.getElementById("refreshButton");
+
+  if (currentCycle !== cycle) {
+
     previousSnapshot.clear();
     changedCandidateIds.clear();
     currentCycle = cycle;
+
   }
 
-  status.textContent = "Получаем свежие данные из FEC...";
-  rows.innerHTML = '<tr><td colspan="6">Загрузка...</td></tr>';
+  status.className = "status";
+  status.textContent =
+    "Загружаем данные из FEC для трёх типов выборов...";
 
-  try{
+  refreshButton.disabled = true;
+  refreshButton.textContent = "Загрузка...";
+
+  rows.innerHTML =
+    '<tr><td colspan="6">Загрузка данных...</td></tr>';
+
+  try {
+
     const results = await Promise.all(
-      offices.map(o=>getOfficeData(o.code,cycle))
+      offices.map(o => getOfficeData(o.code, cycle))
     );
 
-    if(version !== loadVersion) return;
+    if (version !== loadVersion) return;
 
     const all = results.flat();
 
     const unique = new Map();
 
-    all.forEach(item=>{
-      const key = item.candidate_id || (
-        item.office_code + "-" + (item.name || item.candidate_name || "")
-      );
+    all.forEach(item => {
 
-      if(!unique.has(key)){
-        unique.set(key,item);
+      const key = item.candidate_id ||
+        item.office_code + "-" +
+        (item.name || item.candidate_name || "");
+
+      if (!unique.has(key)) {
+        unique.set(key, item);
       }
+
     });
 
     const newCampaigns = Array.from(unique.values());
 
     changedCandidateIds = new Set();
 
-    newCampaigns.forEach(c=>{
+    newCampaigns.forEach(c => {
+
       const id = c.candidate_id;
-      if(!id) return;
+
+      if (!id) return;
 
       const old = previousSnapshot.get(id);
 
-      if(old && (
+      if (old && (
         Number(old.receipts || 0) !== Number(c.receipts || 0) ||
         Number(old.disbursements || 0) !== Number(c.disbursements || 0) ||
         old.coverage_end_date !== c.coverage_end_date
-      )){
+      )) {
+
         changedCandidateIds.add(id);
+
       }
 
-      previousSnapshot.set(id,{
-        receipts:c.receipts,
-        disbursements:c.disbursements,
-        coverage_end_date:c.coverage_end_date
+      previousSnapshot.set(id, {
+        receipts: c.receipts,
+        disbursements: c.disbursements,
+        coverage_end_date: c.coverage_end_date
       });
+
     });
 
     campaigns = newCampaigns;
 
-    campaigns.sort((a,b)=>
-      Number(b.receipts||0)-Number(a.receipts||0)
+    campaigns.sort((a, b) =>
+      Number(b.receipts || 0) -
+      Number(a.receipts || 0)
     );
 
     updatePartyOptions();
@@ -282,259 +785,81 @@ async function loadCampaigns(){
 
     lastSuccessfulLoad = Date.now();
 
+    status.className = "status success";
+
     status.textContent =
-      "Подключение работает. Загружено " + campaigns.length +
-      " записей. Последняя успешная проверка: " +
+      "Подключение работает. Загружено " +
+      campaigns.length +
+      " записей. Последняя успешная загрузка: " +
       new Date(lastSuccessfulLoad).toLocaleString() +
       ". Следующая проверка примерно через час.";
 
-  }catch(error){
-    if(version !== loadVersion) return;
+  } catch (error) {
+
+    if (version !== loadVersion) return;
+
+    status.className = "status error";
 
     status.textContent =
-      "Ошибка обновления: " + error.message +
-      ". Последние успешно загруженные данные, если они есть, сохранены на экране.";
+      "Не удалось обновить данные: " +
+      error.message +
+      ". Проверь соединение и попробуй ещё раз.";
 
-    if(campaigns.length===0){
+    if (campaigns.length === 0) {
+
       rows.innerHTML =
-        '<tr><td colspan="6">Не удалось получить данные. Попробуй обновить страницу позже.</td></tr>';
+        '<tr><td colspan="6">Данные пока недоступны.</td></tr>';
+
+    } else {
+
+      renderCampaigns();
+
     }
+
+  } finally {
+
+    if (version === loadVersion) {
+
+      refreshButton.disabled = false;
+      refreshButton.textContent = "Обновить данные";
+
+    }
+
   }
+
 }
 
-// Первичная загрузка
+// Первоначальная загрузка
 loadCampaigns();
 
-// Автоматическая проверка раз в час,
-// только когда вкладка сайта открыта.
-setInterval(()=>{
-  if(document.visibilityState === "visible"){
+// Автоматическая проверка раз в час
+setInterval(() => {
+
+  if (document.visibilityState === "visible") {
     loadCampaigns();
   }
-},REFRESH_INTERVAL);
 
-// Проверка после возвращения на вкладку
-document.addEventListener("visibilitychange",()=>{
-  if(
+}, REFRESH_INTERVAL);
+
+// Проверка при возвращении на вкладку
+document.addEventListener("visibilitychange", () => {
+
+  if (
     document.visibilityState === "visible" &&
-    Date.now()-lastSuccessfulLoad >= REFRESH_INTERVAL
-  ){
+    lastSuccessfulLoad > 0 &&
+    Date.now() - lastSuccessfulLoad >= REFRESH_INTERVAL
+  ) {
+
     loadCampaigns();
+
   }
+
 });
+
 </script>
+
 </body>
 </html>
+```
 
-<section class="stats">
-<div class="card"><span>Транзакции</span><strong>0</strong></div>
-<div class="card"><span>Загружено кандидатов</span><strong id="campaignCount">—</strong></div>
-<div class="card"><span>Сборы загруженных кандидатов</span><strong id="totalReceipts">—</strong></div>
-<div class="card"><span>Расходы загруженных кандидатов</span><strong id="totalSpent">—</strong></div>
-</section>
 
-<nav>
-<button class="active" onclick="showTab('trades',this)">Transactions</button>
-<button onclick="showTab('campaigns',this)">Campaigns</button>
-<button onclick="showTab('watch',this)">Watchlist</button>
-<button onclick="showTab('about',this)">About</button>
-</nav>
-
-<section id="trades" class="panel">
-<h2>Disclosed transactions</h2>
-<p class="muted">Публичные финансовые раскрытия членов Конгресса США.</p>
-<p>Загрузка транзакций из House и Senate пока не подключена.</p>
-<p><a href="https://disclosures-clerk.house.gov/" target="_blank" rel="noopener">House disclosures</a> ·
-<a href="https://efdsearch.senate.gov/" target="_blank" rel="noopener">Senate disclosures</a></p>
-</section>
-
-<section id="campaigns" class="panel hidden">
-<h2>U.S. Campaign Finance</h2>
-<p class="muted">Официальные данные FEC о финансировании федеральных кампаний.</p>
-
-<div class="filters">
-  <select id="cycle" onchange="loadCampaigns()">
-    <option value="2026">Избирательный цикл 2026</option>
-    <option value="2028">Избирательный цикл 2028</option>
-    <option value="2024">Избирательный цикл 2024</option>
-  </select>
-
-  <input id="candidateSearch" type="search"
-    placeholder="Поиск кандидата..."
-    oninput="renderCampaigns()">
-
-  <select id="partyFilter" onchange="renderCampaigns()">
-    <option value="">Все партии</option>
-  </select>
-
-  <select id="officeFilter" onchange="renderCampaigns()">
-    <option value="">Все виды выборов</option>
-    <option value="P">Президент</option>
-    <option value="S">Сенат</option>
-    <option value="H">Палата представителей</option>
-  </select>
-
-  <button onclick="loadCampaigns()">Обновить данные</button>
-</div>
-
-<div id="status" class="status">Подготовка загрузки...</div>
-
-<div style="overflow-x:auto">
-<table>
-<thead>
-<tr>
-<th>Кандидат</th>
-<th>Выборы</th>
-<th>Партия</th>
-<th>Собрано</th>
-<th>Потрачено</th>
-<th>Данные на дату</th>
-</tr>
-</thead>
-<tbody id="campaignRows">
-<tr><td colspan="6">Загрузка...</td></tr>
-</tbody>
-</table>
-</div>
-
-<p class="muted">
-Показываются до 100 кандидатов на каждый тип выборов, отсортированных по сумме сборов.
-Это не полный список всех кандидатов.
-</p>
-<p>
-Источник: <a href="https://www.fec.gov/data/" target="_blank" rel="noopener">FEC Data</a> ·
-<a href="https://api.open.fec.gov/developers/" target="_blank" rel="noopener">API documentation</a>
-</p>
-</section>
-
-<section id="watch" class="panel hidden">
-<h2>Watchlist</h2>
-<p class="muted">Список наблюдения пока хранится в этом браузере.</p>
-<p>Политики и кампании можно будет добавлять после подключения соответствующих функций.</p>
-</section>
-
-<section id="about" class="panel hidden">
-<h2>О проекте InsiderGov</h2>
-<p>InsiderGov собирает и отображает публичные сведения о финансировании политических кампаний и финансовых раскрытиях членов Конгресса США.</p>
-<p>Кампании загружаются из открытого API FEC. Транзакции House и Senate пока не подключены.</p>
-<p>Данные FEC могут обновляться с задержкой и исправляться самим источником.</p>
-</section>
-</main>
-
-const API_KEY = "DEMO_KEY";
-const API_BASE = "https://api.open.fec.gov/v1";
-let campaigns = [];
-let previousSnapshot = new Map();
-let changedCandidateIds = new Set();
-let lastSuccessfulLoad = 0;
-let loadVersion = 0;
-
-const offices = [
-  {code:"P",name:"Президент"},
-  {code:"S",name:"Сенат"},
-  {code:"H",name:"Палата представителей"}
-];
-
-function money(value){
-  if(value===null || value===undefined || !Number.isFinite(Number(value))) return "—";
-  return new Intl.NumberFormat("en-US",{
-    style:"currency",currency:"USD",maximumFractionDigits:0
-  }).format(Number(value));
-}
-
-function escapeHTML(value){
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  })[c]);
-}
-
-function showTab(id,button){
-  document.querySelectorAll("main>section.panel").forEach(s=>s.classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
-  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-  button.classList.add("active");
-  if(id==="campaigns" && campaigns.length===0) loadCampaigns();
-}
-
-async function getOfficeData(office,cycle){
-  const url = new URL(API_BASE + "/candidates/totals/");
-  url.searchParams.set("api_key",API_KEY);
-  url.searchParams.set("office",office);
-  url.searchParams.set("cycle",cycle);
-  url.searchParams.set("per_page","100");
-  url.searchParams.set("sort","-receipts");
-  url.searchParams.set("has_raised_funds","true");
-
-  const response = await fetch(url);
-  if(!response.ok) throw new Error("FEC ответил с кодом " + response.status);
-
-  const data = await response.json();
-  if(!Array.isArray(data.results)) throw new Error("Неожиданный формат ответа FEC");
-
-  return data.results.map(item=>({
-    ...item,
-    office_code:office,
-    office_name:offices.find(o=>o.code===office).name
-  }));
-}
-
-async function loadCampaigns(){
-  const cycle=document.getElementById("cycle").value;
-  const status=document.getElementById("status");
-  const rows=document.getElementById("campaignRows");
-
-  status.textContent="Загружаем данные FEC для трёх типов выборов...";
-  rows.innerHTML='<tr><td colspan="6">Загрузка...</td></tr>';
-
-  document.getElementById("campaignCount").textContent="...";
-  document.getElementById("totalReceipts").textContent="...";
-  document.getElementById("totalSpent").textContent="...";
-
-  try{
-    const results=await Promise.all(
-      offices.map(o=>getOfficeData(o.code,cycle))
-    );
-
-    campaigns=results.flat();
-
-    campaigns.sort((a,b)=>
-      Number(b.receipts||0)-Number(a.receipts||0)
-    );
-
-    const receipts=campaigns.reduce((sum,c)=>sum+Number(c.receipts||0),0);
-    const spent=campaigns.reduce((sum,c)=>sum+Number(c.disbursements||0),0);
-
-    document.getElementById("campaignCount").textContent=campaigns.length;
-    document.getElementById("totalReceipts").textContent=money(receipts);
-    document.getElementById("totalSpent").textContent=money(spent);
-
-    rows.innerHTML=campaigns.map(c=>`
-      <tr>
-        <td>${escapeHTML(c.name || c.candidate_name || c.candidate_id || "Без имени")}</td>
-        <td>${escapeHTML(c.office_name)}</td>
-        <td>${escapeHTML(c.party || "—")}</td>
-        <td>${money(c.receipts)}</td>
-        <td>${money(c.disbursements)}</td>
-        <td>${escapeHTML(c.coverage_end_date || "—")}</td>
-      </tr>
-    `).join("") || '<tr><td colspan="6">FEC не вернул записи для выбранного цикла.</td></tr>';
-
-    status.textContent=
-      "Успешно загружено: "+campaigns.length+
-      " записей. Цикл "+cycle+
-      ". Время загрузки: "+new Date().toLocaleString();
-  }catch(error){
-    campaigns=[];
-    document.getElementById("campaignCount").textContent="—";
-    document.getElementById("totalReceipts").textContent="—";
-    document.getElementById("totalSpent").textContent="—";
-    rows.innerHTML='<tr><td colspan="6">Не удалось получить данные. Попробуй обновить страницу позже.</td></tr>';
-    status.textContent="Ошибка загрузки FEC: "+error.message+
-      ". DEMO_KEY может иметь ограничения. Проверь соединение и попробуй позже.";
-  }
-}
-
-loadCampaigns();
-</script>
-</body>
-</html>
