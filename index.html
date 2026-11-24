@@ -3,307 +3,631 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#090d16">
-<title>InsiderGov — Intelligence Terminal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080e19">
+<title>InsiderGov — Political Finance Intelligence</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+
 <style>
-:root{
-  --bg:#090d16;--panel:#101725;--panel2:#141e2e;
-  --line:#253248;--text:#e9eef8;--muted:#8492aa;
-  --blue:#78a9ff;--green:#49d6a0;--red:#ff777e;
-  --gold:#e9bd70;
+:root {
+  --bg:#080e19;
+  --panel:#101a2a;
+  --panel2:#131f32;
+  --border:#213047;
+  --text:#edf3fc;
+  --muted:#8796ad;
+  --cyan:#39c6d8;
+  --green:#37c98a;
+  --red:#f16d78;
+  --radius:14px;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,Arial,sans-serif}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;
+}
 button,input,select{font:inherit}
 button{cursor:pointer}
-.app{display:grid;grid-template-columns:240px minmax(0,1fr);min-height:100vh}
-.sidebar{background:#0c1320;border-right:1px solid var(--line);padding:25px 16px;position:sticky;top:0;height:100vh}
-.brand{font-size:21px;font-weight:800;letter-spacing:1px;padding:8px 12px}
-.brand span{color:var(--blue)}
-.tagline{font-size:10px;letter-spacing:2px;color:var(--muted);padding:5px 12px 30px}
-.nav-label{font-size:10px;letter-spacing:1.5px;color:#64748b;padding:15px 12px 8px}
-.nav button{width:100%;display:flex;align-items:center;gap:12px;padding:12px;border:0;background:transparent;color:#9cabc2;text-align:left;border-radius:8px;margin:3px 0}
-.nav button:hover,.nav button.active{background:#192943;color:#fff}
-.nav button.active{box-shadow:inset 2px 0 var(--blue)}
-.side-bottom{position:absolute;bottom:22px;left:22px;right:22px;color:var(--muted);font-size:11px;line-height:1.8}
-main{min-width:0;padding:28px clamp(16px,3vw,42px)}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;border-bottom:1px solid var(--line);padding-bottom:22px}
-.eyebrow{font-size:10px;color:var(--blue);letter-spacing:2px;font-weight:700}
-h1{font-size:25px;margin:7px 0}
-.subtitle{color:var(--muted);font-size:12px}
-.top-right{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:11px}
-.live{color:var(--green)}
-.live:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:7px}
-.page{display:none;padding-top:25px}
-.page.active{display:block}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:19px;min-width:0}
-.metric-label{font-size:11px;color:var(--muted)}
-.metric-value{font-size:25px;font-weight:700;margin:13px 0 7px;letter-spacing:-.7px}
-.metric-foot{font-size:10px;color:var(--muted)}
-.green{color:var(--green)}.blue{color:var(--blue)}.gold{color:var(--gold)}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:27px 0 13px}
-h2{font-size:15px;margin:0}
-.section-head small{color:var(--muted)}
-.two{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
-.chart{height:230px;width:100%;margin-top:12px}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+  width:245px;flex-shrink:0;background:#0b1422;
+  border-right:1px solid var(--border);padding:25px 16px;
+  display:flex;flex-direction:column;
+}
+.brand{display:flex;align-items:center;gap:12px;padding:0 10px 32px}
+.logo{
+  width:38px;height:38px;border-radius:11px;
+  display:grid;place-items:center;background:#123449;
+  color:var(--cyan);font-size:22px;font-weight:900;
+}
+.brand-name{font-size:17px;font-weight:800;letter-spacing:.3px}
+.brand-sub{font-size:10px;color:var(--muted);margin-top:3px}
+.nav-label{font-size:10px;color:#62748d;letter-spacing:1.5px;
+  padding:10px 12px}
+.nav-btn{
+  width:100%;display:flex;align-items:center;gap:12px;
+  color:#9aaac0;background:transparent;border:0;
+  padding:12px;border-radius:9px;text-align:left;
+  margin:2px 0;font-size:13px;
+}
+.nav-btn:hover,.nav-btn.active{
+  color:white;background:#16283a;
+}
+.nav-btn.active{box-shadow:inset 3px 0 var(--cyan)}
+.nav-icon{width:19px;text-align:center;color:var(--cyan)}
+.sidebar-bottom{margin-top:auto;padding:15px 10px;color:var(--muted);
+  font-size:11px;line-height:1.7}
+.main{flex:1;min-width:0}
+.topbar{
+  height:76px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;background:#0a1220;
+}
+.breadcrumb{font-size:13px;color:var(--muted)}
+.breadcrumb strong{color:var(--text)}
+.top-actions{display:flex;align-items:center;gap:12px}
+.status{font-size:11px;color:var(--muted);display:flex;gap:7px;align-items:center}
+.dot{width:7px;height:7px;border-radius:50%;background:#e1a64c}
+.content{padding:30px 32px;max-width:1500px;margin:auto}
+.page-heading{display:flex;justify-content:space-between;align-items:flex-start;
+  gap:15px;margin-bottom:25px}
+h1{font-size:25px;margin:0 0 7px;letter-spacing:-.6px}
+.subtitle{font-size:12px;color:var(--muted)}
+.eyebrow{font-size:10px;color:var(--cyan);letter-spacing:1.5px;
+  margin-bottom:9px;font-weight:700}
+.btn{
+  border:1px solid var(--border);background:var(--panel2);
+  color:var(--text);padding:10px 14px;border-radius:9px;font-size:12px;
+}
+.btn:hover{border-color:var(--cyan)}
+.btn.primary{background:#123b4b;border-color:#1c6270;color:#a7f4fa}
+.stats{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:15px;margin-bottom:20px
+}
+.card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:var(--radius);padding:19px;min-width:0;
+}
+.stat-label{font-size:11px;color:var(--muted);margin-bottom:13px}
+.stat-value{font-size:27px;font-weight:750;letter-spacing:-.8px}
+.stat-note{font-size:10px;color:var(--muted);margin-top:9px}
+.grid-main{display:grid;grid-template-columns:1.55fr 1fr;gap:16px}
+.card-title{font-size:13px;font-weight:700}
+.card-desc{font-size:10px;color:var(--muted);margin-top:5px}
+.chart{height:220px;margin-top:22px}
 .chart svg{width:100%;height:100%;overflow:visible}
-.chart text{fill:#8492aa;font-size:10px}
-.axis{stroke:#26344b;stroke-width:1}
-.line{fill:none;stroke:var(--blue);stroke-width:2.5}
-.area{fill:url(#area)}
-.bar{fill:#477ecb}
-.table-wrap{overflow:auto}
-table{border-collapse:collapse;width:100%;min-width:650px}
-th{text-align:left;font-size:10px;letter-spacing:1px;color:#8291a9;font-weight:600}
-td,th{padding:14px 12px;border-bottom:1px solid #202c40}
-td{font-size:12px}
-tbody tr:hover{background:#162237}
-.pill{display:inline-block;padding:5px 8px;border-radius:5px;background:#1b2b40;color:#9fc3ff;font-size:10px}
-.controls{display:flex;flex-wrap:wrap;gap:9px}
-select,input{background:#0c1422;color:var(--text);border:1px solid var(--line);border-radius:7px;padding:10px}
-.action{background:#263d60;color:#fff;border:1px solid #36557e;border-radius:7px;padding:10px 14px}
-.action:hover{background:#31547f}
-.status{padding:12px 14px;background:#0d1929;border:1px solid var(--line);border-radius:8px;color:#9bb0ce;font-size:11px;margin:15px 0}
-.status.error{color:#ff999f;border-color:#633a43}
-.status.ok{color:var(--green)}
-.empty{color:var(--muted);text-align:center;padding:28px}
-.link{color:var(--blue);text-decoration:none}
-.link:hover{text-decoration:underline}
+.chart-labels{display:flex;justify-content:space-between;
+  font-size:10px;color:var(--muted);margin-top:10px}
+.activity-list{margin-top:20px}
+.activity{
+  padding:13px 0;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;gap:10px;font-size:11px
+}
+.activity:last-child{border:0}
+.activity small{display:block;color:var(--muted);margin-top:5px}
+.tag{font-size:10px;padding:5px 8px;border-radius:6px;
+  background:#1b2b3e;color:#9db2ca;white-space:nowrap;height:max-content}
+.notice{
+  padding:14px 16px;border:1px solid #5c4c2d;
+  background:#211d16;color:#dfc48d;border-radius:10px;
+  font-size:11px;line-height:1.7;margin-bottom:20px
+}
+.section{display:none}
+.section.active{display:block}
+.toolbar{
+  display:flex;gap:10px;flex-wrap:wrap;margin:18px 0;
+}
+.field{
+  background:#0c1726;color:var(--text);border:1px solid var(--border);
+  border-radius:8px;padding:10px 12px;font-size:12px;min-width:150px;
+}
+.field:focus{outline:1px solid var(--cyan)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th{text-align:left;color:var(--muted);font-size:10px;font-weight:600;
+  padding:13px;border-bottom:1px solid var(--border)}
+td{padding:14px 13px;border-bottom:1px solid #1b293b;font-size:11px}
+tr:last-child td{border-bottom:0}
+.empty{text-align:center;padding:40px 15px;color:var(--muted);font-size:12px}
+.source-link{color:var(--cyan);text-decoration:none}
+.source-link:hover{text-decoration:underline}
+.watch-btn{border:0;background:none;color:var(--cyan);font-size:17px}
+.panel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.info-item{padding:14px 0;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;font-size:12px;gap:10px}
+.info-item:last-child{border:0}
+.footer{
+  padding:22px 32px;border-top:1px solid var(--border);
+  font-size:10px;color:var(--muted);line-height:1.7
+}
 .mobile-menu{display:none}
-footer{padding:25px 0;color:#64748b;font-size:10px;border-top:1px solid var(--line);margin-top:35px}
-@media(max-width:950px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}}
-@media(max-width:680px){
- .app{display:block}.sidebar{height:auto;position:relative;padding:12px}
- .brand{display:inline-block}.tagline{display:none}
- .nav{display:flex;overflow:auto}.nav-label,.side-bottom{display:none}
- .nav button{white-space:nowrap;width:auto;font-size:11px}
- main{padding:18px 13px}.topbar{align-items:flex-start}
- .top-right{font-size:10px}.grid{gap:8px}
- .panel{padding:13px}.metric-value{font-size:20px}
- .mobile-menu{display:block}
+@media(max-width:900px){
+  .sidebar{width:205px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .grid-main{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+  .layout{display:block}
+  .sidebar{width:100%;padding:12px;display:none}
+  .sidebar.open{display:flex}
+  .sidebar-bottom{display:none}
+  .brand{padding:5px 8px 15px}
+  .topbar{height:60px;padding:0 16px}
+  .content{padding:22px 15px}
+  .page-heading{align-items:center}
+  h1{font-size:22px}
+  .mobile-menu{display:inline-block}
+  .stats{gap:9px}
+  .card{padding:14px}
+  .stat-value{font-size:22px}
+  .panel-grid{grid-template-columns:1fr}
+  .footer{padding:18px 15px}
 }
 </style>
 </head>
+
 <body>
-<div class="app">
-<aside class="sidebar">
-  <div class="brand">INSIDER<span>GOV</span></div>
-  <div class="tagline">POLITICAL INTELLIGENCE</div>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="logo">I</div>
+    <div>
+      <div class="brand-name">InsiderGov</div>
+      <div class="brand-sub">POLITICAL FINANCE INTELLIGENCE</div>
+    </div>
+  </div>
+
   <div class="nav-label">WORKSPACE</div>
-  <nav class="nav">
-    <button class="active" data-page="overview">◈ &nbsp; Overview</button>
-    <button data-page="campaigns">▤ &nbsp; Campaign finance</button>
-    <button data-page="transactions">↗ &nbsp; Transactions</button>
-    <button data-page="watchlist">☆ &nbsp; Watchlist</button>
-    <button data-page="analytics">▥ &nbsp; Analytics</button>
-    <button data-page="about">ⓘ &nbsp; About</button>
-  </nav>
-  <div class="side-bottom">INSIDERGOV TERMINAL<br>PUBLIC DATA EDITION<br>DATA SOURCE: FEC</div>
+  <button class="nav-btn active" data-page="overview"><span class="nav-icon">◫</span>Overview</button>
+  <button class="nav-btn" data-page="transactions"><span class="nav-icon">⇄</span>Transactions</button>
+  <button class="nav-btn" data-page="campaigns"><span class="nav-icon">▤</span>Campaigns</button>
+  <button class="nav-btn" data-page="analytics"><span class="nav-icon">▥</span>Analytics</button>
+  <button class="nav-btn" data-page="watchlist"><span class="nav-icon">☆</span>Watchlist</button>
+
+  <div class="nav-label" style="margin-top:20px">INFORMATION</div>
+  <button class="nav-btn" data-page="about"><span class="nav-icon">ⓘ</span>About InsiderGov</button>
+
+  <div class="sidebar-bottom">
+    PUBLIC DATA • TRANSPARENCY<br>
+    Independent information platform<br>
+    <span style="color:#52647b">Version 1.0</span>
+  </div>
 </aside>
 
-<main>
+<main class="main">
 <header class="topbar">
- <div>
-  <div class="eyebrow">UNITED STATES / POLITICAL FINANCE</div>
-  <h1 id="pageTitle">Overview</h1>
-  <div class="subtitle">Public disclosures. Campaign finance. Political transparency.</div>
- </div>
- <div class="top-right"><span class="live">SYSTEM ONLINE</span><span id="clock">—</span></div>
+  <div style="display:flex;align-items:center;gap:13px">
+    <button class="btn mobile-menu" id="menuBtn">☰</button>
+    <div class="breadcrumb">InsiderGov / <strong id="crumb">Overview</strong></div>
+  </div>
+  <div class="top-actions">
+    <div class="status"><span class="dot"></span><span id="dataStatus">Data sources not connected</span></div>
+  </div>
 </header>
 
-<div id="globalStatus" class="status">Connecting to public data...</div>
+<div class="content">
 
-<section class="page active" id="overview">
- <div class="grid">
-  <div class="panel"><div class="metric-label">CANDIDATES TRACKED</div><div class="metric-value" id="mCandidates">—</div><div class="metric-foot">Selected election cycle</div></div>
-  <div class="panel"><div class="metric-label">TOTAL RECEIPTS</div><div class="metric-value blue" id="mReceipts">—</div><div class="metric-foot">Reported campaign receipts</div></div>
-  <div class="panel"><div class="metric-label">TOTAL DISBURSEMENTS</div><div class="metric-value" id="mSpent">—</div><div class="metric-foot">Reported campaign spending</div></div>
-  <div class="panel"><div class="metric-label">DATA CYCLE</div><div class="metric-value gold" id="mCycle">2026</div><div class="metric-foot">Federal election cycle</div></div>
- </div>
- <div class="section-head"><h2>Market overview</h2><small>Campaign finance totals</small></div>
- <div class="two">
-  <div class="panel"><h2>Top candidates by receipts</h2><div class="chart" id="overviewChart"></div></div>
-  <div class="panel"><h2>Office distribution</h2><div id="officeStats" style="padding-top:18px"></div></div>
- </div>
- <div class="section-head"><h2>Largest campaigns</h2><small>Ranked by reported receipts</small></div>
- <div class="panel table-wrap"><table><thead><tr><th>CANDIDATE</th><th>OFFICE</th><th>PARTY</th><th>RECEIPTS</th><th>DISBURSEMENTS</th></tr></thead><tbody id="overviewRows"><tr><td colspan="5" class="empty">Waiting for data</td></tr></tbody></table></div>
-</section>
-
-<section class="page" id="campaigns">
- <div class="section-head"><h2>Campaign finance database</h2><small>Federal Election Commission</small></div>
- <div class="panel">
-  <div class="controls">
-   <select id="cycle"><option value="2026">2026 cycle</option><option value="2028">2028 cycle</option><option value="2024">2024 cycle</option></select>
-   <input id="search" placeholder="Search candidate or party...">
-   <button class="action" id="refresh">Refresh view</button>
+<section class="section active" id="overview">
+  <div class="page-heading">
+    <div>
+      <div class="eyebrow">INTELLIGENCE OVERVIEW</div>
+      <h1>Political Finance Overview</h1>
+      <div class="subtitle">A transparent view of publicly disclosed political financial information.</div>
+    </div>
+    <button class="btn" onclick="loadData()">↻ Refresh</button>
   </div>
-  <div class="status" id="campaignStatus">Loading...</div>
-  <div class="table-wrap"><table><thead><tr><th>CANDIDATE</th><th>OFFICE</th><th>PARTY</th><th>RECEIPTS</th><th>SPENDING</th><th>CASH</th></tr></thead><tbody id="campaignRows"><tr><td colspan="6" class="empty">Loading data...</td></tr></tbody></table></div>
- </div>
+
+  <div class="notice">
+    <strong>Data transparency notice</strong><br>
+    No live dataset has been connected yet. Statistics are intentionally not fabricated.
+    Official source links are available below.
+  </div>
+
+  <div class="stats">
+    <div class="card">
+      <div class="stat-label">POLITICIANS TRACKED</div>
+      <div class="stat-value" id="politicianCount">—</div>
+      <div class="stat-note">Awaiting verified dataset</div>
+    </div>
+    <div class="card">
+      <div class="stat-label">DISCLOSED TRANSACTIONS</div>
+      <div class="stat-value" id="transactionCount">—</div>
+      <div class="stat-note">House and Senate disclosures</div>
+    </div>
+    <div class="card">
+      <div class="stat-label">CAMPAIGN CANDIDATES</div>
+      <div class="stat-value" id="candidateCount">—</div>
+      <div class="stat-note">FEC public records</div>
+    </div>
+    <div class="card">
+      <div class="stat-label">DATA LAST UPDATED</div>
+      <div class="stat-value" style="font-size:19px" id="updatedAt">—</div>
+      <div class="stat-note">Verified source timestamp</div>
+    </div>
+  </div>
+
+  <div class="grid-main">
+    <div class="card">
+      <div class="card-title">Campaign Finance Activity</div>
+      <div class="card-desc">Verified historical data will appear here when connected.</div>
+      <div class="chart">
+        <svg viewBox="0 0 600 210" preserveAspectRatio="none">
+          <g stroke="#26364b" stroke-width="1">
+            <line x1="0" y1="25" x2="600" y2="25"/>
+            <line x1="0" y1="75" x2="600" y2="75"/>
+            <line x1="0" y1="125" x2="600" y2="125"/>
+            <line x1="0" y1="175" x2="600" y2="175"/>
+          </g>
+          <text x="300" y="108" text-anchor="middle" fill="#8796ad" font-size="14">Awaiting verified data</text>
+        </svg>
+      </div>
+      <div class="chart-labels"><span>Historical data</span><span>Official FEC source</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Official Data Sources</div>
+      <div class="card-desc">Primary government disclosure portals</div>
+      <div class="activity-list">
+        <div class="activity">
+          <div>Federal Election Commission<small>Campaign finance records</small></div>
+          <a class="source-link" href="https://www.fec.gov/data/" target="_blank" rel="noopener">Open ↗</a>
+        </div>
+        <div class="activity">
+          <div>House Disclosures<small>Personal financial disclosures</small></div>
+          <a class="source-link" href="https://disclosures-clerk.house.gov/" target="_blank" rel="noopener">Open ↗</a>
+        </div>
+        <div class="activity">
+          <div>Senate Disclosures<small>Personal financial disclosures</small></div>
+          <a class="source-link" href="https://efdsearch.senate.gov/" target="_blank" rel="noopener">Open ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="page" id="transactions">
- <div class="section-head"><h2>Congressional disclosures</h2><small>Official disclosure portals</small></div>
- <div class="panel">
-  <p class="subtitle">Personal financial disclosures and periodic transaction reports are separate from FEC campaign finance data.</p>
-  <div class="section-head"><h2>Official sources</h2></div>
-  <p><a class="link" href="https://disclosures-clerk.house.gov/" target="_blank" rel="noopener">U.S. House Financial Disclosures ↗</a></p>
-  <p><a class="link" href="https://efdsearch.senate.gov/" target="_blank" rel="noopener">U.S. Senate Financial Disclosures ↗</a></p>
-  <p class="subtitle">Individual stock transaction data is not fabricated or inferred. It must be imported from the official disclosure records.</p>
- </div>
+<section class="section" id="transactions">
+  <div class="page-heading">
+    <div>
+      <div class="eyebrow">FINANCIAL DISCLOSURES</div>
+      <h1>Transactions</h1>
+      <div class="subtitle">Publicly disclosed personal financial records of U.S. lawmakers.</div>
+    </div>
+  </div>
+  <div class="notice">Transaction records are not connected yet. No fictional trades or politician activity are displayed.</div>
+  <div class="card">
+    <div class="toolbar">
+      <input class="field" id="transactionSearch" placeholder="Search politician..." />
+      <select class="field" id="transactionType">
+        <option value="">All transaction types</option>
+        <option value="purchase">Purchase</option>
+        <option value="sale">Sale</option>
+        <option value="exchange">Exchange</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>POLITICIAN</th><th>ASSET</th><th>TYPE</th><th>DATE</th><th>SOURCE</th></tr></thead>
+        <tbody id="transactionRows"><tr><td colspan="5" class="empty">No verified transaction records loaded.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
 </section>
 
-<section class="page" id="watchlist">
- <div class="section-head"><h2>Personal watchlist</h2><small>Saved in this browser</small></div>
- <div class="panel">
-  <div class="controls"><input id="watchInput" placeholder="Candidate name"><button class="action" id="addWatch">Add candidate</button></div>
-  <div id="watchItems" style="margin-top:20px"></div>
- </div>
+<section class="section" id="campaigns">
+  <div class="page-heading">
+    <div>
+      <div class="eyebrow">ELECTION FINANCE</div>
+      <h1>Campaigns</h1>
+      <div class="subtitle">Campaign receipts, disbursements and financial balances.</div>
+    </div>
+  </div>
+  <div class="notice">Campaign data has not been connected. Values will appear only after verified FEC records are loaded.</div>
+  <div class="card">
+    <div class="toolbar">
+      <input class="field" id="campaignSearch" placeholder="Search candidate..." />
+      <select class="field" id="cycleFilter">
+        <option value="">All election cycles</option>
+        <option>2024</option><option>2026</option><option>2028</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>CANDIDATE</th><th>OFFICE</th><th>PARTY</th><th>RECEIPTS</th><th>DISBURSEMENTS</th></tr></thead>
+        <tbody id="campaignRows"><tr><td colspan="5" class="empty">No verified FEC records loaded.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
 </section>
 
-<section class="page" id="analytics">
- <div class="section-head"><h2>Political finance analytics</h2></div>
- <div class="two">
-  <div class="panel"><h2>Receipts by office</h2><div class="chart" id="analyticsChart"></div></div>
-  <div class="panel"><h2>Data quality</h2><div id="dataQuality" class="subtitle" style="padding-top:20px">Waiting for data</div></div>
- </div>
+<section class="section" id="analytics">
+  <div class="page-heading">
+    <div>
+      <div class="eyebrow">DATA INTELLIGENCE</div>
+      <h1>Analytics</h1>
+      <div class="subtitle">Analysis of verified political finance information.</div>
+    </div>
+  </div>
+  <div class="notice">Analytics will become available when real data sources are connected.</div>
+  <div class="panel-grid">
+    <div class="card"><div class="card-title">Campaign receipts</div><div class="empty">No verified data available.</div></div>
+    <div class="card"><div class="card-title">Campaign disbursements</div><div class="empty">No verified data available.</div></div>
+    <div class="card"><div class="card-title">Party distribution</div><div class="empty">No verified data available.</div></div>
+    <div class="card"><div class="card-title">Election cycle comparison</div><div class="empty">No verified data available.</div></div>
+  </div>
 </section>
 
-<section class="page" id="about">
- <div class="panel">
-  <h2>About InsiderGov</h2>
-  <p class="subtitle">Independent public-data dashboard for U.S. political finance transparency.</p>
-  <p>Campaign finance information is sourced from the Federal Election Commission (FEC).</p>
-  <p>Personal financial disclosures are published separately by the U.S. House and Senate.</p>
-  <p>InsiderGov is an informational project and does not provide investment advice.</p>
-  <p><a class="link" href="https://www.fec.gov/data/" target="_blank" rel="noopener">FEC official data ↗</a></p>
-  <p class="subtitle" id="lastUpdated">Last update: waiting for data</p>
- </div>
+<section class="section" id="watchlist">
+  <div class="page-heading">
+    <div>
+      <div class="eyebrow">PERSONAL TRACKING</div>
+      <h1>Watchlist</h1>
+      <div class="subtitle">Keep track of politicians you want to follow.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="toolbar">
+      <input class="field" id="watchInput" placeholder="Enter politician name..." />
+      <button class="btn primary" id="addWatch">+ Add politician</button>
+    </div>
+    <div id="watchRows"></div>
+  </div>
 </section>
 
-<footer>INSIDERGOV · PUBLIC INFORMATION ONLY · DATA MAY BE DELAYED OR CORRECTED BY SOURCE AGENCIES</footer>
+<section class="section" id="about">
+  <div class="page-heading">
+    <div>
+      <div class="eyebrow">ABOUT THE PLATFORM</div>
+      <h1>About InsiderGov</h1>
+      <div class="subtitle">Independent public-information tracking platform.</div>
+    </div>
+  </div>
+  <div class="panel-grid">
+    <div class="card">
+      <div class="card-title">Our mission</div>
+      <p class="subtitle" style="line-height:1.9">InsiderGov aims to make public political financial information easier to access, understand and compare.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Data integrity</div>
+      <p class="subtitle" style="line-height:1.9">Information should be traceable to official sources. Missing data must never be replaced with invented statistics.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Campaign finance</div>
+      <p class="subtitle" style="line-height:1.9">FEC records describe campaign fundraising and spending. They do not represent politicians' personal investments.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Personal disclosures</div>
+      <p class="subtitle" style="line-height:1.9">House and Senate financial disclosures are separate records and may contain estimated asset ranges rather than exact values.</p>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<footer class="footer">
+  INSIDERGOV — PUBLIC FINANCIAL INFORMATION<br>
+  This platform is an independent informational project and is not affiliated with the U.S. government.
+  Always consult original official documents before drawing conclusions.
+</footer>
 </main>
 </div>
 
 <script>
-const $=id=>document.getElementById(id);
-let database=null, visible=[];
+"use strict";
 
-function fmt(v){
- const n=Number(v||0);
- if(!Number.isFinite(n))return "—";
- return new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",notation:"compact",maximumFractionDigits:1}).format(n);
+const pages = {
+  overview: "Overview",
+  transactions: "Transactions",
+  campaigns: "Campaigns",
+  analytics: "Analytics",
+  watchlist: "Watchlist",
+  about: "About InsiderGov"
+};
+
+const navButtons = document.querySelectorAll(".nav-btn");
+
+function showPage(page) {
+  if (!pages[page]) return;
+
+  document.querySelectorAll(".section").forEach(section => {
+    section.classList.toggle("active", section.id === page);
+  });
+
+  navButtons.forEach(button => {
+    button.classList.toggle("active", button.dataset.page === page);
+  });
+
+  document.getElementById("crumb").textContent = pages[page];
+  document.getElementById("sidebar").classList.remove("open");
+  history.replaceState(null, "", "#" + page);
 }
-function esc(s){
- return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function setStatus(message,type=""){
- const el=$("globalStatus");
- el.className="status "+type;
- el.textContent=message;
-}
-function chartBars(items,target){
- const max=Math.max(1,...items.map(x=>x.value));
- const bars=items.map((x,i)=>{
-  const y=20+i*37;
-  const w=Math.max(2,x.value/max*68);
-  return `<text x="0" y="${y+10}">${esc(x.name.slice(0,17))}</text>
-  <rect x="125" y="${y}" width="${w}%" height="15" rx="3" class="bar"/>
-  <text x="99%" y="${y+11}" text-anchor="end">${esc(fmt(x.value))}</text>`;
- }).join("");
- $(target).innerHTML=`<svg viewBox="0 0 500 ${Math.max(170,items.length*37+20)}" preserveAspectRatio="none">${bars}</svg>`;
-}
-function render(){
- if(!database)return;
- const cycle=$("cycle").value;
- const list=database.cycles?.[cycle]||[];
- visible=list.slice();
- const receipts=list.reduce((s,x)=>s+Number(x.receipts||0),0);
- const spent=list.reduce((s,x)=>s+Number(x.disbursements||0),0);
- $("mCandidates").textContent=list.length.toLocaleString();
- $("mReceipts").textContent=fmt(receipts);
- $("mSpent").textContent=fmt(spent);
- $("mCycle").textContent=cycle;
- $("campaignStatus").textContent=`${list.length} records · Cycle ${cycle}`;
- const top=list.slice().sort((a,b)=>Number(b.receipts||0)-Number(a.receipts||0)).slice(0,10);
- chartBars(top.slice(0,5).map(x=>({name:x.name||x.candidate_id,value:Number(x.receipts||0)})),"overviewChart");
- const offices={};
- list.forEach(x=>{const k=x.office_name||x.office_code||"Other";offices[k]=(offices[k]||0)+Number(x.receipts||0)});
- $("officeStats").innerHTML=Object.entries(offices).map(([k,v])=>`<div style="margin:12px 0"><div style="display:flex;justify-content:space-between"><span>${esc(k)}</span><b>${fmt(v)}</b></div><div style="height:5px;background:#253248;border-radius:5px;margin-top:7px"><div style="height:5px;width:${receipts?Math.min(100,v/receipts*100):0}%;background:#78a9ff;border-radius:5px"></div></div></div>`).join("")||"No data";
- const rows=top.slice(0,10).map(x=>`<tr><td>${esc(x.name||x.candidate_id)}</td><td><span class="pill">${esc(x.office_name||x.office_code||"—")}</span></td><td>${esc(x.party||"—")}</td><td>${fmt(x.receipts)}</td><td>${fmt(x.disbursements)}</td></tr>`).join("");
- $("overviewRows").innerHTML=rows||'<tr><td colspan="5" class="empty">No records</td></tr>';
- filterRows();
- chartBars(Object.entries(offices).map(([name,value])=>({name,value})),"analyticsChart");
- $("dataQuality").textContent=`${list.length} records loaded. Data timestamp: ${database.updated_at||"unknown"}. Source: ${database.source||"FEC"}.`;
- $("lastUpdated").textContent="Last update: "+(database.updated_at||"unknown");
-}
-function filterRows(){
- if(!database)return;
- const cycle=$("cycle").value;
- const q=$("search").value.toLowerCase().trim();
- const list=(database.cycles?.[cycle]||[]).filter(x=>
-  [x.name,x.candidate_id,x.party,x.office_name].join(" ").toLowerCase().includes(q)
- );
- $("campaignRows").innerHTML=list.slice(0,200).map(x=>`<tr>
- <td>${esc(x.name||x.candidate_id||"—")}</td>
- <td>${esc(x.office_name||x.office_code||"—")}</td>
- <td>${esc(x.party||"—")}</td>
- <td>${fmt(x.receipts)}</td><td>${fmt(x.disbursements)}</td><td>${fmt(x.cash_on_hand_end_period)}</td>
- </tr>`).join("")||'<tr><td colspan="6" class="empty">No matching records</td></tr>';
- $("campaignStatus").textContent=`Showing ${Math.min(list.length,200)} of ${list.length} matching records`;
-}
-async function load(){
- setStatus("Connecting to InsiderGov data service...");
- try{
-  const r=await fetch("./data/fec-data.json?ts="+Date.now(),{cache:"no-store"});
-  if(!r.ok)throw Error("data/fec-data.json returned HTTP "+r.status);
-  const d=await r.json();
-  if(!d.cycles||typeof d.cycles!=="object")throw Error("Invalid data format");
-  database=d;
-  render();
-  setStatus("Data successfully loaded · FEC · "+(d.updated_at||"timestamp unavailable"),"ok");
- }catch(e){
-  setStatus("DATA CONNECTION ERROR: "+e.message+" — Check GitHub Actions and data/fec-data.json","error");
-  $("campaignRows").innerHTML='<tr><td colspan="6" class="empty">No data file found. Run the Update FEC data workflow.</td></tr>';
-  $("overviewRows").innerHTML='<tr><td colspan="5" class="empty">Data unavailable</td></tr>';
- }
-}
-document.querySelectorAll(".nav button").forEach(btn=>btn.addEventListener("click",()=>{
- document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
- document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
- btn.classList.add("active");
- $(btn.dataset.page).classList.add("active");
- $("pageTitle").textContent=btn.textContent.trim().replace(/^[◈▤↗☆▥ⓘ]\s*/,"");
-}));
-$("cycle").addEventListener("change",render);
-$("search").addEventListener("input",filterRows);
-$("refresh").addEventListener("click",render);
-$("addWatch").addEventListener("click",()=>{
- const value=$("watchInput").value.trim();
- if(!value)return;
- const items=JSON.parse(localStorage.getItem("ig-watchlist")||"[]");
- if(!items.includes(value))items.push(value);
- localStorage.setItem("ig-watchlist",JSON.stringify(items));
- $("watchInput").value="";
- renderWatch();
+
+navButtons.forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
 });
-function renderWatch(){
- const items=JSON.parse(localStorage.getItem("ig-watchlist")||"[]");
- $("watchItems").innerHTML=items.map((x,i)=>`<div style="padding:12px;border-bottom:1px solid #253248;display:flex;justify-content:space-between">${esc(x)}<button class="action" data-remove="${i}">Remove</button></div>`).join("")||'<div class="empty">Your watchlist is empty</div>';
- document.querySelectorAll("[data-remove]").forEach(b=>b.addEventListener("click",()=>{
-  const arr=JSON.parse(localStorage.getItem("ig-watchlist")||"[]");
-  arr.splice(Number(b.dataset.remove),1);
-  localStorage.setItem("ig-watchlist",JSON.stringify(arr));
-  renderWatch();
- }));
+
+document.getElementById("menuBtn").addEventListener("click", () => {
+  document.getElementById("sidebar").classList.toggle("open");
+});
+
+const initialPage = location.hash.replace("#", "");
+if (pages[initialPage]) showPage(initialPage);
+
+// Watchlist storage
+const STORAGE_KEY = "insidergov-watchlist";
+
+function getWatchlist() {
+  try {
+    const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    return Array.isArray(value) ? value.filter(x => typeof x === "string") : [];
+  } catch {
+    return [];
+  }
 }
-function clock(){
- $("clock").textContent=new Date().toLocaleString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false});
+
+function saveWatchlist(items) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 }
-clock();setInterval(clock,30000);
-renderWatch();load();
+
+function renderWatchlist() {
+  const container = document.getElementById("watchRows");
+  const items = getWatchlist();
+
+  if (!items.length) {
+    container.innerHTML = '<div class="empty">Your watchlist is empty. Add a politician above.</div>';
+    return;
+  }
+
+  container.replaceChildren();
+
+  items.forEach(name => {
+    const row = document.createElement("div");
+    row.className = "info-item";
+
+    const label = document.createElement("span");
+    label.textContent = name;
+
+    const remove = document.createElement("button");
+    remove.className = "btn";
+    remove.textContent = "Remove";
+    remove.addEventListener("click", () => {
+      saveWatchlist(getWatchlist().filter(x => x !== name));
+      renderWatchlist();
+    });
+
+    row.append(label, remove);
+    container.append(row);
+  });
+}
+
+document.getElementById("addWatch").addEventListener("click", () => {
+  const input = document.getElementById("watchInput");
+  const name = input.value.trim();
+
+  if (!name) return;
+
+  const items = getWatchlist();
+
+  if (items.some(x => x.toLowerCase() === name.toLowerCase())) {
+    input.value = "";
+    return;
+  }
+
+  items.push(name);
+  saveWatchlist(items);
+  input.value = "";
+  renderWatchlist();
+});
+
+document.getElementById("watchInput").addEventListener("keydown", event => {
+  if (event.key === "Enter") document.getElementById("addWatch").click();
+});
+
+// Data loader: only accepts a verified, locally published JSON file.
+async function loadData() {
+  const status = document.getElementById("dataStatus");
+
+  try {
+    const response = await fetch("./data/fec-data.json?time=" + Date.now(), {
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("Dataset unavailable: HTTP " + response.status);
+    }
+
+    const data = await response.json();
+
+    if (!data || typeof data !== "object" || !Array.isArray(data.cycles)) {
+      throw new Error("Dataset format is not recognized.");
+    }
+
+    const candidates = data.cycles.flatMap(cycle =>
+      Array.isArray(cycle.candidates) ? cycle.candidates : []
+    );
+
+    const unique = new Map();
+    candidates.forEach(candidate => {
+      if (candidate.candidate_id) unique.set(candidate.candidate_id, candidate);
+    });
+
+    document.getElementById("candidateCount").textContent =
+      unique.size.toLocaleString();
+
+    const date = data.updated_at ? new Date(data.updated_at) : null;
+    document.getElementById("updatedAt").textContent =
+      date && !Number.isNaN(date.getTime())
+        ? date.toLocaleDateString()
+        : "Unknown";
+
+    status.textContent = "FEC dataset loaded";
+    status.style.color = "#37c98a";
+
+    renderCampaigns([...unique.values()]);
+  } catch (error) {
+    status.textContent = "Data source unavailable";
+    status.style.color = "#f16d78";
+    console.warn("InsiderGov data loading:", error.message);
+  }
+}
+
+function renderCampaigns(candidates) {
+  const tbody = document.getElementById("campaignRows");
+  tbody.replaceChildren();
+
+  if (!candidates.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="empty">No candidate records in dataset.</td></tr>';
+    return;
+  }
+
+  candidates.slice(0, 100).forEach(candidate => {
+    const tr = document.createElement("tr");
+
+    [
+      candidate.name || "Unknown",
+      candidate.office || "—",
+      candidate.party || "—",
+      formatMoney(candidate.receipts),
+      formatMoney(candidate.disbursements)
+    ].forEach(value => {
+      const td = document.createElement("td");
+      td.textContent = value;
+      tr.append(td);
+    });
+
+    tbody.append(tr);
+  });
+}
+
+function formatMoney(value) {
+  const number = Number(value);
+  return Number.isFinite(number)
+    ? number.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      })
+    : "—";
+}
+
+document.getElementById("campaignSearch").addEventListener("input", event => {
+  const query = event.target.value.toLowerCase();
+  document.querySelectorAll("#campaignRows tr").forEach(row => {
+    row.hidden = !row.textContent.toLowerCase().includes(query);
+  });
+});
+
+document.getElementById("cycleFilter").addEventListener("change", () => {
+  // Cycle-specific filtering requires the cycle field in the dataset.
+  // It will be enabled when the data schema includes per-candidate cycles.
+});
+
+function downloadCSV() {
+  // Export can be enabled once verified records are loaded.
+}
+
+renderWatchlist();
+loadData();
 </script>
 </body>
 </html>
