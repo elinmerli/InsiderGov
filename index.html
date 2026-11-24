@@ -35,18 +35,188 @@ a{color:#83b5ff}
 <p>U.S. Political Finance & Congressional Disclosure Tracker</p>
 </header>
 
-<main>
-<div class="notice">
-Данные о кампаниях загружаются из API Федеральной избирательной комиссии США (FEC).
-Суммы относятся только к полученным записям, а не ко всем кампаниям страны.
-</div>
 
-<section class="stats">
-<div class="card"><span>Транзакции</span><strong>0</strong></div>
-<div class="card"><span>Загружено кандидатов</span><strong id="campaignCount">—</strong></div>
-<div class="card"><span>Сборы загруженных кандидатов</span><strong id="totalReceipts">—</strong></div>
-<div class="card"><span>Расходы загруженных кандидатов</span><strong id="totalSpent">—</strong></div>
-</section>
+<script>
+const API_KEY = "DEMO_KEY";
+const API_BASE = "https://api.open.fec.gov/v1";
+
+let campaigns = [];
+
+const offices = [
+  {code:"P",name:"Президент"},
+  {code:"S",name:"Сенат"},
+  {code:"H",name:"Палата представителей"}
+];
+
+function money(value){
+  if(value===null || value===undefined || !Number.isFinite(Number(value))) return "—";
+  return new Intl.NumberFormat("en-US",{
+    style:"currency",
+    currency:"USD",
+    maximumFractionDigits:0
+  }).format(Number(value));
+}
+
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[c]);
+}
+
+function showTab(id,button){
+  document.querySelectorAll("main>section.panel")
+    .forEach(s=>s.classList.add("hidden"));
+
+  document.getElementById(id).classList.remove("hidden");
+
+  document.querySelectorAll("nav button")
+    .forEach(b=>b.classList.remove("active"));
+
+  button.classList.add("active");
+
+  if(id==="campaigns" && campaigns.length===0){
+    loadCampaigns();
+  }
+}
+
+async function getOfficeData(office,cycle){
+  const url = new URL(API_BASE + "/candidates/totals/");
+
+  url.searchParams.set("api_key",API_KEY);
+  url.searchParams.set("office",office);
+  url.searchParams.set("cycle",cycle);
+  url.searchParams.set("per_page","100");
+  url.searchParams.set("sort","-receipts");
+  url.searchParams.set("has_raised_funds","true");
+
+  const response = await fetch(url);
+
+  if(!response.ok){
+    throw new Error("FEC ответил с кодом " + response.status);
+  }
+
+  const data = await response.json();
+
+  if(!Array.isArray(data.results)){
+    throw new Error("Неожиданный формат ответа FEC");
+  }
+
+  return data.results.map(item=>({
+    ...item,
+    office_code:office,
+    office_name:offices.find(o=>o.code===office).name
+  }));
+}
+
+function renderCampaigns(){
+  const search = document.getElementById("candidateSearch").value
+    .trim().toLowerCase();
+
+  const party = document.getElementById("partyFilter").value;
+  const office = document.getElementById("officeFilter").value;
+
+  const filtered = campaigns.filter(c=>{
+    const name = String(c.name || c.candidate_name || "").toLowerCase();
+
+    return name.includes(search)
+      && (!party || c.party === party)
+      && (!office || c.office_code === office);
+  });
+
+  const rows = document.getElementById("campaignRows");
+
+  rows.innerHTML = filtered.map(c=>`
+    <tr>
+      <td>${escapeHTML(c.name || c.candidate_name || c.candidate_id || "Без имени")}</td>
+      <td>${escapeHTML(c.office_name)}</td>
+      <td>${escapeHTML(c.party || "—")}</td>
+      <td>${money(c.receipts)}</td>
+      <td>${money(c.disbursements)}</td>
+      <td>${escapeHTML(c.coverage_end_date || "—")}</td>
+    </tr>
+  `).join("") || '<tr><td colspan="6">Ничего не найдено.</td></tr>';
+}
+
+async function loadCampaigns(){
+  const cycle = document.getElementById("cycle").value;
+  const status = document.getElementById("status");
+  const rows = document.getElementById("campaignRows");
+
+  status.textContent = "Загружаем данные FEC...";
+  rows.innerHTML = '<tr><td colspan="6">Загрузка...</td></tr>';
+
+  document.getElementById("campaignCount").textContent = "...";
+  document.getElementById("totalReceipts").textContent = "...";
+  document.getElementById("totalSpent").textContent = "...";
+
+  try{
+    const results = await Promise.all(
+      offices.map(o=>getOfficeData(o.code,cycle))
+    );
+
+    campaigns = results.flat();
+
+    campaigns.sort((a,b)=>
+      Number(b.receipts||0)-Number(a.receipts||0)
+    );
+
+    const receipts = campaigns.reduce(
+      (sum,c)=>sum+Number(c.receipts||0),0
+    );
+
+    const spent = campaigns.reduce(
+      (sum,c)=>sum+Number(c.disbursements||0),0
+    );
+
+    document.getElementById("campaignCount").textContent = campaigns.length;
+    document.getElementById("totalReceipts").textContent = money(receipts);
+    document.getElementById("totalSpent").textContent = money(spent);
+
+    const partyFilter = document.getElementById("partyFilter");
+    const selectedParty = partyFilter.value;
+
+    const parties = [...new Set(
+      campaigns.map(c=>c.party).filter(Boolean)
+    )].sort();
+
+    partyFilter.innerHTML =
+      '<option value="">Все партии</option>' +
+      parties.map(p=>
+        `<option value="${escapeHTML(p)}">${escapeHTML(p)}</option>`
+      ).join("");
+
+    if(parties.includes(selectedParty)){
+      partyFilter.value = selectedParty;
+    }
+
+    renderCampaigns();
+
+    status.textContent =
+      "Успешно загружено: " + campaigns.length +
+      " записей. Цикл " + cycle +
+      ". Время загрузки: " + new Date().toLocaleString();
+
+  }catch(error){
+    campaigns = [];
+
+    document.getElementById("campaignCount").textContent = "—";
+    document.getElementById("totalReceipts").textContent = "—";
+    document.getElementById("totalSpent").textContent = "—";
+
+    rows.innerHTML =
+      '<tr><td colspan="6">Не удалось получить данные.</td></tr>';
+
+    status.textContent = "Ошибка загрузки FEC: " + error.message;
+  }
+}
+
+loadCampaigns();
+</script>
+
 
 <nav>
 <button class="active" onclick="showTab('trades',this)">Transactions</button>
