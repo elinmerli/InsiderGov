@@ -1,0 +1,32 @@
+
+name: Check official disclosure sources
+
+on:
+  schedule:
+    - cron: "23 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-sources:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check House disclosures
+        run: |
+          curl --fail --location --silent --show-error \
+            --user-agent "InsiderGov/1.0" \
+            --output /dev/null \
+            "https://disclosures-clerk.house.gov/PublicDisclosure"
+
+      - name: Check Senate disclosures
+        run: |
+          curl --fail --location --silent --show-error \
+            --user-agent "InsiderGov/1.0" \
+            --output /dev/null \
+            "https://efdsearch.senate.gov/search/home/"
+
+      - name: Report success
+        run: echo "Official source pages responded successfully."
