@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -10,27 +10,24 @@
 body{margin:0;background:#0b1020;color:#e8edf7;font:15px Arial,sans-serif}
 header{padding:24px 6%;background:#111a2e;border-bottom:1px solid #26334d}
 h1{margin:0;color:#70a5ff;font-size:27px}
-header p{color:#aab8d0;margin:8px 0 0}
-main{max-width:1100px;margin:auto;padding:25px 18px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+header p,.muted{color:#aab8d0}
+main{max-width:1150px;margin:auto;padding:25px 18px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:18px 0}
 .card,.panel{background:#141e32;border:1px solid #293751;border-radius:12px;padding:18px}
 .card span{color:#9eacc4;font-size:13px}
-.card strong{display:block;font-size:26px;margin-top:10px}
-nav{display:flex;gap:8px;flex-wrap:wrap;margin:25px 0}
+.card strong{display:block;font-size:23px;margin-top:10px}
+nav,.filters{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
 button{background:#243552;color:#eaf1ff;border:0;border-radius:8px;padding:11px 15px;cursor:pointer}
 button.active,button:hover{background:#3269bd}
 input,select{background:#0d1628;color:white;border:1px solid #34435f;padding:11px;border-radius:8px}
-.filters{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
 table{width:100%;border-collapse:collapse;margin-top:15px}
-th,td{text-align:left;padding:13px 9px;border-bottom:1px solid #293751}
+th,td{text-align:left;padding:12px 9px;border-bottom:1px solid #293751}
 th{color:#91a6c8;font-size:13px}
-.muted{color:#9eacc4}
-.tag{background:#233e38;color:#85dfb1;padding:5px 8px;border-radius:6px;font-size:12px}
 .hidden{display:none}
 .notice{background:#342d1c;color:#f5d58b;padding:12px;border-radius:8px;margin:16px 0}
-.source-link{color:#83b5ff}
-.stat-value{font-size:22px!important}
-@media(max-width:650px){table{font-size:12px}th,td{padding:9px 5px}}
+.status{padding:12px;background:#101b30;border-radius:8px;margin:12px 0;color:#aab8d0}
+a{color:#83b5ff}
+@media(max-width:650px){table{font-size:12px}th,td{padding:8px 5px}}
 </style>
 </head>
 <body>
@@ -41,15 +38,15 @@ th{color:#91a6c8;font-size:13px}
 
 <main>
 <div class="notice">
-Данные FEC и финансовые раскрытия пока не подключены.
-Сайт не показывает вымышленные финансовые показатели как реальные.
+Данные о кампаниях загружаются из API Федеральной избирательной комиссии США (FEC).
+Суммы относятся только к полученным записям, а не ко всем кампаниям страны.
 </div>
 
 <section class="stats">
-<div class="card"><span>Транзакции</span><strong id="count">0</strong></div>
-<div class="card"><span>Кампании в базе</span><strong id="campaignCount">0</strong></div>
-<div class="card"><span>В Watchlist</span><strong id="watchCount">0</strong></div>
-<div class="card"><span>Статус данных</span><strong style="font-size:17px">Ожидание FEC</strong></div>
+<div class="card"><span>Транзакции</span><strong>0</strong></div>
+<div class="card"><span>Загружено кандидатов</span><strong id="campaignCount">—</strong></div>
+<div class="card"><span>Сборы загруженных кандидатов</span><strong id="totalReceipts">—</strong></div>
+<div class="card"><span>Расходы загруженных кандидатов</span><strong id="totalSpent">—</strong></div>
 </section>
 
 <nav>
@@ -62,61 +59,26 @@ th{color:#91a6c8;font-size:13px}
 <section id="trades" class="panel">
 <h2>Disclosed transactions</h2>
 <p class="muted">Публичные финансовые раскрытия членов Конгресса США.</p>
-<div class="filters">
-<input id="search" placeholder="Поиск политика или компании" oninput="render()">
-</div>
-<div style="overflow-x:auto">
-<table>
-<thead>
-<tr><th>Политик</th><th>Компания</th><th>Тип</th><th>Дата</th><th>Диапазон</th><th>Watchlist</th></tr>
-</thead>
-<tbody id="rows"></tbody>
-</table>
-</div>
+<p>Загрузка транзакций из House и Senate пока не подключена.</p>
+<p><a href="https://disclosures-clerk.house.gov/" target="_blank" rel="noopener">House disclosures</a> ·
+<a href="https://efdsearch.senate.gov/" target="_blank" rel="noopener">Senate disclosures</a></p>
 </section>
 
 <section id="campaigns" class="panel hidden">
 <h2>U.S. Campaign Finance</h2>
-<p class="muted">
-Статистика финансирования президентских, сенатских и конгрессовых кампаний.
-</p>
+<p class="muted">Официальные данные FEC о финансировании федеральных кампаний.</p>
 
 <div class="filters">
-<select id="electionType" onchange="renderCampaigns()">
-<option value="all">Все типы выборов</option>
-<option value="president">Президентские</option>
-<option value="senate">Сенат</option>
-<option value="house">Палата представителей</option>
+<select id="cycle" onchange="loadCampaigns()">
+<option value="2026">Избирательный цикл 2026</option>
+<option value="2028">Избирательный цикл 2028</option>
+<option value="2024">Избирательный цикл 2024</option>
 </select>
-
-<select id="electionCycle" onchange="renderCampaigns()">
-<option value="all">Все избирательные циклы</option>
-<option value="2026">2026</option>
-<option value="2028">2028</option>
-<option value="2024">2024</option>
-</select>
+<button onclick="loadCampaigns()">Обновить данные</button>
 </div>
 
-<div class="stats">
-<div class="card">
-<span>Всего собрано</span>
-<strong class="stat-value">—</strong>
-</div>
-<div class="card">
-<span>Всего потрачено</span>
-<strong class="stat-value">—</strong>
-</div>
-<div class="card">
-<span>Кампаний найдено</span>
-<strong class="stat-value">0</strong>
-</div>
-<div class="card">
-<span>Последнее обновление</span>
-<strong style="font-size:17px">Нет данных</strong>
-</div>
-</div>
+<div id="status" class="status">Подготовка загрузки...</div>
 
-<h3>Campaign leaderboard</h3>
 <div style="overflow-x:auto">
 <table>
 <thead>
@@ -126,219 +88,150 @@ th{color:#91a6c8;font-size:13px}
 <th>Партия</th>
 <th>Собрано</th>
 <th>Потрачено</th>
+<th>Данные на дату</th>
 </tr>
 </thead>
 <tbody id="campaignRows">
-<tr><td colspan="5">Данные FEC ещё не подключены.</td></tr>
+<tr><td colspan="6">Загрузка...</td></tr>
 </tbody>
 </table>
 </div>
 
-<h3>Что будет отображаться</h3>
-<ul class="muted">
-<li>Кампании с наибольшими сборами.</li>
-<li>Кампании с наибольшими расходами.</li>
-<li>Сравнение демократов и республиканцев.</li>
-<li>Пожертвования физических лиц и организаций.</li>
-<li>Крупнейшие доноры и комитеты политических действий (PAC).</li>
-<li>Изменение финансирования по месяцам.</li>
-</ul>
-
+<p class="muted">
+Показываются до 100 кандидатов на каждый тип выборов, отсортированных по сумме сборов.
+Это не полный список всех кандидатов.
+</p>
 <p>
-Официальная база:
-<a class="source-link" href="https://www.fec.gov/data/" target="_blank" rel="noopener">FEC Campaign Finance Data</a>
+Источник: <a href="https://www.fec.gov/data/" target="_blank" rel="noopener">FEC Data</a> ·
+<a href="https://api.open.fec.gov/developers/" target="_blank" rel="noopener">API documentation</a>
 </p>
 </section>
 
 <section id="watch" class="panel hidden">
 <h2>Watchlist</h2>
-<p class="muted">Сохранённые в этом браузере политики.</p>
-<div id="watchRows"></div>
+<p class="muted">Список наблюдения пока хранится в этом браузере.</p>
+<p>Политики и кампании можно будет добавлять после подключения соответствующих функций.</p>
 </section>
 
 <section id="about" class="panel hidden">
 <h2>О проекте InsiderGov</h2>
-<p>
-InsiderGov — проект для изучения публичных финансовых раскрытий
-членов Конгресса США и финансирования политических кампаний.
-</p>
-<p>
-В текущей версии реальные источники ещё не подключены.
-Показатели не подменяются демонстрационными цифрами.
-</p>
-<p>Официальные источники:</p>
-<ul>
-<li><a class="source-link" href="https://www.fec.gov/data/" target="_blank" rel="noopener">Federal Election Commission (FEC)</a></li>
-<li><a class="source-link" href="https://disclosures-clerk.house.gov/" target="_blank" rel="noopener">U.S. House Financial Disclosures</a></li>
-<li><a class="source-link" href="https://efdsearch.senate.gov/" target="_blank" rel="noopener">U.S. Senate Financial Disclosures</a></li>
-</ul>
+<p>InsiderGov собирает и отображает публичные сведения о финансировании политических кампаний и финансовых раскрытиях членов Конгресса США.</p>
+<p>Кампании загружаются из открытого API FEC. Транзакции House и Senate пока не подключены.</p>
+<p>Данные FEC могут обновляться с задержкой и исправляться самим источником.</p>
 </section>
 </main>
 
 <script>
-const trades=[];
-let watch=JSON.parse(localStorage.getItem("ig-watch")||"[]");
+const API_KEY = "DEMO_KEY";
+const API_BASE = "https://api.open.fec.gov/v1";
+let campaigns = [];
 
-function render(){
-const q=document.getElementById("search").value.toLowerCase();
-const list=trades.filter(t=>
-(t.person+" "+t.company).toLowerCase().includes(q)
-);
+const offices = [
+  {code:"P",name:"Президент"},
+  {code:"S",name:"Сенат"},
+  {code:"H",name:"Палата представителей"}
+];
 
-document.getElementById("rows").innerHTML=
-list.map(t=>`<tr>
-<td>${t.person}</td>
-<td>${t.company}</td>
-<td><span class="tag">${t.type}</span></td>
-<td>${t.date}</td>
-<td>${t.amount}</td>
-<td><button onclick="toggleWatch('${t.person}')">
-${watch.includes(t.person)?"★":"☆"}
-</button></td>
-</tr>`).join("")||
-'<tr><td colspan="6">Реальные транзакции ещё не загружены.</td></tr>';
-
-document.getElementById("count").textContent=trades.length;
-document.getElementById("watchCount").textContent=watch.length;
-
-document.getElementById("watchRows").innerHTML=
-watch.map(n=>`<p>${n}
-<button onclick="toggleWatch('${n}')">Удалить</button></p>`
-).join("")||"<p>Список пока пуст.</p>";
+function money(value){
+  if(value===null || value===undefined || !Number.isFinite(Number(value))) return "—";
+  return new Intl.NumberFormat("en-US",{
+    style:"currency",currency:"USD",maximumFractionDigits:0
+  }).format(Number(value));
 }
 
-function renderCampaigns(){
-const type=document.getElementById("electionType").value;
-const cycle=document.getElementById("electionCycle").value;
-
-// Фильтры готовы. После подключения FEC здесь появятся
-// реальные записи, отфильтрованные по типу выборов и циклу.
-document.getElementById("campaignRows").innerHTML=
-'<tr><td colspan="5">Источник FEC ещё не подключён. Реальные данные пока не загружены.</td></tr>';
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
 }
 
-function toggleWatch(n){
-watch=watch.includes(n)?
-watch.filter(x=>x!==n):[...watch,n];
-localStorage.setItem("ig-watch",JSON.stringify(watch));
-render();
+function showTab(id,button){
+  document.querySelectorAll("main>section.panel").forEach(s=>s.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
+  button.classList.add("active");
+  if(id==="campaigns" && campaigns.length===0) loadCampaigns();
 }
 
-function showTab(id,b){
-document.querySelectorAll("main>section.panel")
-.forEach(x=>x.classList.add("hidden"));
-document.getElementById(id).classList.remove("hidden");
+async function getOfficeData(office,cycle){
+  const url = new URL(API_BASE + "/candidates/totals/");
+  url.searchParams.set("api_key",API_KEY);
+  url.searchParams.set("office",office);
+  url.searchParams.set("cycle",cycle);
+  url.searchParams.set("per_page","100");
+  url.searchParams.set("sort","-receipts");
+  url.searchParams.set("has_raised_funds","true");
 
-document.querySelectorAll("nav button")
-.forEach(x=>x.classList.remove("active"));
-b.classList.add("active");
+  const response = await fetch(url);
+  if(!response.ok) throw new Error("FEC ответил с кодом " + response.status);
+
+  const data = await response.json();
+  if(!Array.isArray(data.results)) throw new Error("Неожиданный формат ответа FEC");
+
+  return data.results.map(item=>({
+    ...item,
+    office_code:office,
+    office_name:offices.find(o=>o.code===office).name
+  }));
 }
 
-render();
-renderCampaigns();
+async function loadCampaigns(){
+  const cycle=document.getElementById("cycle").value;
+  const status=document.getElementById("status");
+  const rows=document.getElementById("campaignRows");
+
+  status.textContent="Загружаем данные FEC для трёх типов выборов...";
+  rows.innerHTML='<tr><td colspan="6">Загрузка...</td></tr>';
+
+  document.getElementById("campaignCount").textContent="...";
+  document.getElementById("totalReceipts").textContent="...";
+  document.getElementById("totalSpent").textContent="...";
+
+  try{
+    const results=await Promise.all(
+      offices.map(o=>getOfficeData(o.code,cycle))
+    );
+
+    campaigns=results.flat();
+
+    campaigns.sort((a,b)=>
+      Number(b.receipts||0)-Number(a.receipts||0)
+    );
+
+    const receipts=campaigns.reduce((sum,c)=>sum+Number(c.receipts||0),0);
+    const spent=campaigns.reduce((sum,c)=>sum+Number(c.disbursements||0),0);
+
+    document.getElementById("campaignCount").textContent=campaigns.length;
+    document.getElementById("totalReceipts").textContent=money(receipts);
+    document.getElementById("totalSpent").textContent=money(spent);
+
+    rows.innerHTML=campaigns.map(c=>`
+      <tr>
+        <td>${escapeHTML(c.name || c.candidate_name || c.candidate_id || "Без имени")}</td>
+        <td>${escapeHTML(c.office_name)}</td>
+        <td>${escapeHTML(c.party || "—")}</td>
+        <td>${money(c.receipts)}</td>
+        <td>${money(c.disbursements)}</td>
+        <td>${escapeHTML(c.coverage_end_date || "—")}</td>
+      </tr>
+    `).join("") || '<tr><td colspan="6">FEC не вернул записи для выбранного цикла.</td></tr>';
+
+    status.textContent=
+      "Успешно загружено: "+campaigns.length+
+      " записей. Цикл "+cycle+
+      ". Время загрузки: "+new Date().toLocaleString();
+  }catch(error){
+    campaigns=[];
+    document.getElementById("campaignCount").textContent="—";
+    document.getElementById("totalReceipts").textContent="—";
+    document.getElementById("totalSpent").textContent="—";
+    rows.innerHTML='<tr><td colspan="6">Не удалось получить данные. Попробуй обновить страницу позже.</td></tr>';
+    status.textContent="Ошибка загрузки FEC: "+error.message+
+      ". DEMO_KEY может иметь ограничения. Проверь соединение и попробуй позже.";
+  }
+}
+
+loadCampaigns();
 </script>
 </body>
 </html>
-```
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>InsiderGov — Congressional Trading Tracker</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#0b1020;color:#e8edf7;font:15px Arial,sans-serif}
-header{padding:24px 6%;background:#111a2e;border-bottom:1px solid #26334d}
-h1{margin:0;color:#70a5ff;font-size:27px}
-header p{color:#aab8d0;margin:8px 0 0}
-main{max-width:1100px;margin:auto;padding:25px 18px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
-.card,.panel{background:#141e32;border:1px solid #293751;border-radius:12px;padding:18px}
-.card span{color:#9eacc4;font-size:13px}
-.card strong{display:block;font-size:26px;margin-top:10px}
-nav{display:flex;gap:8px;flex-wrap:wrap;margin:25px 0}
-button{background:#243552;color:#eaf1ff;border:0;border-radius:8px;padding:11px 15px;cursor:pointer}
-button.active,button:hover{background:#3269bd}
-input,select{background:#0d1628;color:white;border:1px solid #34435f;padding:11px;border-radius:8px}
-.filters{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
-table{width:100%;border-collapse:collapse;margin-top:15px}
-th,td{text-align:left;padding:13px 9px;border-bottom:1px solid #293751}
-th{color:#91a6c8;font-size:13px}
-.muted{color:#9eacc4}
-.tag{background:#233e38;color:#85dfb1;padding:5px 8px;border-radius:6px;font-size:12px}
-.hidden{display:none}
-.notice{background:#342d1c;color:#f5d58b;padding:12px;border-radius:8px;margin:16px 0}
-@media(max-width:650px){table{font-size:12px}th,td{padding:9px 5px}}
-</style>
-</head>
-<body>
-<header>
-<h1>InsiderGov</h1>
-<p>U.S. Congressional Financial Disclosure Tracker</p>
-</header>
-<main>
-<div class="notice">DEMO VERSION — записи ниже вымышлены и не являются реальными финансовыми раскрытиями.</div>
-<section class="stats">
-<div class="card"><span>Демо-записей</span><strong id="count">4</strong></div>
-<div class="card"><span>Политиков</span><strong>3</strong></div>
-<div class="card"><span>В Watchlist</span><strong id="watchCount">0</strong></div>
-<div class="card"><span>Обновление</span><strong style="font-size:17px">Demo</strong></div>
-</section>
-<nav>
-<button class="active" onclick="showTab('trades',this)">Transactions</button>
-<button onclick="showTab('watch',this)">Watchlist</button>
-<button onclick="showTab('about',this)">About</button>
-</nav>
-<section id="trades" class="panel">
-<h2>Disclosed transactions</h2>
-<div class="filters">
-<input id="search" placeholder="Поиск политика или компании" oninput="render()">
-<select id="party" onchange="render()">
-<option value="">Все политики</option>
-<option>Nancy Pelosi</option>
-<option>Michael McCaul</option>
-<option>Marjorie Taylor Greene</option>
-</select>
-</div>
-<div style="overflow-x:auto">
-<table>
-<thead><tr><th>Политик</th><th>Компания</th><th>Тип</th><th>Дата</th><th>Диапазон</th><th>Watchlist</th></tr></thead>
-<tbody id="rows"></tbody>
-</table>
-</div>
-</section>
-<section id="watch" class="panel hidden">
-<h2>Watchlist</h2>
-<p class="muted">Сохранённые в этом браузере политики.</p>
-<div id="watchRows"></div>
-</section>
-<section id="about" class="panel hidden">
-<h2>О проекте InsiderGov</h2>
-<p>Проект предназначен для изучения публичных финансовых раскрытий членов Конгресса США.</p>
-<p>В этой версии используются только демонстрационные записи. Автоматический сбор и проверка официальных документов ещё не подключены.</p>
-<p>Официальные источники:</p>
-<ul>
-<li><a href="https://disclosures-clerk.house.gov/" target="_blank" rel="noopener">U.S. House Financial Disclosures</a></li>
-<li><a href="https://efdsearch.senate.gov/" target="_blank" rel="noopener">U.S. Senate Financial Disclosures</a></li>
-</ul>
-</section>
-</main>
-<script>
-const trades=[];
-let watch=JSON.parse(localStorage.getItem("ig-watch")||"[]");
-function render(){
-const q=document.getElementById("search").value.toLowerCase();
-const p=document.getElementById("party").value;
-const list=trades.filter(t=>(!p||t.person===p)&&(t.person+" "+t.company).toLowerCase().includes(q));
-document.getElementById("rows").innerHTML=list.map(t=>`<tr><td>${t.person}</td><td>${t.company}</td><td><span class="tag">${t.type}</span></td><td>${t.date}</td><td>${t.amount}</td><td><button onclick="toggleWatch('${t.person}')">${watch.includes(t.person)?"★":"☆"}</button></td></tr>`).join("")||'<tr><td colspan="6">Ничего не найдено</td></tr>';
-document.getElementById("watchCount").textContent=watch.length;
-document.getElementById("watchRows").innerHTML=watch.map(n=>`<p>${n} <button onclick="toggleWatch('${n}')">Удалить</button></p>`).join("")||"<p>Список пока пуст.</p>";
-}
-function toggleWatch(n){watch=watch.includes(n)?watch.filter(x=>x!==n):[...watch,n];localStorage.setItem("ig-watch",JSON.stringify(watch));render()}
-function showTab(id,b){document.querySelectorAll("main>section.panel").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active")}
-render();
-</script>
-</body>
-</html>
-
