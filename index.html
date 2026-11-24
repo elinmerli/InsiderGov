@@ -69,12 +69,28 @@ a{color:#83b5ff}
 <p class="muted">Официальные данные FEC о финансировании федеральных кампаний.</p>
 
 <div class="filters">
-<select id="cycle" onchange="loadCampaigns()">
-<option value="2026">Избирательный цикл 2026</option>
-<option value="2028">Избирательный цикл 2028</option>
-<option value="2024">Избирательный цикл 2024</option>
-</select>
-<button onclick="loadCampaigns()">Обновить данные</button>
+  <select id="cycle" onchange="loadCampaigns()">
+    <option value="2026">Избирательный цикл 2026</option>
+    <option value="2028">Избирательный цикл 2028</option>
+    <option value="2024">Избирательный цикл 2024</option>
+  </select>
+
+  <input id="candidateSearch" type="search"
+    placeholder="Поиск кандидата..."
+    oninput="renderCampaigns()">
+
+  <select id="partyFilter" onchange="renderCampaigns()">
+    <option value="">Все партии</option>
+  </select>
+
+  <select id="officeFilter" onchange="renderCampaigns()">
+    <option value="">Все виды выборов</option>
+    <option value="P">Президент</option>
+    <option value="S">Сенат</option>
+    <option value="H">Палата представителей</option>
+  </select>
+
+  <button onclick="loadCampaigns()">Обновить данные</button>
 </div>
 
 <div id="status" class="status">Подготовка загрузки...</div>
