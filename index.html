@@ -1,413 +1,258 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>InsiderGov — Political Finance Intelligence</title>
+<title>InsiderGov — Political Finance Tracker</title>
 <style>
-:root{
-  --bg:#080d16;--panel:#101927;--panel2:#142235;--border:#223247;
-  --text:#edf4fc;--muted:#8293a9;--teal:#35d6bd;
-  --blue:#6ca8ff;--green:#55d69e;--red:#ff7185;--gold:#e8bd72;
-}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,system-ui,sans-serif}
-button,input,select{font:inherit}
-button{cursor:pointer}
-.app{min-height:100vh}
-.sidebar{position:fixed;inset:0 auto 0 0;width:245px;background:#0b121e;border-right:1px solid var(--border);padding:25px 16px;display:flex;flex-direction:column;z-index:5}
-.brand{display:flex;align-items:center;gap:12px;padding:4px 9px 28px}
-.brand-mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(145deg,#35d6bd,#167f88);display:grid;place-items:center;color:#07151b;font-weight:900;font-size:20px}
-.brand-name{font-size:17px;font-weight:850;letter-spacing:1.5px}
-.brand-sub{font-size:9px;color:var(--muted);letter-spacing:1.3px}
-.nav-label{font-size:10px;color:#64768c;font-weight:800;letter-spacing:1.5px;padding:12px}
-.nav-btn{display:block;width:100%;padding:12px;border:1px solid transparent;border-radius:9px;background:transparent;color:#93a4b9;text-align:left;margin:3px 0}
-.nav-btn:hover{background:#142235;color:white}
-.nav-btn.active{color:var(--teal);background:#16302f;border-color:#24534e}
-.sidebar-bottom{margin-top:auto;border-top:1px solid var(--border);padding:17px 9px 0;color:#8293a9;font-size:11px}
-.main{margin-left:245px}
-.topbar{height:76px;border-bottom:1px solid var(--border);padding:0 34px;display:flex;align-items:center;justify-content:space-between;background:#0b121e;position:sticky;top:0;z-index:4}
-.eyebrow{color:var(--teal);font-size:10px;font-weight:800;letter-spacing:1.7px}
-.top-title{font-size:15px;font-weight:750;margin-top:3px}
-.top-right{display:flex;gap:12px;align-items:center}
-.cycle-select,.field{background:#0b1522;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px 12px;outline:none}
-.content{max-width:1500px;margin:auto;padding:30px 34px 50px}
-.page{display:none}
-.page.active{display:block;animation:fade .2s ease}
-@keyframes fade{from{opacity:.3}to{opacity:1}}
-.page-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:25px}
-h1{font-size:25px;letter-spacing:-.7px;margin:0 0 5px}
-.subtitle{color:var(--muted);font-size:13px}
-.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin-bottom:20px}
-.stat-card,.panel,.source-card{background:linear-gradient(145deg,#111d2c,#0e1825);border:1px solid var(--border);border-radius:14px}
-.stat-card{padding:19px}
-.stat-top{color:var(--muted);font-size:10px;font-weight:750;letter-spacing:.5px}
-.stat-value{font-size:27px;font-weight:800;letter-spacing:-1px;margin-top:12px}
-.stat-foot{font-size:10px;color:#71849a;margin-top:5px}
-.grid-two{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
-.panel{padding:20px;margin-bottom:17px;min-width:0}
-.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}
-.panel-title{font-size:14px;font-weight:750}
-.panel-sub{font-size:11px;color:var(--muted);margin-top:4px}
-.tag{font-size:10px;border:1px solid var(--border);border-radius:20px;padding:5px 9px;color:#a6b6c9;white-space:nowrap}
-.chart{width:100%;min-height:180px}
-.chart svg{width:100%;height:auto;display:block}
-.chart-empty{display:grid;place-items:center;min-height:150px;color:var(--muted);font-size:12px;text-align:center;padding:15px}
-.legend{display:flex;gap:16px;color:var(--muted);font-size:10px;margin-top:10px}
-.legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}
-.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px}
-.search{flex:1;min-width:170px}
-.btn{border:1px solid var(--border);background:#172438;color:#dce8f5;border-radius:8px;padding:10px 14px;font-weight:700}
-.btn:hover{border-color:var(--teal);color:var(--teal)}
-.btn-primary{background:var(--teal);border-color:var(--teal);color:#061713}
-.status{font-size:11px;color:var(--muted);margin:10px 0 14px;overflow-wrap:anywhere}
-.status.error{color:#ff9aa9}
-.status.ok{color:var(--green)}
-.table-wrap{width:100%;overflow-x:auto}
-table{width:100%;border-collapse:collapse;white-space:nowrap}
-th{text-align:left;color:#7589a1;font-size:10px;letter-spacing:1px;padding:12px;border-bottom:1px solid var(--border)}
-td{padding:13px 12px;border-bottom:1px solid #1c2a3a;color:#cbd7e5;font-size:12px}
-tbody tr:hover{background:#172538}
-.money{font-variant-numeric:tabular-nums;color:#eaf4ff;font-weight:650}
-.party{font-size:10px;border-radius:5px;padding:4px 7px;font-weight:750}
-.party-D{background:#2b1c2a;color:#ff829b}.party-R{background:#172a42;color:#8cbaff}.party-I{background:#2a2a1d;color:#e8d38b}
-.small-muted{font-size:10px;color:var(--muted)}
-.empty{padding:30px;text-align:center;color:var(--muted)}
-.watch-btn{background:transparent;border:1px solid var(--border);color:var(--gold);border-radius:7px;padding:5px 9px}
-.info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.source-card{padding:23px}
-.source-card h3{margin:10px 0 5px}
-.source-card p{color:var(--muted);font-size:12px}
-.source-link{display:inline-block;color:var(--teal);text-decoration:none;font-weight:700;font-size:12px;margin-top:10px}
-.notice{border:1px solid #594b2d;background:#282317;color:#d9c18d;border-radius:10px;padding:13px 15px;font-size:11px;margin:17px 0}
-.footer{border-top:1px solid var(--border);padding-top:18px;color:#60748b;font-size:10px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:25px}
-@media(max-width:1050px){.stats-grid{grid-template-columns:repeat(2,1fr)}.grid-two{grid-template-columns:1fr}}
-@media(max-width:720px){
-.sidebar{position:static;width:100%;height:auto;padding:12px;border:0;border-bottom:1px solid var(--border)}
-.brand{padding:4px 7px 12px}.nav-label,.sidebar-bottom{display:none}
-.sidebar nav{display:flex;overflow-x:auto;gap:5px}
-.nav-btn{white-space:nowrap;width:auto;flex-shrink:0;padding:9px 11px;font-size:11px}
-.main{margin:0}.topbar{height:62px;padding:0 15px}.content{padding:22px 14px 35px}
-.page-heading{align-items:flex-start;flex-direction:column}h1{font-size:22px}
-.panel{padding:15px}.info-grid{grid-template-columns:1fr}
-}
-@media(max-width:390px){.stat-card{padding:12px}.stat-value{font-size:20px}}
+body{margin:0;background:#0b1020;color:#e8edf7;font:15px Arial,sans-serif}
+header{padding:24px 6%;background:#111a2e;border-bottom:1px solid #26334d}
+h1{margin:0;color:#70a5ff;font-size:27px}
+header p,.muted{color:#aab8d0}
+main{max-width:1150px;margin:auto;padding:25px 18px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:18px 0}
+.card,.panel{background:#141e32;border:1px solid #293751;border-radius:12px;padding:18px}
+.card span{color:#9eacc4;font-size:13px}
+.card strong{display:block;font-size:23px;margin-top:10px}
+nav,.filters{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}
+button{background:#243552;color:#eaf1ff;border:0;border-radius:8px;padding:11px 15px;cursor:pointer}
+button.active,button:hover{background:#3269bd}
+input,select{background:#0d1628;color:white;border:1px solid #34435f;padding:11px;border-radius:8px}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{text-align:left;padding:12px 9px;border-bottom:1px solid #293751}
+th{color:#91a6c8;font-size:13px}
+.hidden{display:none}
+.notice{background:#342d1c;color:#f5d58b;padding:12px;border-radius:8px;margin:16px 0}
+.status{padding:12px;background:#101b30;border-radius:8px;margin:12px 0;color:#aab8d0}
+a{color:#83b5ff}
+@media(max-width:650px){table{font-size:12px}th,td{padding:8px 5px}}
 </style>
 </head>
 <body>
-<div class="app">
-<aside class="sidebar">
-  <div class="brand">
-    <div class="brand-mark">I</div>
-    <div><div class="brand-name">INSIDERGOV</div><div class="brand-sub">POLITICAL FINANCE INTELLIGENCE</div></div>
-  </div>
-  <div class="nav-label">WORKSPACE</div>
-  <nav>
-    <button class="nav-btn active" data-tab="overview">◈ Overview</button>
-    <button class="nav-btn" data-tab="transactions">⇄ Transactions</button>
-    <button class="nav-btn" data-tab="campaigns">▤ Campaigns</button>
-    <button class="nav-btn" data-tab="analytics">▥ Analytics</button>
-    <button class="nav-btn" data-tab="watchlist">☆ Watchlist</button>
-    <button class="nav-btn" data-tab="about">ⓘ About</button>
-  </nav>
-  <div class="sidebar-bottom">● Public data platform<br><br>Independent public-data research interface.</div>
-</aside>
-
-<main class="main">
-<header class="topbar">
-  <div><div class="eyebrow">INSIDERGOV / INTELLIGENCE</div><div class="top-title" id="topTitle">Overview</div></div>
-  <div class="top-right">
-    <select class="cycle-select" id="cycle">
-      <option value="2026">Cycle 2026</option>
-      <option value="2028">Cycle 2028</option>
-      <option value="2024">Cycle 2024</option>
-    </select>
-    <span class="tag">PUBLIC DATA</span>
-  </div>
+<header>
+<h1>InsiderGov</h1>
+<p>U.S. Political Finance & Congressional Disclosure Tracker</p>
 </header>
 
-<div class="content">
-<section class="page active" id="overview">
-  <div class="page-heading">
-    <div><div class="eyebrow">MARKET OVERVIEW</div><h1>Political Finance Overview</h1><div class="subtitle">A data-driven view of U.S. campaign finance activity.</div></div>
-    <button class="btn btn-primary" id="overviewRefresh">↻ Refresh data</button>
-  </div>
-  <div class="stats-grid">
-    <div class="stat-card"><div class="stat-top">CANDIDATES TRACKED</div><div class="stat-value" id="campaignCount">—</div><div class="stat-foot">FEC records returned</div></div>
-    <div class="stat-card"><div class="stat-top">TOTAL RAISED</div><div class="stat-value" id="totalReceipts">—</div><div class="stat-foot">Reported campaign receipts</div></div>
-    <div class="stat-card"><div class="stat-top">TOTAL SPENT</div><div class="stat-value" id="totalSpent">—</div><div class="stat-foot">Reported disbursements</div></div>
-    <div class="stat-card"><div class="stat-top">CASH ON HAND</div><div class="stat-value" id="totalCash">—</div><div class="stat-foot">Reported ending balances</div></div>
-  </div>
-  <div class="grid-two">
-    <div class="panel"><div class="panel-head"><div><div class="panel-title">Receipts vs. Disbursements</div><div class="panel-sub">Aggregate campaign finance totals</div></div><span class="tag">FEC DATA</span></div><div class="chart" id="overviewChart"><div class="chart-empty">Waiting for FEC data…</div></div><div class="legend"><span><i style="background:#35d6bd"></i>Receipts</span><span><i style="background:#6ca8ff"></i>Disbursements</span></div></div>
-    <div class="panel"><div class="panel-head"><div><div class="panel-title">Party Activity</div><div class="panel-sub">Reported receipts by party</div></div></div><div class="chart" id="overviewPartyChart"><div class="chart-empty">Waiting for FEC data…</div></div></div>
-  </div>
-  <div class="panel">
-    <div class="panel-head"><div><div class="panel-title">Top Candidates by Receipts</div><div class="panel-sub">Largest reported receipts in the returned records</div></div><button class="btn" data-goto="campaigns">View candidates →</button></div>
-    <div class="table-wrap"><table><thead><tr><th>CANDIDATE</th><th>PARTY</th><th>OFFICE</th><th>STATE</th><th>RECEIPTS</th></tr></thead><tbody id="overviewRows"><tr><td colspan="5" class="empty">Waiting for data…</td></tr></tbody></table></div>
-  </div>
-</section>
-
-<section class="page" id="transactions">
-  <div class="page-heading"><div><div class="eyebrow">PUBLIC DISCLOSURES</div><h1>Congressional Transactions</h1><div class="subtitle">Official House and Senate financial disclosure sources.</div></div></div>
-  <div class="notice">Individual stock-trade records are not automatically imported into InsiderGov yet. Campaign finance information is not the same as politicians' personal stock transactions.</div>
-  <div class="info-grid">
-    <div class="source-card"><div class="eyebrow">U.S. HOUSE OF REPRESENTATIVES</div><h3>House Financial Disclosures</h3><p>Search public financial disclosure reports and periodic transaction reports filed by House members.</p><a class="source-link" href="https://disclosures-clerk.house.gov/" target="_blank" rel="noopener">Open House disclosures ↗</a></div>
-    <div class="source-card"><div class="eyebrow">U.S. SENATE</div><h3>Senate EFD Search</h3><p>Access the Senate's public electronic financial disclosure system.</p><a class="source-link" href="https://efdsearch.senate.gov/" target="_blank" rel="noopener">Open Senate disclosures ↗</a></div>
-  </div>
-</section>
-
-<section class="page" id="campaigns">
-  <div class="page-heading"><div><div class="eyebrow">FEDERAL ELECTION COMMISSION</div><h1>Campaign Finance</h1><div class="subtitle">Candidate receipts, disbursements and cash balances.</div></div><button class="btn btn-primary" id="refreshButton">↻ Refresh</button></div>
-  <div class="toolbar">
-    <input class="field search" id="candidateSearch" placeholder="Search candidate or state…">
-    <select class="field" id="partyFilter"><option value="all">All parties</option><option value="D">Democratic</option><option value="R">Republican</option><option value="I">Independent / Other</option></select>
-    <select class="field" id="officeFilter"><option value="all">All offices</option><option value="P">President</option><option value="S">Senate</option><option value="H">House</option></select>
-  </div>
-  <div class="status" id="status">Connecting to FEC…</div>
-  <div class="panel"><div class="panel-head"><div><div class="panel-title">Candidate financial activity</div><div class="panel-sub">FEC candidate totals</div></div><span class="tag" id="resultCount">0 RESULTS</span></div>
-    <div class="table-wrap"><table><thead><tr><th>CANDIDATE</th><th>PARTY</th><th>OFFICE</th><th>STATE</th><th>RECEIPTS</th><th>SPENT</th><th>CASH</th><th>TRACK</th></tr></thead><tbody id="campaignRows"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody></table></div>
-  </div>
-</section>
-
-<section class="page" id="analytics">
-  <div class="page-heading"><div><div class="eyebrow">DATA INTELLIGENCE</div><h1>Analytics</h1><div class="subtitle">Visual analysis of returned campaign finance records.</div></div></div>
-  <div class="grid-two">
-    <div class="panel"><div class="panel-title">Receipts vs. Disbursements</div><div class="chart" id="totalsChart"><div class="chart-empty">Waiting for data…</div></div></div>
-    <div class="panel"><div class="panel-title">Receipts by Party</div><div class="chart" id="partyChart"><div class="chart-empty">Waiting for data…</div></div></div>
-  </div>
-  <div class="panel"><div class="panel-title">Top 10 Candidates</div><div class="chart" id="topChart"><div class="chart-empty">Waiting for data…</div></div></div>
-  <div class="small-muted">Charts summarize returned FEC records and are not a complete measure of all political spending.</div>
-</section>
-
-<section class="page" id="watchlist">
-  <div class="page-heading"><div><div class="eyebrow">PERSONAL TRACKING</div><h1>Watchlist</h1><div class="subtitle">Candidates saved in this browser.</div></div></div>
-  <div class="panel"><div class="panel-head"><div class="panel-title">Tracked candidates</div><span class="tag" id="watchCount">0 SAVED</span></div>
-    <div class="table-wrap"><table><thead><tr><th>CANDIDATE</th><th>PARTY</th><th>OFFICE</th><th>STATE</th><th>RECEIPTS</th><th>SPENT</th><th>REMOVE</th></tr></thead><tbody id="watchRows"></tbody></table></div>
-    <div id="watchEmpty" class="empty">Your watchlist is empty. Add candidates with ☆ in Campaigns.</div>
-  </div>
-</section>
-
-<section class="page" id="about">
-  <div class="page-heading"><div><div class="eyebrow">ABOUT THE PLATFORM</div><h1>About InsiderGov</h1><div class="subtitle">Making public political finance information easier to explore.</div></div></div>
-  <div class="panel"><div class="eyebrow">OUR MISSION</div><h2>Transparency through accessible public data.</h2><p class="subtitle">InsiderGov is an independent interface for exploring publicly available information about U.S. political finance.</p></div>
-  <div class="info-grid">
-    <div class="source-card"><div class="eyebrow">CAMPAIGN FINANCE</div><h3>FEC public data</h3><p>Candidate fundraising and spending summaries from the Federal Election Commission API.</p><a class="source-link" href="https://www.fec.gov/data/" target="_blank" rel="noopener">Explore FEC data ↗</a></div>
-    <div class="source-card"><div class="eyebrow">DISCLOSURES</div><h3>Official reports</h3><p>House and Senate disclosure databases for original filings.</p><a class="source-link" href="https://efdsearch.senate.gov/" target="_blank" rel="noopener">Senate disclosure portal ↗</a></div>
-  </div>
-  <div class="notice">Campaign contributions and committee spending are not the same as a politician's personal investments or stock transactions. Always consult original filings.</div>
-</section>
-
-<footer class="footer"><span>INSIDERGOV · PUBLIC DATA, PUBLIC INTEREST</span><span>Independent project · Not affiliated with the U.S. government</span></footer>
+<main>
+<div class="notice">
+Данные о финансировании кампаний загружаются из официального API Федеральной избирательной комиссии США (FEC).
+Данные автоматически обновляются через GitHub Actions.
 </div>
+
+<section class="stats">
+<div class="card"><span>Транзакции</span><strong>—</strong></div>
+<div class="card"><span>Загружено кандидатов</span><strong id="campaignCount">—</strong></div>
+<div class="card"><span>Сборы загруженных кандидатов</span><strong id="totalReceipts">—</strong></div>
+<div class="card"><span>Расходы загруженных кандидатов</span><strong id="totalSpent">—</strong></div>
+</section>
+
+<nav>
+<button class="active" onclick="showTab('trades',this)">Transactions</button>
+<button onclick="showTab('campaigns',this)">Campaigns</button>
+<button onclick="showTab('watch',this)">Watchlist</button>
+<button onclick="showTab('about',this)">About</button>
+</nav>
+
+<section id="trades" class="panel">
+<h2>Disclosed transactions</h2>
+<p class="muted">Публичные финансовые раскрытия членов Конгресса США.</p>
+<p>Автоматическая загрузка индивидуальных сделок пока не подключена.</p>
+<p>
+<a href="https://disclosures-clerk.house.gov/" target="_blank" rel="noopener">House disclosures</a> ·
+<a href="https://efdsearch.senate.gov/" target="_blank" rel="noopener">Senate disclosures</a>
+</p>
+</section>
+
+<section id="campaigns" class="panel hidden">
+<h2>U.S. Campaign Finance</h2>
+<p class="muted">Официальные данные FEC о финансировании федеральных кампаний.</p>
+
+<div class="filters">
+<select id="cycle" onchange="loadCampaigns()">
+<option value="2026">Избирательный цикл 2026</option>
+<option value="2028">Избирательный цикл 2028</option>
+<option value="2024">Избирательный цикл 2024</option>
+</select>
+<button onclick="loadCampaigns()">Обновить данные</button>
+</div>
+
+<div id="status" class="status">Проверяем локальные данные...</div>
+
+<div style="overflow-x:auto">
+<table>
+<thead>
+<tr>
+<th>Кандидат</th>
+<th>Выборы</th>
+<th>Партия</th>
+<th>Собрано</th>
+<th>Потрачено</th>
+<th>Данные на дату</th>
+</tr>
+</thead>
+<tbody id="campaignRows">
+<tr><td colspan="6">Загрузка...</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="muted">
+Показываются до 100 кандидатов на каждый тип выборов.
+Это не полный список всех кандидатов.
+</p>
+<p>
+Источник:
+<a href="https://www.fec.gov/data/" target="_blank" rel="noopener">FEC Data</a> ·
+<a href="https://api.open.fec.gov/developers/" target="_blank" rel="noopener">API documentation</a>
+</p>
+</section>
+
+<section id="watch" class="panel hidden">
+<h2>Watchlist</h2>
+<p class="muted">Список наблюдения пока хранится в этом браузере.</p>
+<p>Функция добавления кандидатов будет подключена отдельно.</p>
+</section>
+
+<section id="about" class="panel hidden">
+<h2>О проекте InsiderGov</h2>
+<p>InsiderGov отображает публичные сведения о финансировании политических кампаний и финансовых раскрытиях членов Конгресса США.</p>
+<p>Финансирование кампаний загружается из официального API FEC.</p>
+<p>Личные биржевые сделки политиков не входят в данные FEC и требуют отдельного источника.</p>
+<p>Данные могут обновляться с задержкой и исправляться самим источником.</p>
+</section>
 </main>
-</div>
 
 <script>
-const API_KEY="DEMO_KEY";
-const API_BASE="https://api.open.fec.gov/v1/candidates/totals/";
-let campaigns=[];
-let filteredCampaigns=[];
-let watchlist=[];
+let allData = null;
+let campaigns = [];
 
-const $=id=>document.getElementById(id);
-const money=value=>{
-  const n=Number(value||0);
-  if(!Number.isFinite(n))return "$0";
-  if(Math.abs(n)>=1e9)return "$"+(n/1e9).toFixed(2)+"B";
-  if(Math.abs(n)>=1e6)return "$"+(n/1e6).toFixed(2)+"M";
-  if(Math.abs(n)>=1e3)return "$"+(n/1e3).toFixed(1)+"K";
-  return "$"+n.toLocaleString("en-US",{maximumFractionDigits:0});
-};
-const fullMoney=value=>"$"+Number(value||0).toLocaleString("en-US",{maximumFractionDigits:0});
-const safe=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const partyName=p=>p==="D"?"Democratic":p==="R"?"Republican":"Other";
-const officeName=o=>({P:"President",S:"Senate",H:"House"}[o]||o||"—");
-const partyClass=p=>p==="D"?"party-D":p==="R"?"party-R":"party-I";
-const partyBadge=p=>`<span class="party ${partyClass(p)}">${safe(partyName(p))}</span>`;
-
-function showPage(page){
-  document.querySelectorAll(".page").forEach(el=>el.classList.toggle("active",el.id===page));
-  document.querySelectorAll(".nav-btn").forEach(el=>el.classList.toggle("active",el.dataset.tab===page));
-  const names={overview:"Overview",transactions:"Transactions",campaigns:"Campaign Finance",analytics:"Analytics",watchlist:"Watchlist",about:"About"};
-  $("topTitle").textContent=names[page]||"Overview";
-  if(page==="watchlist")renderWatchlist();
-}
-document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.tab)));
-document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>showPage(b.dataset.goto)));
-
-async function requestFEC(cycle){
-  const params=new URLSearchParams({
-    api_key:API_KEY,
-    cycle:String(cycle),
-    per_page:"100",
-    page:"1",
-    sort:"-receipts"
-  });
-  const response=await fetch(API_BASE+"?"+params.toString(),{headers:{Accept:"application/json"}});
-  let data;
-  try{data=await response.json()}catch(e){throw new Error("FEC returned a response that was not valid JSON.")}
-  if(!response.ok){
-    const message=data?.error?.message||data?.error||data?.message||"Unknown API error";
-    throw new Error("FEC HTTP "+response.status+": "+message);
-  }
-  if(!Array.isArray(data.results))throw new Error("FEC response did not contain a results list.");
-  return data.results;
+function money(value){
+  if(value===null || value===undefined || !Number.isFinite(Number(value))) return "—";
+  return new Intl.NumberFormat("en-US",{
+    style:"currency",
+    currency:"USD",
+    maximumFractionDigits:0
+  }).format(Number(value));
 }
 
-async function loadCampaigns(){
-  const cycle=$("cycle").value;
-  const status=$("status");
-  status.className="status";
-  status.textContent="Connecting to FEC public API…";
-  $("campaignRows").innerHTML='<tr><td colspan="8" class="empty">Loading public records…</td></tr>';
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[c]);
+}
+
+function showTab(id,button){
+  document.querySelectorAll("main>section.panel")
+    .forEach(s=>s.classList.add("hidden"));
+
+  document.getElementById(id).classList.remove("hidden");
+
+  document.querySelectorAll("nav button")
+    .forEach(b=>b.classList.remove("active"));
+
+  button.classList.add("active");
+
+  if(id==="campaigns") loadCampaigns();
+}
+
+async function loadData(){
+  const status = document.getElementById("status");
+  const rows = document.getElementById("campaignRows");
+
+  status.textContent = "Загружаем сохранённые данные FEC...";
+
   try{
-    let records;
-    try{
-      records=await requestFEC(cycle);
-    }catch(firstError){
-      // Retry once without the sort parameter in case the API rejects sorting.
-      const params=new URLSearchParams({api_key:API_KEY,cycle:String(cycle),per_page:"100",page:"1"});
-      const response=await fetch(API_BASE+"?"+params.toString(),{headers:{Accept:"application/json"}});
-      let data={};
-      try{data=await response.json()}catch(e){}
-      if(!response.ok)throw new Error("First attempt: "+firstError.message+" | Retry: HTTP "+response.status+" "+(data.message||data.error||"API request failed"));
-      if(!Array.isArray(data.results))throw new Error("FEC did not return a results list.");
-      records=data.results;
+    const response = await fetch("./data/fec-data.json?t=" + Date.now(), {
+      cache: "no-store"
+    });
+
+    if(!response.ok){
+      throw new Error("Файл данных недоступен: HTTP " + response.status);
     }
 
-    campaigns=records.map(item=>({
-      id:item.candidate_id||item.committee_id||item.name,
-      name:item.name||item.candidate_name||"Unknown candidate",
-      party:item.party||"",
-      office:item.office||"",
-      state:item.state||"",
-      receipts:Number(item.receipts||0),
-      disbursements:Number(item.disbursements||0),
-      cash:Number(item.cash_on_hand_end_period||0),
-      cycle:item.cycle||cycle
-    })).filter(c=>c.id);
+    const data = await response.json();
 
-    campaigns.sort((a,b)=>b.receipts-a.receipts);
-    if(!campaigns.length)throw new Error("The FEC API returned zero candidates for cycle "+cycle+". Try another cycle.");
+    if(!data.cycles){
+      throw new Error("Файл данных имеет неправильный формат");
+    }
 
-    status.className="status ok";
-    status.textContent="Connected successfully · "+campaigns.length+" records returned · Cycle "+cycle;
-    applyFilters();
-    updateStats();
-    renderOverview();
-    renderAnalytics();
-    renderWatchlist();
+    allData = data;
+    loadCampaigns();
+
   }catch(error){
-    console.error("InsiderGov FEC error:",error);
-    status.className="status error";
-    status.textContent="DATA ERROR: "+error.message;
-    $("campaignRows").innerHTML=`<tr><td colspan="8" class="empty">${safe(error.message)}</td></tr>`;
-    $("overviewRows").innerHTML='<tr><td colspan="5" class="empty">FEC data unavailable.</td></tr>';
-    ["campaignCount","totalReceipts","totalSpent","totalCash"].forEach(id=>$(id).textContent="—");
-    ["overviewChart","overviewPartyChart","totalsChart","partyChart","topChart"].forEach(id=>$(id).innerHTML='<div class="chart-empty">Data unavailable. Check the FEC connection.</div>');
-    $("resultCount").textContent="0 RESULTS";
+    status.textContent =
+      "Не удалось загрузить данные: " + error.message +
+      ". Проверь, завершился ли GitHub Actions успешно.";
+
+    rows.innerHTML =
+      '<tr><td colspan="6">Данные пока недоступны. Запусти обновление в GitHub Actions.</td></tr>';
   }
 }
 
-function applyFilters(){
-  const search=$("candidateSearch").value.trim().toLowerCase();
-  const party=$("partyFilter").value;
-  const office=$("officeFilter").value;
-  filteredCampaigns=campaigns.filter(c=>{
-    const matchSearch=!search||`${c.name} ${c.state} ${c.id}`.toLowerCase().includes(search);
-    const matchParty=party==="all"||(party==="I"?!["D","R"].includes(c.party):c.party===party);
-    const matchOffice=office==="all"||c.office===office;
-    return matchSearch&&matchParty&&matchOffice;
-  });
-  renderCampaignTable();
-  $("resultCount").textContent=filteredCampaigns.length+" RESULTS";
-}
-function updateStats(){
-  $("campaignCount").textContent=campaigns.length.toLocaleString("en-US");
-  $("totalReceipts").textContent=money(campaigns.reduce((s,c)=>s+c.receipts,0));
-  $("totalSpent").textContent=money(campaigns.reduce((s,c)=>s+c.disbursements,0));
-  $("totalCash").textContent=money(campaigns.reduce((s,c)=>s+c.cash,0));
-}
-function renderCampaignTable(){
-  if(!filteredCampaigns.length){
-    $("campaignRows").innerHTML='<tr><td colspan="8" class="empty">No candidates match these filters.</td></tr>';return;
+function loadCampaigns(){
+  const cycle = document.getElementById("cycle").value;
+  const status = document.getElementById("status");
+  const rows = document.getElementById("campaignRows");
+
+  if(!allData){
+    status.textContent = "Файл с данными ещё не загружен.";
+    return;
   }
-  $("campaignRows").innerHTML=filteredCampaigns.map(c=>`
-    <tr><td><strong>${safe(c.name)}</strong><div class="small-muted">${safe(c.id)}</div></td>
-    <td>${partyBadge(c.party)}</td><td>${safe(officeName(c.office))}</td><td>${safe(c.state||"—")}</td>
-    <td class="money">${fullMoney(c.receipts)}</td><td class="money">${fullMoney(c.disbursements)}</td><td class="money">${fullMoney(c.cash)}</td>
-    <td><button class="watch-btn" data-watch="${safe(c.id)}">☆</button></td></tr>`).join("");
-  document.querySelectorAll("[data-watch]").forEach(b=>b.addEventListener("click",()=>toggleWatch(b.dataset.watch)));
-}
-function renderOverview(){
-  $("overviewRows").innerHTML=campaigns.slice(0,7).map(c=>`
-    <tr><td><strong>${safe(c.name)}</strong></td><td>${partyBadge(c.party)}</td><td>${safe(officeName(c.office))}</td><td>${safe(c.state||"—")}</td><td class="money">${fullMoney(c.receipts)}</td></tr>`).join("");
-  renderTotals("overviewChart");
-  renderParty("overviewPartyChart");
-}
-function renderTotals(id){
-  const receipts=campaigns.reduce((s,c)=>s+c.receipts,0);
-  const spent=campaigns.reduce((s,c)=>s+c.disbursements,0);
-  const max=Math.max(receipts,spent,1);
-  const h1=Math.max(3,receipts/max*120),h2=Math.max(3,spent/max*120);
-  $(id).innerHTML=`<svg viewBox="0 0 440 180" role="img" aria-label="Receipts and spending chart">
-    <line x1="25" y1="140" x2="420" y2="140" stroke="#304155"/>
-    <rect x="105" y="${140-h1}" width="75" height="${h1}" rx="5" fill="#35d6bd"/>
-    <rect x="250" y="${140-h2}" width="75" height="${h2}" rx="5" fill="#6ca8ff"/>
-    <text x="142" y="160" text-anchor="middle" fill="#a9bacd" font-size="11">Receipts</text>
-    <text x="287" y="160" text-anchor="middle" fill="#a9bacd" font-size="11">Spent</text>
-    <text x="142" y="${Math.max(13,132-h1)}" text-anchor="middle" fill="#edf4fc" font-size="11">${money(receipts)}</text>
-    <text x="287" y="${Math.max(13,132-h2)}" text-anchor="middle" fill="#edf4fc" font-size="11">${money(spent)}</text></svg>`;
-}
-function renderParty(id){
-  const groups=[{name:"Democratic",key:"D",color:"#ff829b"},{name:"Republican",key:"R",color:"#6ca8ff"},{name:"Other",key:"I",color:"#e8bd72"}];
-  const totals=groups.map(g=>({...g,value:campaigns.filter(c=>g.key==="I"?!["D","R"].includes(c.party):c.party===g.key).reduce((s,c)=>s+c.receipts,0)}));
-  const max=Math.max(...totals.map(g=>g.value),1);
-  $(id).innerHTML=`<svg viewBox="0 0 440 190" role="img" aria-label="Party receipts chart">${totals.map((g,i)=>{
-    const y=22+i*53,w=Math.max(2,g.value/max*245);
-    return `<text x="0" y="${y+13}" fill="#a9bacd" font-size="11">${g.name}</text><rect x="105" y="${y}" width="245" height="15" rx="5" fill="#1d2b3c"/><rect x="105" y="${y}" width="${w}" height="15" rx="5" fill="${g.color}"/><text x="360" y="${y+13}" fill="#edf4fc" font-size="11">${money(g.value)}</text>`;
-  }).join("")}</svg>`;
-}
-function renderAnalytics(){
-  renderTotals("totalsChart");renderParty("partyChart");
-  const top=campaigns.slice(0,10),max=Math.max(...top.map(c=>c.receipts),1);
-  $("topChart").innerHTML=`<svg viewBox="0 0 700 ${Math.max(60,top.length*34+10)}" role="img" aria-label="Top candidates">${top.map((c,i)=>{
-    const y=i*34+5,w=Math.max(2,c.receipts/max*360);
-    return `<text x="0" y="${y+14}" fill="#a9bacd" font-size="11">${safe(c.name.slice(0,27))}</text><rect x="220" y="${y}" width="360" height="17" rx="4" fill="#1d2b3c"/><rect x="220" y="${y}" width="${w}" height="17" rx="4" fill="#35d6bd"/><text x="590" y="${y+13}" fill="#edf4fc" font-size="11">${money(c.receipts)}</text>`;
-  }).join("")}</svg>`;
-}
-function loadWatchlist(){
-  try{const x=JSON.parse(localStorage.getItem("insidergov_watchlist")||"[]");watchlist=Array.isArray(x)?x:[]}catch(e){watchlist=[];}
-}
-function saveWatchlist(){
-  try{localStorage.setItem("insidergov_watchlist",JSON.stringify(watchlist));}catch(e){console.warn(e);}
-}
-function toggleWatch(id){
-  if(watchlist.some(c=>String(c.id)===String(id)))watchlist=watchlist.filter(c=>String(c.id)!==String(id));
-  else{const c=campaigns.find(x=>String(x.id)===String(id));if(c)watchlist.push(c);}
-  saveWatchlist();renderWatchlist();renderCampaignTable();
-}
-function renderWatchlist(){
-  $("watchCount").textContent=watchlist.length+" SAVED";
-  $("watchEmpty").style.display=watchlist.length?"none":"block";
-  $("watchRows").innerHTML=watchlist.map(saved=>{
-    const c=campaigns.find(x=>String(x.id)===String(saved.id))||saved;
-    return `<tr><td><strong>${safe(c.name)}</strong></td><td>${partyBadge(c.party)}</td><td>${safe(officeName(c.office))}</td><td>${safe(c.state||"—")}</td><td class="money">${fullMoney(c.receipts)}</td><td class="money">${fullMoney(c.disbursements)}</td><td><button class="watch-btn" data-remove="${safe(c.id)}">Remove</button></td></tr>`;
-  }).join("");
-  document.querySelectorAll("[data-remove]").forEach(b=>b.addEventListener("click",()=>toggleWatch(b.dataset.remove)));
+
+  campaigns = allData.cycles[String(cycle)] || [];
+
+  const receipts = campaigns.reduce(
+    (sum,c)=>sum+Number(c.receipts||0),0
+  );
+
+  const spent = campaigns.reduce(
+    (sum,c)=>sum+Number(c.disbursements||0),0
+  );
+
+  document.getElementById("campaignCount").textContent =
+    campaigns.length;
+
+  document.getElementById("totalReceipts").textContent =
+    money(receipts);
+
+  document.getElementById("totalSpent").textContent =
+    money(spent);
+
+  if(!campaigns.length){
+    rows.innerHTML =
+      '<tr><td colspan="6">Для этого цикла записей пока нет.</td></tr>';
+  }else{
+    rows.innerHTML = campaigns.map(c=>`
+      <tr>
+        <td>${escapeHTML(c.name || c.candidate_name || c.candidate_id || "Без имени")}</td>
+        <td>${escapeHTML(c.office_name || "—")}</td>
+        <td>${escapeHTML(c.party || "—")}</td>
+        <td>${money(c.receipts)}</td>
+        <td>${money(c.disbursements)}</td>
+        <td>${escapeHTML(c.coverage_end_date || "—")}</td>
+      </tr>
+    `).join("");
+  }
+
+  const updated = allData.updated_at
+    ? new Date(allData.updated_at).toLocaleString()
+    : "неизвестно";
+
+  status.textContent =
+    "Успешно загружено: " + campaigns.length +
+    " записей. Цикл " + cycle +
+    ". Обновление источника: " + updated;
 }
 
-$("candidateSearch").addEventListener("input",applyFilters);
-$("partyFilter").addEventListener("change",applyFilters);
-$("officeFilter").addEventListener("change",applyFilters);
-$("refreshButton").addEventListener("click",loadCampaigns);
-$("overviewRefresh").addEventListener("click",loadCampaigns);
-$("cycle").addEventListener("change",loadCampaigns);
-
-loadWatchlist();
-loadCampaigns();
+loadData();
 </script>
 </body>
 </html>
+
