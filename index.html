@@ -4,456 +4,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b1020">
+<meta name="theme-color" content="#0b1220">
 <title>InsiderGov — Political Finance Tracker</title>
-
 <style>
-
 :root {
-  --bg: #0b1220;
-  --panel: #121e30;
-  --panel2: #17263a;
-  --border: #283a50;
-  --text: #edf3fa;
-  --muted: #91a4ba;
-  --blue: #5ee0bb;
-  --blue2: #168c79;
-  --green: #55d6a5;
-  --red: #ff8585;
+  --bg:#0b1220; --panel:#17263a; --panel2:#111d2e;
+  --border:#283a50; --text:#edf3fa; --muted:#91a4ba;
+  --blue:#5ee0bb; --blue2:#168c79; --green:#55d6a5;
+  --red:#ff8585;
 }
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
+* {box-sizing:border-box}
 body {
-  margin: 0;
-  background:
-    radial-gradient(ellipse at 50% -20%, #1a3447 0%, transparent 55%),
-    var(--bg);
-  color: var(--text);
-  font: 15px Inter, system-ui, -apple-system, Arial, sans-serif;
-  line-height: 1.55;
+  margin:0; background:var(--bg); color:var(--text);
+  font:15px Inter,system-ui,Arial,sans-serif; line-height:1.55;
 }
-
 header {
-  padding: 30px max(6%, calc((100% - 1200px) / 2));
-  background: rgba(14, 25, 42, .94);
-  border-bottom: 1px solid var(--border);
-  box-shadow: 0 8px 30px rgba(0,0,0,.16);
+  padding:26px max(5%,calc((100% - 1200px)/2));
+  background:#0e192a; border-bottom:1px solid var(--border);
 }
-
-h1 {
-  margin: 0;
-  color: #65e0c0;
-  font-size: 32px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-}
-
-header p {
-  color: var(--muted);
-  margin: 7px 0 0;
-  letter-spacing: .4px;
-}
-
-h2 {
-  font-size: 23px;
-  margin: 0 0 12px;
-  letter-spacing: -.4px;
-}
-
-h3 {
-  margin-top: 25px;
-}
-
-main {
-  max-width: 1240px;
-  margin: auto;
-  padding: 30px 22px 60px;
-}
-
+h1 {margin:0;color:var(--blue);font-size:30px;letter-spacing:1px}
+header p {margin:5px 0 0;color:var(--muted)}
+main {max-width:1240px;margin:auto;padding:26px 20px 55px}
+h2 {margin:0 0 12px;font-size:23px}
+h3 {margin-top:22px}
 .notice {
-  background: linear-gradient(110deg, #263522, #292b22);
-  color: #e6d49d;
-  border: 1px solid #5b5635;
-  padding: 16px 18px;
-  border-radius: 12px;
-  margin-bottom: 22px;
-  line-height: 1.65;
+  background:#292b22;color:#e6d49d;border:1px solid #5b5635;
+  padding:15px 17px;border-radius:12px;margin-bottom:20px;
 }
-
 .stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 16px;
-  margin: 25px 0;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:14px;margin:22px 0;
 }
-
-.card,
-.panel {
-  background: linear-gradient(145deg, #17263a, #111d2e);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 21px;
-  box-shadow: 0 10px 28px rgba(0,0,0,.14);
+.card,.panel,.chart-card {
+  background:linear-gradient(145deg,#17263a,#111d2e);
+  border:1px solid var(--border);border-radius:15px;padding:19px;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
 }
-
-.card {
-  transition: transform .2s, border-color .2s;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  border-color: #3e8d82;
-}
-
-.card span {
-  color: var(--muted);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: .8px;
-}
-
-.card strong {
-  display: block;
-  color: #66dfbd;
-  font-size: 27px;
-  margin-top: 12px;
-  overflow-wrap: anywhere;
-}
-
-nav,
-.filters {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin: 24px 0;
-}
-
-nav {
-  padding: 7px;
-  background: #111c2d;
-  border: 1px solid var(--border);
-  border-radius: 13px;
-}
-
-button,
-input,
-select {
-  font: inherit;
-}
-
+.card span {color:var(--muted);font-size:12px;text-transform:uppercase}
+.card strong {display:block;color:var(--blue);font-size:25px;margin-top:9px;overflow-wrap:anywhere}
+nav,.filters {display:flex;gap:9px;flex-wrap:wrap;margin:20px 0}
+nav {padding:7px;background:#111c2d;border:1px solid var(--border);border-radius:12px}
+button,input,select {font:inherit}
 button {
-  background: #20334a;
-  color: #eaf2fa;
-  border: 1px solid #304760;
-  border-radius: 9px;
-  padding: 11px 16px;
-  cursor: pointer;
-  transition: background .2s, border-color .2s, transform .2s;
+  background:#20334a;color:#eaf2fa;border:1px solid #304760;
+  border-radius:9px;padding:11px 15px;cursor:pointer;transition:.2s;
 }
-
-button:hover {
-  background: #28516a;
-  border-color: #4b9b91;
+button:hover {background:#28516a}
+button.active {background:#146b61;border-color:#35b99d}
+button:disabled {opacity:.5;cursor:not-allowed}
+input,select {
+  background:#0c1727;color:var(--text);border:1px solid #34465d;
+  padding:11px 12px;border-radius:9px;min-width:150px;
 }
-
-button:active {
-  transform: scale(.98);
-}
-
-button.active {
-  background: #146b61;
-  border-color: #35b99d;
-  color: white;
-  box-shadow: 0 3px 14px rgba(35,180,150,.15);
-}
-
-button:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
-
-input,
-select {
-  background: #0c1727;
-  color: var(--text);
-  border: 1px solid #34465d;
-  padding: 12px 13px;
-  border-radius: 9px;
-  min-width: 150px;
-  outline: none;
-}
-
-input:focus,
-select:focus {
-  border-color: #53cbb0;
-  box-shadow: 0 0 0 3px rgba(83,203,176,.12);
-}
-
-input::placeholder {
-  color: #8193aa;
-}
-
-.filters input {
-  flex: 1;
-  min-width: 190px;
-}
-
+input:focus,select:focus {outline:2px solid #53cbb055;border-color:#53cbb0}
+.filters input {flex:1;min-width:190px}
 .status {
-  padding: 14px 16px;
-  background: #18283b;
-  border: 1px solid #2a4159;
-  border-radius: 10px;
-  margin: 14px 0;
-  color: #b4c4d7;
-  line-height: 1.6;
+  padding:13px 15px;background:var(--panel2);border:1px solid var(--border);
+  border-radius:9px;margin:12px 0;color:var(--muted);
 }
-
-.status.error {
-  color: #ff9999;
-  border-color: #713e49;
-  background: #30202a;
+.status.error {color:var(--red)}
+.status.success {color:var(--green)}
+.muted {color:var(--muted);line-height:1.7}
+.hidden {display:none!important}
+.table-wrap {width:100%;overflow-x:auto;border:1px solid var(--border);border-radius:10px;margin-top:14px}
+table {width:100%;border-collapse:collapse;min-width:700px}
+th,td {text-align:left;padding:13px 11px;border-bottom:1px solid var(--border)}
+th {color:#83a69f;font-size:12px;text-transform:uppercase;background:#17283a}
+tbody tr:nth-child(even) {background:#16253a}
+tbody tr:hover {background:#20364b}
+.small-button {padding:7px 10px;font-size:12px;white-space:nowrap}
+.remove-button {background:#542e3a}
+a {color:#68d9c0;text-decoration:none}
+a:hover {text-decoration:underline;color:#a1f3df}
+.grid-two {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.source-card {
+  background:#14243a;border:1px solid var(--border);
+  border-radius:12px;padding:18px;margin-top:12px;
 }
-
-.status.success {
-  color: #76dfb7;
-  border-color: #286c5c;
-  background: #152d2b;
-}
-
-.muted {
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.table-wrap {
-  width: 100%;
-  overflow-x: auto;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  margin-top: 16px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 700px;
-  margin: 0;
-}
-
-th,
-td {
-  text-align: left;
-  padding: 14px 13px;
-  border-bottom: 1px solid #29394e;
-}
-
-th {
-  color: #83a69f;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: .65px;
-  background: #17283a;
-  white-space: nowrap;
-}
-
-td {
-  line-height: 1.5;
-}
-
-tbody tr {
-  background: #132136;
-  transition: background .15s;
-}
-
-tbody tr:nth-child(even) {
-  background: #16253a;
-}
-
-tbody tr:hover {
-  background: #20364b;
-}
-
-tbody tr:last-child td {
-  border-bottom: 0;
-}
-
-.small-button {
-  padding: 8px 11px;
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.remove-button {
-  background: #542e3a;
-  border-color: #77404d;
-}
-
-.remove-button:hover {
-  background: #793b4c;
-}
-
-a {
-  color: #68d9c0;
-  text-decoration: none;
-}
-
-a:hover {
-  color: #a1f3df;
-  text-decoration: underline;
-}
-
+.source-card h3 {margin:0 0 8px}
+.source-card p {color:var(--muted);margin:5px 0 13px}
+.source-link {display:inline-block;margin:5px 12px 0 0}
+.chart-card {min-width:0;margin-bottom:15px}
+.chart-card h3 {margin:0 0 5px}
+.chart-area {width:100%;overflow:hidden;margin-top:15px}
+.chart-area svg {width:100%;height:auto;display:block;overflow:visible}
+.chart-label {fill:#dce8f5;font-size:12px}
+.chart-value {fill:#91a4ba;font-size:11px}
+.bar-bg {fill:#26394f}
+.bar-fill {fill:#45c8a5}
+.empty-chart {color:var(--muted);padding:20px 0}
 footer {
-  text-align: center;
-  color: #7f91a8;
-  padding: 30px 15px;
-  font-size: 13px;
-  border-top: 1px solid var(--border);
-  background: #0e1929;
+  text-align:center;color:#7f91a8;padding:28px 12px;
+  border-top:1px solid var(--border);font-size:13px;
 }
-
-@media (max-width: 650px) {
-  header {
-    padding: 23px 18px;
-  }
-
-  h1 {
-    font-size: 27px;
-  }
-
-  main {
-    padding: 20px 12px 40px;
-  }
-
-  .stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .card,
-  .panel {
-    padding: 15px;
-  }
-
-  .card strong {
-    font-size: 21px;
-  }
-
-  nav button {
-    flex: 1 1 40%;
-  }
-
-  .filters > * {
-    width: 100%;
-  }
-
-  .filters input {
-    min-width: 0;
-  }
+@media(max-width:700px) {
+  header {padding:22px 17px}
+  h1 {font-size:26px}
+  main {padding:18px 12px 40px}
+  .card,.panel,.chart-card {padding:14px}
+  .grid-two {grid-template-columns:1fr}
+  .filters>* {width:100%}
+  .filters input {min-width:0}
+  nav button {flex:1 1 40%}
 }
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    transition: none !important;
-  }
-}
-
 </style>
 </head>
-
 <body>
 
 <header>
-  <h1>InsiderGov</h1>
+  <h1>INSIDERGOV</h1>
   <p>U.S. Political Finance & Congressional Disclosure Tracker</p>
 </header>
 
 <main>
-
   <div class="notice">
-    Данные о финансировании кампаний загружаются из официального API
-    Федеральной избирательной комиссии США (FEC).
-    Показанные суммы относятся только к загруженным записям и не являются
-    полной статистикой всех политических кампаний США.
+    InsiderGov собирает публичную информацию о финансировании федеральных
+    политических кампаний из официального API FEC. Финансирование кампаний
+    не является личным состоянием политика или историей его сделок с акциями.
   </div>
 
   <section class="stats">
-    <div class="card">
-      <span>Транзакции Конгресса</span>
-      <strong>Не подключены</strong>
-    </div>
-
-    <div class="card">
-      <span>Загружено кандидатов</span>
-      <strong id="campaignCount">—</strong>
-    </div>
-
-    <div class="card">
-      <span>Сборы загруженных кандидатов</span>
-      <strong id="totalReceipts">—</strong>
-    </div>
-
-    <div class="card">
-      <span>Расходы загруженных кандидатов</span>
-      <strong id="totalSpent">—</strong>
-    </div>
+    <div class="card"><span>Congressional disclosures</span><strong>Не подключены</strong></div>
+    <div class="card"><span>Загружено кандидатов</span><strong id="campaignCount">—</strong></div>
+    <div class="card"><span>Сборы загруженных кандидатов</span><strong id="totalReceipts">—</strong></div>
+    <div class="card"><span>Расходы загруженных кандидатов</span><strong id="totalSpent">—</strong></div>
   </section>
 
   <nav>
     <button class="active" data-tab="transactions">Transactions</button>
     <button data-tab="campaigns">Campaigns</button>
+    <button data-tab="analytics">Analytics</button>
     <button data-tab="watchlist">Watchlist</button>
     <button data-tab="about">About</button>
   </nav>
 
-  <!-- TRANSACTIONS -->
-
   <section id="transactions" class="panel">
-    <h2>Disclosed transactions</h2>
-
+    <h2>Congressional Disclosures</h2>
     <p class="muted">
-      Публичные финансовые раскрытия членов Конгресса США.
+      Члены Конгресса США обязаны подавать определённые финансовые раскрытия.
+      В этих документах могут содержаться сведения о сделках с ценными бумагами.
     </p>
 
-    <div class="notice">
-      Автоматическая загрузка индивидуальных раскрытий House и Senate
-      пока не подключена. Здесь не отображаются неподтверждённые сделки.
+    <div class="status">
+      <strong>Статус подключения: в разработке</strong><br>
+      InsiderGov пока не загружает и не проверяет индивидуальные декларации
+      House и Senate автоматически. Для просмотра документов используй
+      официальные сайты ниже.
     </div>
 
-    <p>
-      <a href="https://disclosures-clerk.house.gov/"
-         target="_blank" rel="noopener">
-        House disclosures
-      </a>
-      ·
-      <a href="https://efdsearch.senate.gov/"
-         target="_blank" rel="noopener">
-        Senate disclosures
-      </a>
+    <div class="grid-two">
+      <div class="source-card">
+        <h3>U.S. House of Representatives</h3>
+        <p>Публичные финансовые раскрытия членов Палаты представителей.</p>
+        <a class="source-link" href="https://disclosures-clerk.house.gov/"
+           target="_blank" rel="noopener">Открыть House disclosures ↗</a>
+      </div>
+      <div class="source-card">
+        <h3>U.S. Senate</h3>
+        <p>Публичная система финансовых раскрытий сенаторов.</p>
+        <a class="source-link" href="https://efdsearch.senate.gov/"
+           target="_blank" rel="noopener">Открыть Senate disclosures ↗</a>
+      </div>
+    </div>
+
+    <h3>Что появится после подключения</h3>
+    <ul class="muted">
+      <li>Имя должностного лица и палата Конгресса.</li>
+      <li>Дата подачи документа и дата раскрытой операции.</li>
+      <li>Название актива, если оно указано в документе.</li>
+      <li>Заявленный диапазон стоимости операции.</li>
+      <li>Ссылка на исходный официальный документ.</li>
+    </ul>
+
+    <p class="muted">
+      Диапазоны стоимости в декларациях не всегда означают точную сумму.
+      Сведения нужно сверять с оригинальным документом.
     </p>
   </section>
 
-  <!-- CAMPAIGNS -->
-
   <section id="campaigns" class="panel hidden">
     <h2>U.S. Campaign Finance</h2>
-
-    <p class="muted">
-      Официальная информация FEC о финансировании федеральных кампаний.
-    </p>
+    <p class="muted">Официальные сведения FEC о федеральных кампаниях.</p>
 
     <div class="filters">
       <select id="cycle">
@@ -461,260 +192,167 @@ footer {
         <option value="2028">Избирательный цикл 2028</option>
         <option value="2024">Избирательный цикл 2024</option>
       </select>
-
-      <input
-        id="candidateSearch"
-        type="search"
-        placeholder="Поиск кандидата..."
-      >
-
-      <select id="partyFilter">
-        <option value="">Все партии</option>
-      </select>
-
+      <input id="candidateSearch" type="search" placeholder="Поиск кандидата...">
+      <select id="partyFilter"><option value="">Все партии</option></select>
       <select id="officeFilter">
         <option value="">Все виды выборов</option>
         <option value="P">Президент</option>
         <option value="S">Сенат</option>
         <option value="H">Палата представителей</option>
       </select>
-
       <button id="refreshButton">Обновить данные</button>
     </div>
 
-    <div id="status" class="status">
-      Подготовка загрузки...
-    </div>
-
+    <div id="status" class="status">Подготовка загрузки...</div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Кандидат</th>
-            <th>Выборы</th>
-            <th>Партия</th>
-            <th>Собрано</th>
-            <th>Потрачено</th>
-            <th>Данные на дату</th>
-            <th>Watchlist</th>
-          </tr>
-        </thead>
-
-        <tbody id="campaignRows">
-          <tr>
-            <td colspan="7">Загрузка...</td>
-          </tr>
-        </tbody>
+        <thead><tr>
+          <th>Кандидат</th><th>Выборы</th><th>Партия</th>
+          <th>Собрано</th><th>Потрачено</th><th>Данные на дату</th><th>Watchlist</th>
+        </tr></thead>
+        <tbody id="campaignRows"><tr><td colspan="7">Загрузка...</td></tr></tbody>
       </table>
     </div>
-
-    <p class="muted">
-      Загружается до 100 кандидатов на каждый тип выборов.
-      Это не полный список всех кандидатов.
-    </p>
-
-    <p>
-      Источник:
-      <a href="https://www.fec.gov/data/"
-         target="_blank" rel="noopener">FEC Data</a>
-      ·
-      <a href="https://api.open.fec.gov/developers/"
-         target="_blank" rel="noopener">FEC API documentation</a>
-    </p>
+    <p class="muted">Загружается до 100 записей на каждый тип выборов. Это не полный список всех кандидатов.</p>
+    <p>Источник: <a href="https://www.fec.gov/data/" target="_blank" rel="noopener">FEC Data</a> ·
+    <a href="https://api.open.fec.gov/developers/" target="_blank" rel="noopener">FEC API</a></p>
   </section>
 
-  <!-- WATCHLIST -->
+  <section id="analytics" class="panel hidden">
+    <h2>Financial Analytics</h2>
+    <p class="muted">
+      Аналитика строится на загруженных записях FEC. Выбери цикл на вкладке
+      Campaigns, чтобы загрузить другой набор данных.
+    </p>
+    <div id="analyticsStatus" class="status">Ожидание данных FEC...</div>
+    <div class="grid-two">
+      <div class="chart-card">
+        <h3>Campaign Funding</h3>
+        <p class="muted">Суммарные сборы и расходы загруженных кандидатов</p>
+        <div id="totalsChart" class="chart-area"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Party Comparison</h3>
+        <p class="muted">Сборы по партиям среди загруженных кандидатов</p>
+        <div id="partyChart" class="chart-area"></div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3>Top 10 Candidates by Receipts</h3>
+      <p class="muted">Кандидаты с наибольшими сборами среди загруженных записей</p>
+      <div id="topChart" class="chart-area"></div>
+    </div>
+    <p class="muted">
+      Важно: графики отражают только записи, полученные от API, а не полную
+      сумму всех политических расходов или доходов в США.
+    </p>
+  </section>
 
   <section id="watchlist" class="panel hidden">
     <h2>My Watchlist</h2>
-
-    <p class="muted">
-      Сохраняй интересующих кандидатов в список наблюдения.
-      Список хранится локально в этом браузере.
-    </p>
-
-    <div id="watchStatus" class="status">
-      Твой список наблюдения.
-    </div>
-
+    <p class="muted">Список наблюдения хранится локально в этом браузере.</p>
+    <div id="watchStatus" class="status">Твой список наблюдения.</div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Кандидат</th>
-            <th>Выборы</th>
-            <th>Партия</th>
-            <th>Собрано</th>
-            <th>Потрачено</th>
-            <th>Действие</th>
-          </tr>
-        </thead>
-
-        <tbody id="watchRows">
-          <tr>
-            <td colspan="6">Список пока пуст.</td>
-          </tr>
-        </tbody>
+        <thead><tr><th>Кандидат</th><th>Выборы</th><th>Партия</th><th>Собрано</th><th>Потрачено</th><th>Действие</th></tr></thead>
+        <tbody id="watchRows"><tr><td colspan="6">Список пока пуст.</td></tr></tbody>
       </table>
     </div>
   </section>
 
-  <!-- ABOUT -->
-
   <section id="about" class="panel hidden">
     <h2>About InsiderGov</h2>
-
-    <p>
-      InsiderGov — независимый информационный проект,
-      посвящённый публичным сведениям о финансировании
-      политических кампаний и финансовых раскрытиях
-      членов Конгресса США.
-    </p>
-
-    <h3>Источники данных</h3>
-
-    <p>
-      Кампании: Федеральная избирательная комиссия США (FEC).
-    </p>
-
-    <p>
-      Раскрытия Палаты представителей:
-      <a href="https://disclosures-clerk.house.gov/"
-         target="_blank" rel="noopener">House Clerk</a>.
-    </p>
-
-    <p>
-      Раскрытия Сената:
-      <a href="https://efdsearch.senate.gov/"
-         target="_blank" rel="noopener">U.S. Senate</a>.
-    </p>
-
-    <h3>Важная информация</h3>
-
-    <p class="muted">
-      Данные FEC могут обновляться с задержкой и исправляться
-      первоисточником. Информация на сайте предназначена
-      для ознакомления и не является инвестиционной рекомендацией.
-    </p>
+    <p>InsiderGov — независимый информационный проект о публичных данных политического финансирования и финансовых раскрытиях членов Конгресса США.</p>
+    <h3>Источники</h3>
+    <p>Кампании: <a href="https://www.fec.gov/data/" target="_blank" rel="noopener">Federal Election Commission</a>.</p>
+    <p>Палата представителей: <a href="https://disclosures-clerk.house.gov/" target="_blank" rel="noopener">House Clerk</a>.</p>
+    <p>Сенат: <a href="https://efdsearch.senate.gov/" target="_blank" rel="noopener">U.S. Senate</a>.</p>
+    <h3>Ограничения</h3>
+    <p class="muted">Данные могут обновляться с задержкой и исправляться первоисточником. Информация предназначена для ознакомления и не является инвестиционной рекомендацией.</p>
   </section>
-
 </main>
 
-<footer>
-  InsiderGov · Public political finance information
-</footer>
+<footer>InsiderGov · Public political finance information</footer>
 
 <script>
 "use strict";
 
-/* CONFIGURATION */
-
 const API_KEY = "DEMO_KEY";
 const API_BASE = "https://api.open.fec.gov/v1";
-
 const offices = [
-  { code: "P", name: "Президент" },
-  { code: "S", name: "Сенат" },
-  { code: "H", name: "Палата представителей" }
+  {code:"P",name:"Президент"},
+  {code:"S",name:"Сенат"},
+  {code:"H",name:"Палата представителей"}
 ];
 
 let campaigns = [];
 let watchlist = [];
 let loading = false;
 
-/* HELPERS */
-
 function money(value) {
-  if (
-    value === null ||
-    value === undefined ||
-    !Number.isFinite(Number(value))
-  ) {
-    return "—";
-  }
-
+  if (value === null || value === undefined || !Number.isFinite(Number(value))) return "—";
   return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0
+    style:"currency",currency:"USD",maximumFractionDigits:0
   }).format(Number(value));
 }
 
+function shortMoney(value) {
+  const n = Number(value) || 0;
+  if (Math.abs(n) >= 1e9) return "$" + (n/1e9).toFixed(1) + "B";
+  if (Math.abs(n) >= 1e6) return "$" + (n/1e6).toFixed(1) + "M";
+  if (Math.abs(n) >= 1e3) return "$" + (n/1e3).toFixed(0) + "K";
+  return "$" + n.toFixed(0);
+}
+
 function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
 }
 
-function candidateName(candidate) {
-  return candidate.name ||
-    candidate.candidate_name ||
-    candidate.candidate_id ||
-    "Без имени";
+function candidateName(c) {
+  return c.name || c.candidate_name || c.candidate_id || "Без имени";
 }
 
-function candidateKey(candidate) {
-  return String(candidate.candidate_id || "");
+function candidateKey(c) {
+  return String(c.candidate_id || "");
 }
 
-function setStatus(message, type = "") {
-  const status = document.getElementById("status");
-  status.textContent = message;
-  status.className = "status" + (type ? " " + type : "");
+function setStatus(message,type="") {
+  const el = document.getElementById("status");
+  el.textContent = message;
+  el.className = "status" + (type ? " " + type : "");
 }
 
-/* TABS */
-
-document.querySelectorAll("nav button[data-tab]").forEach(button => {
-  button.addEventListener("click", () => {
+/* Tabs */
+document.querySelectorAll("nav [data-tab]").forEach(button => {
+  button.addEventListener("click",() => {
     const id = button.dataset.tab;
-
-    document.querySelectorAll("main > section.panel").forEach(section => {
-      section.classList.add("hidden");
-    });
-
+    document.querySelectorAll("main > section.panel").forEach(s => s.classList.add("hidden"));
     document.getElementById(id).classList.remove("hidden");
-
-    document.querySelectorAll("nav button").forEach(item => {
-      item.classList.remove("active");
-    });
-
+    document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
     button.classList.add("active");
-
-    if (id === "campaigns" && campaigns.length === 0 && !loading) {
-      loadCampaigns();
-    }
-
-    if (id === "watchlist") {
-      renderWatchlist();
-    }
+    if (id === "campaigns" && !campaigns.length && !loading) loadCampaigns();
+    if (id === "watchlist") renderWatchlist();
+    if (id === "analytics") renderAnalytics();
   });
 });
 
-/* WATCHLIST STORAGE */
-
+/* Watchlist */
 function loadWatchlist() {
   try {
     const saved = localStorage.getItem("insidergov_watchlist");
     const parsed = saved ? JSON.parse(saved) : [];
-
     watchlist = Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    watchlist = [];
-  }
+  } catch(e) { watchlist = []; }
 }
 
 function saveWatchlist() {
   try {
-    localStorage.setItem(
-      "insidergov_watchlist",
-      JSON.stringify(watchlist)
-    );
-  } catch (error) {
+    localStorage.setItem("insidergov_watchlist",JSON.stringify(watchlist));
+    document.getElementById("watchStatus").textContent =
+      "В списке наблюдения: " + watchlist.length + " кандидатов.";
+  } catch(e) {
     document.getElementById("watchStatus").textContent =
       "Не удалось сохранить список в этом браузере.";
   }
@@ -722,37 +360,24 @@ function saveWatchlist() {
 
 function isWatched(candidate) {
   const id = candidateKey(candidate);
-
-  return id && watchlist.some(item =>
-    candidateKey(item) === id
-  );
+  return id && watchlist.some(x => candidateKey(x) === id);
 }
 
 function toggleWatchlist(id) {
-  const candidate = campaigns.find(item =>
-    candidateKey(item) === String(id)
-  );
-
+  const candidate = campaigns.find(x => candidateKey(x) === String(id));
   if (!candidate) return;
-
   if (isWatched(candidate)) {
-    watchlist = watchlist.filter(item =>
-      candidateKey(item) !== String(id)
-    );
+    watchlist = watchlist.filter(x => candidateKey(x) !== String(id));
   } else {
     watchlist.push(candidate);
   }
-
   saveWatchlist();
   renderCampaigns();
   renderWatchlist();
 }
 
 function removeFromWatchlist(id) {
-  watchlist = watchlist.filter(item =>
-    candidateKey(item) !== String(id)
-  );
-
+  watchlist = watchlist.filter(x => candidateKey(x) !== String(id));
   saveWatchlist();
   renderWatchlist();
   renderCampaigns();
@@ -760,170 +385,166 @@ function removeFromWatchlist(id) {
 
 function renderWatchlist() {
   const rows = document.getElementById("watchRows");
-  const status = document.getElementById("watchStatus");
-
-  status.textContent =
+  document.getElementById("watchStatus").textContent =
     "В списке наблюдения: " + watchlist.length + " кандидатов.";
-
-  if (watchlist.length === 0) {
-    rows.innerHTML =
-      '<tr><td colspan="6">Список пока пуст. Добавь кандидатов во вкладке Campaigns.</td></tr>';
+  if (!watchlist.length) {
+    rows.innerHTML = '<tr><td colspan="6">Список пока пуст. Добавь кандидатов во вкладке Campaigns.</td></tr>';
     return;
   }
-
-  rows.innerHTML = watchlist.map(candidate => `
+  rows.innerHTML = watchlist.map(c => `
     <tr>
-      <td>${escapeHTML(candidateName(candidate))}</td>
-      <td>${escapeHTML(candidate.office_name || "—")}</td>
-      <td>${escapeHTML(candidate.party || "—")}</td>
-      <td>${money(candidate.receipts)}</td>
-      <td>${money(candidate.disbursements)}</td>
-      <td>
-        <button
-          class="small-button remove-button"
-          data-remove="${escapeHTML(candidateKey(candidate))}">
-          Удалить
-        </button>
-      </td>
-    </tr>
-  `).join("");
+      <td>${escapeHTML(candidateName(c))}</td>
+      <td>${escapeHTML(c.office_name || "—")}</td>
+      <td>${escapeHTML(c.party || "—")}</td>
+      <td>${money(c.receipts)}</td>
+      <td>${money(c.disbursements)}</td>
+      <td><button class="small-button remove-button" data-remove="${escapeHTML(candidateKey(c))}">Удалить</button></td>
+    </tr>`).join("");
 }
 
-/* FEC API */
-
-async function getOfficeData(office, cycle) {
+/* FEC */
+async function getOfficeData(office,cycle) {
   const url = new URL(API_BASE + "/candidates/totals/");
-
-  url.searchParams.set("api_key", API_KEY);
-  url.searchParams.set("office", office);
-  url.searchParams.set("cycle", cycle);
-  url.searchParams.set("per_page", "100");
-  url.searchParams.set("sort", "-receipts");
-  url.searchParams.set("has_raised_funds", "true");
+  url.searchParams.set("api_key",API_KEY);
+  url.searchParams.set("office",office);
+  url.searchParams.set("cycle",cycle);
+  url.searchParams.set("per_page","100");
+  url.searchParams.set("sort","-receipts");
+  url.searchParams.set("has_raised_funds","true");
 
   const response = await fetch(url.toString());
-
-  if (!response.ok) {
-    throw new Error("FEC ответил с кодом " + response.status);
-  }
-
+  if (!response.ok) throw new Error("FEC ответил с кодом " + response.status);
   const data = await response.json();
+  if (!Array.isArray(data.results)) throw new Error("Неожиданный формат ответа FEC");
 
-  if (!Array.isArray(data.results)) {
-    throw new Error("Неожиданный формат ответа FEC");
-  }
-
-  const officeInfo = offices.find(item => item.code === office);
-
+  const info = offices.find(x => x.code === office);
   return data.results.map(item => ({
-    ...item,
-    office_code: office,
-    office_name: officeInfo ? officeInfo.name : office
+    ...item,office_code:office,office_name:info ? info.name : office
   }));
 }
 
-/* FILTERS */
-
+/* Campaign filters and table */
 function getFilteredCampaigns() {
-  const search = document
-    .getElementById("candidateSearch")
-    .value.trim()
-    .toLowerCase();
-
+  const search = document.getElementById("candidateSearch").value.trim().toLowerCase();
   const party = document.getElementById("partyFilter").value;
   const office = document.getElementById("officeFilter").value;
-
-  return campaigns.filter(candidate => {
-    const name = candidateName(candidate).toLowerCase();
-
-    const matchesName = name.includes(search);
-    const matchesParty = !party || candidate.party === party;
-    const matchesOffice = !office || candidate.office_code === office;
-
-    return matchesName && matchesParty && matchesOffice;
-  });
+  return campaigns.filter(c =>
+    candidateName(c).toLowerCase().includes(search) &&
+    (!party || c.party === party) &&
+    (!office || c.office_code === office)
+  );
 }
-
-/* CAMPAIGN TABLE */
 
 function renderCampaigns() {
   const rows = document.getElementById("campaignRows");
   const filtered = getFilteredCampaigns();
-
-  if (filtered.length === 0) {
-    rows.innerHTML =
-      '<tr><td colspan="7">Ничего не найдено.</td></tr>';
+  if (!filtered.length) {
+    rows.innerHTML = '<tr><td colspan="7">Ничего не найдено.</td></tr>';
     return;
   }
-
-  rows.innerHTML = filtered.map(candidate => {
-    const id = candidateKey(candidate);
-    const watched = isWatched(candidate);
-
-    return `
-      <tr>
-        <td>${escapeHTML(candidateName(candidate))}</td>
-        <td>${escapeHTML(candidate.office_name || "—")}</td>
-        <td>${escapeHTML(candidate.party || "—")}</td>
-        <td>${money(candidate.receipts)}</td>
-        <td>${money(candidate.disbursements)}</td>
-        <td>${escapeHTML(candidate.coverage_end_date || "—")}</td>
-        <td>
-          ${
-            id
-              ? `<button
-                  class="small-button"
-                  data-watch="${escapeHTML(id)}">
-                  ${watched ? "Убрать ★" : "Добавить +"}
-                </button>`
-              : "—"
-          }
-        </td>
-      </tr>
-    `;
+  rows.innerHTML = filtered.map(c => {
+    const id = candidateKey(c);
+    const watched = isWatched(c);
+    return `<tr>
+      <td>${escapeHTML(candidateName(c))}</td>
+      <td>${escapeHTML(c.office_name || "—")}</td>
+      <td>${escapeHTML(c.party || "—")}</td>
+      <td>${money(c.receipts)}</td>
+      <td>${money(c.disbursements)}</td>
+      <td>${escapeHTML(c.coverage_end_date || "—")}</td>
+      <td>${id ? `<button class="small-button" data-watch="${escapeHTML(id)}">${watched ? "Убрать ★" : "Добавить +"}</button>` : "—"}</td>
+    </tr>`;
   }).join("");
 }
 
-/* UPDATE PARTY FILTER */
-
 function updatePartyFilter() {
   const filter = document.getElementById("partyFilter");
-  const previousValue = filter.value;
-
-  const parties = [...new Set(
-    campaigns
-      .map(candidate => candidate.party)
-      .filter(Boolean)
-  )].sort();
-
-  filter.innerHTML =
-    '<option value="">Все партии</option>' +
-    parties.map(party => `
-      <option value="${escapeHTML(party)}">
-        ${escapeHTML(party)}
-      </option>
-    `).join("");
-
-  if (parties.includes(previousValue)) {
-    filter.value = previousValue;
-  }
+  const old = filter.value;
+  const parties = [...new Set(campaigns.map(c => c.party).filter(Boolean))].sort();
+  filter.innerHTML = '<option value="">Все партии</option>' +
+    parties.map(p => `<option value="${escapeHTML(p)}">${escapeHTML(p)}</option>`).join("");
+  if (parties.includes(old)) filter.value = old;
 }
 
-/* LOAD CAMPAIGNS */
+/* SVG chart helpers */
+function barChart(items,options={}) {
+  if (!items.length) return '<div class="empty-chart">Недостаточно данных для графика.</div>';
+  const width = 560;
+  const rowHeight = options.rowHeight || 39;
+  const height = Math.max(75,items.length * rowHeight + 12);
+  const max = Math.max(1,...items.map(x => Number(x.value) || 0));
+  const labelWidth = options.labelWidth || 145;
+  const barWidth = width - labelWidth - 95;
 
+  const bars = items.map((item,i) => {
+    const y = i * rowHeight + 8;
+    const value = Math.max(0,Number(item.value) || 0);
+    const w = Math.max(2,(value/max)*barWidth);
+    return `
+      <text x="0" y="${y+14}" class="chart-label">${escapeHTML(item.label).slice(0,22)}</text>
+      <rect x="${labelWidth}" y="${y}" width="${barWidth}" height="17" rx="5" class="bar-bg"/>
+      <rect x="${labelWidth}" y="${y}" width="${w}" height="17" rx="5" class="bar-fill"/>
+      <text x="${labelWidth+barWidth+8}" y="${y+13}" class="chart-value">${escapeHTML(shortMoney(value))}</text>`;
+  }).join("");
+
+  return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Горизонтальная диаграмма">${bars}</svg>`;
+}
+
+function renderAnalytics() {
+  const status = document.getElementById("analyticsStatus");
+  if (!campaigns.length) {
+    status.textContent = "Сначала дождись загрузки данных во вкладке Campaigns.";
+    document.getElementById("totalsChart").innerHTML = "";
+    document.getElementById("partyChart").innerHTML = "";
+    document.getElementById("topChart").innerHTML = "";
+    return;
+  }
+
+  const receipts = campaigns.reduce((s,c) => s + Number(c.receipts || 0),0);
+  const spent = campaigns.reduce((s,c) => s + Number(c.disbursements || 0),0);
+
+  status.textContent = "Анализ " + campaigns.length +
+    " загруженных записей · цикл " + document.getElementById("cycle").value;
+
+  document.getElementById("totalsChart").innerHTML = barChart([
+    {label:"Собрано",value:receipts},
+    {label:"Потрачено",value:spent}
+  ],{rowHeight:48,labelWidth:105});
+
+  const partyTotals = {};
+  campaigns.forEach(c => {
+    const party = c.party || "Не указана";
+    partyTotals[party] = (partyTotals[party] || 0) + Number(c.receipts || 0);
+  });
+
+  const parties = Object.entries(partyTotals)
+    .map(([label,value]) => ({label,value}))
+    .sort((a,b) => b.value-a.value)
+    .slice(0,8);
+
+  document.getElementById("partyChart").innerHTML = barChart(parties);
+
+  const top = [...campaigns]
+    .sort((a,b) => Number(b.receipts || 0)-Number(a.receipts || 0))
+    .slice(0,10)
+    .map(c => ({
+      label:candidateName(c),
+      value:Number(c.receipts || 0)
+    }));
+
+  document.getElementById("topChart").innerHTML = barChart(top,{rowHeight:36,labelWidth:175});
+}
+
+/* Load */
 async function loadCampaigns() {
   if (loading) return;
-
   loading = true;
 
   const cycle = document.getElementById("cycle").value;
-  const refreshButton = document.getElementById("refreshButton");
-  const rows = document.getElementById("campaignRows");
-
-  refreshButton.disabled = true;
-
+  const refresh = document.getElementById("refreshButton");
+  refresh.disabled = true;
   setStatus("Загружаем данные FEC для трёх типов выборов...");
-  rows.innerHTML =
+  document.getElementById("campaignRows").innerHTML =
     '<tr><td colspan="7">Загрузка данных...</td></tr>';
 
   document.getElementById("campaignCount").textContent = "...";
@@ -932,109 +553,63 @@ async function loadCampaigns() {
 
   try {
     const results = await Promise.all(
-      offices.map(office => getOfficeData(office.code, cycle))
+      offices.map(o => getOfficeData(o.code,cycle))
+    );
+    campaigns = results.flat().sort((a,b) =>
+      Number(b.receipts || 0)-Number(a.receipts || 0)
     );
 
-    campaigns = results.flat();
+    const totalReceipts = campaigns.reduce((s,c) => s+Number(c.receipts || 0),0);
+    const totalSpent = campaigns.reduce((s,c) => s+Number(c.disbursements || 0),0);
 
-    campaigns.sort((a, b) =>
-      Number(b.receipts || 0) - Number(a.receipts || 0)
-    );
-
-    const totalReceipts = campaigns.reduce(
-      (sum, item) => sum + Number(item.receipts || 0),
-      0
-    );
-
-    const totalSpent = campaigns.reduce(
-      (sum, item) => sum + Number(item.disbursements || 0),
-      0
-    );
-
-    document.getElementById("campaignCount").textContent =
-      campaigns.length;
-
-    document.getElementById("totalReceipts").textContent =
-      money(totalReceipts);
-
-    document.getElementById("totalSpent").textContent =
-      money(totalSpent);
+    document.getElementById("campaignCount").textContent = campaigns.length;
+    document.getElementById("totalReceipts").textContent = money(totalReceipts);
+    document.getElementById("totalSpent").textContent = money(totalSpent);
 
     updatePartyFilter();
     renderCampaigns();
     renderWatchlist();
+    renderAnalytics();
 
-    setStatus(
-      "Успешно загружено: " + campaigns.length +
-      " записей. Цикл " + cycle +
-      ". Время загрузки: " + new Date().toLocaleString(),
-      "success"
-    );
-
-  } catch (error) {
+    setStatus("Успешно загружено: " + campaigns.length +
+      " записей. Цикл " + cycle + ". Время: " +
+      new Date().toLocaleString(),"success");
+  } catch(error) {
     campaigns = [];
-
     document.getElementById("campaignCount").textContent = "—";
     document.getElementById("totalReceipts").textContent = "—";
     document.getElementById("totalSpent").textContent = "—";
-
-    rows.innerHTML =
+    document.getElementById("campaignRows").innerHTML =
       '<tr><td colspan="7">Не удалось получить данные.</td></tr>';
-
-    setStatus(
-      "Ошибка загрузки FEC: " + error.message +
-      ". Проверь соединение и попробуй обновить страницу.",
-      "error"
-    );
-
+    setStatus("Ошибка загрузки FEC: " + error.message,"error");
+    renderAnalytics();
   } finally {
     loading = false;
-    refreshButton.disabled = false;
+    refresh.disabled = false;
   }
 }
 
-/* EVENT LISTENERS */
+/* Events */
+document.getElementById("candidateSearch").addEventListener("input",renderCampaigns);
+document.getElementById("partyFilter").addEventListener("change",renderCampaigns);
+document.getElementById("officeFilter").addEventListener("change",renderCampaigns);
+document.getElementById("cycle").addEventListener("change",loadCampaigns);
+document.getElementById("refreshButton").addEventListener("click",loadCampaigns);
 
-document.getElementById("candidateSearch")
-  .addEventListener("input", renderCampaigns);
+document.getElementById("campaignRows").addEventListener("click",event => {
+  const button = event.target.closest("[data-watch]");
+  if (button) toggleWatchlist(button.dataset.watch);
+});
 
-document.getElementById("partyFilter")
-  .addEventListener("change", renderCampaigns);
+document.getElementById("watchRows").addEventListener("click",event => {
+  const button = event.target.closest("[data-remove]");
+  if (button) removeFromWatchlist(button.dataset.remove);
+});
 
-document.getElementById("officeFilter")
-  .addEventListener("change", renderCampaigns);
-
-document.getElementById("cycle")
-  .addEventListener("change", loadCampaigns);
-
-document.getElementById("refreshButton")
-  .addEventListener("click", loadCampaigns);
-
-document.getElementById("campaignRows")
-  .addEventListener("click", event => {
-    const button = event.target.closest("[data-watch]");
-
-    if (button) {
-      toggleWatchlist(button.dataset.watch);
-    }
-  });
-
-document.getElementById("watchRows")
-  .addEventListener("click", event => {
-    const button = event.target.closest("[data-remove]");
-
-    if (button) {
-      removeFromWatchlist(button.dataset.remove);
-    }
-  });
-
-/* START */
-
+/* Start */
 loadWatchlist();
 renderWatchlist();
 loadCampaigns();
-
 </script>
-
 </body>
 </html>
