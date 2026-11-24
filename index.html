@@ -137,10 +137,13 @@ a{color:#83b5ff}
 </section>
 </main>
 
-<script>
 const API_KEY = "DEMO_KEY";
 const API_BASE = "https://api.open.fec.gov/v1";
 let campaigns = [];
+let previousSnapshot = new Map();
+let changedCandidateIds = new Set();
+let lastSuccessfulLoad = 0;
+let loadVersion = 0;
 
 const offices = [
   {code:"P",name:"Президент"},
