@@ -8,16 +8,17 @@
 <title>InsiderGov — Political Finance Tracker</title>
 
 <style>
+
 :root {
-  --bg: #0b1020;
-  --panel: #141e32;
-  --panel2: #101a2d;
-  --border: #293751;
-  --text: #e8edf7;
-  --muted: #aab8d0;
-  --blue: #70a5ff;
-  --blue2: #3269bd;
-  --green: #69d6a3;
+  --bg: #0b1220;
+  --panel: #121e30;
+  --panel2: #17263a;
+  --border: #283a50;
+  --text: #edf3fa;
+  --muted: #91a4ba;
+  --blue: #5ee0bb;
+  --blue2: #168c79;
+  --green: #55d6a5;
   --red: #ff8585;
 }
 
@@ -25,78 +26,120 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(ellipse at 50% -20%, #1a3447 0%, transparent 55%),
+    var(--bg);
   color: var(--text);
-  font: 15px Arial, sans-serif;
+  font: 15px Inter, system-ui, -apple-system, Arial, sans-serif;
+  line-height: 1.55;
 }
 
 header {
-  padding: 25px 6%;
-  background: #111a2e;
+  padding: 30px max(6%, calc((100% - 1200px) / 2));
+  background: rgba(14, 25, 42, .94);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 8px 30px rgba(0,0,0,.16);
 }
 
 h1 {
   margin: 0;
-  color: var(--blue);
-  font-size: 29px;
+  color: #65e0c0;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
 }
 
 header p {
   color: var(--muted);
-  margin-bottom: 0;
+  margin: 7px 0 0;
+  letter-spacing: .4px;
+}
+
+h2 {
+  font-size: 23px;
+  margin: 0 0 12px;
+  letter-spacing: -.4px;
+}
+
+h3 {
+  margin-top: 25px;
 }
 
 main {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: auto;
-  padding: 25px 18px 50px;
+  padding: 30px 22px 60px;
 }
 
 .notice {
-  background: #342d1c;
-  color: #f5d58b;
-  padding: 14px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  line-height: 1.5;
+  background: linear-gradient(110deg, #263522, #292b22);
+  color: #e6d49d;
+  border: 1px solid #5b5635;
+  padding: 16px 18px;
+  border-radius: 12px;
+  margin-bottom: 22px;
+  line-height: 1.65;
 }
 
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 14px;
-  margin: 20px 0;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin: 25px 0;
 }
 
 .card,
 .panel {
-  background: var(--panel);
+  background: linear-gradient(145deg, #17263a, #111d2e);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 18px;
+  border-radius: 16px;
+  padding: 21px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.14);
+}
+
+.card {
+  transition: transform .2s, border-color .2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: #3e8d82;
 }
 
 .card span {
-  color: #9eacc4;
-  font-size: 13px;
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
 }
 
 .card strong {
   display: block;
-  font-size: 23px;
-  margin-top: 10px;
+  color: #66dfbd;
+  font-size: 27px;
+  margin-top: 12px;
   overflow-wrap: anywhere;
 }
 
 nav,
 .filters {
   display: flex;
-  gap: 9px;
+  gap: 10px;
   flex-wrap: wrap;
-  margin: 20px 0;
+  margin: 24px 0;
+}
+
+nav {
+  padding: 7px;
+  background: #111c2d;
+  border: 1px solid var(--border);
+  border-radius: 13px;
 }
 
 button,
@@ -106,18 +149,29 @@ select {
 }
 
 button {
-  background: #243552;
-  color: #eaf1ff;
-  border: 0;
-  border-radius: 8px;
-  padding: 11px 15px;
+  background: #20334a;
+  color: #eaf2fa;
+  border: 1px solid #304760;
+  border-radius: 9px;
+  padding: 11px 16px;
   cursor: pointer;
-  transition: background .15s;
+  transition: background .2s, border-color .2s, transform .2s;
 }
 
-button:hover,
+button:hover {
+  background: #28516a;
+  border-color: #4b9b91;
+}
+
+button:active {
+  transform: scale(.98);
+}
+
 button.active {
-  background: var(--blue2);
+  background: #146b61;
+  border-color: #35b99d;
+  color: white;
+  box-shadow: 0 3px 14px rgba(35,180,150,.15);
 }
 
 button:disabled {
@@ -127,16 +181,23 @@ button:disabled {
 
 input,
 select {
-  background: #0d1628;
-  color: white;
-  border: 1px solid #34435f;
-  padding: 11px;
-  border-radius: 8px;
+  background: #0c1727;
+  color: var(--text);
+  border: 1px solid #34465d;
+  padding: 12px 13px;
+  border-radius: 9px;
   min-width: 150px;
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-color: #53cbb0;
+  box-shadow: 0 0 0 3px rgba(83,203,176,.12);
 }
 
 input::placeholder {
-  color: #8998b1;
+  color: #8193aa;
 }
 
 .filters input {
@@ -145,25 +206,30 @@ input::placeholder {
 }
 
 .status {
-  padding: 13px;
-  background: var(--panel2);
-  border-radius: 8px;
-  margin: 12px 0;
-  color: var(--muted);
-  line-height: 1.5;
+  padding: 14px 16px;
+  background: #18283b;
+  border: 1px solid #2a4159;
+  border-radius: 10px;
+  margin: 14px 0;
+  color: #b4c4d7;
+  line-height: 1.6;
 }
 
 .status.error {
-  color: var(--red);
+  color: #ff9999;
+  border-color: #713e49;
+  background: #30202a;
 }
 
 .status.success {
-  color: var(--green);
+  color: #76dfb7;
+  border-color: #286c5c;
+  background: #152d2b;
 }
 
 .muted {
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.7;
 }
 
 .hidden {
@@ -173,79 +239,138 @@ input::placeholder {
 .table-wrap {
   width: 100%;
   overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-top: 16px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 15px;
   min-width: 700px;
+  margin: 0;
 }
 
 th,
 td {
   text-align: left;
-  padding: 12px 9px;
-  border-bottom: 1px solid var(--border);
+  padding: 14px 13px;
+  border-bottom: 1px solid #29394e;
 }
 
 th {
-  color: #91a6c8;
-  font-size: 13px;
+  color: #83a69f;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .65px;
+  background: #17283a;
   white-space: nowrap;
 }
 
 td {
-  line-height: 1.4;
+  line-height: 1.5;
+}
+
+tbody tr {
+  background: #132136;
+  transition: background .15s;
+}
+
+tbody tr:nth-child(even) {
+  background: #16253a;
+}
+
+tbody tr:hover {
+  background: #20364b;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
 }
 
 .small-button {
-  padding: 7px 10px;
+  padding: 8px 11px;
   font-size: 12px;
   white-space: nowrap;
 }
 
 .remove-button {
-  background: #63323b;
+  background: #542e3a;
+  border-color: #77404d;
 }
 
 .remove-button:hover {
-  background: #8c3e4b;
+  background: #793b4c;
 }
 
 a {
-  color: #83b5ff;
+  color: #68d9c0;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #a1f3df;
+  text-decoration: underline;
 }
 
 footer {
   text-align: center;
-  color: #8190aa;
-  padding: 25px 10px;
+  color: #7f91a8;
+  padding: 30px 15px;
   font-size: 13px;
+  border-top: 1px solid var(--border);
+  background: #0e1929;
 }
 
-@media(max-width: 650px) {
+@media (max-width: 650px) {
   header {
-    padding: 20px;
+    padding: 23px 18px;
   }
 
   h1 {
-    font-size: 25px;
+    font-size: 27px;
   }
 
   main {
-    padding: 18px 12px 35px;
+    padding: 20px 12px 40px;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
 
   .card,
   .panel {
-    padding: 14px;
+    padding: 15px;
+  }
+
+  .card strong {
+    font-size: 21px;
   }
 
   nav button {
     flex: 1 1 40%;
   }
+
+  .filters > * {
+    width: 100%;
+  }
+
+  .filters input {
+    min-width: 0;
+  }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
+
 </style>
 </head>
 
