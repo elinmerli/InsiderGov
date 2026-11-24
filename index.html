@@ -1,1 +1,108 @@
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InsiderGov — Congressional Trading Tracker</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b1020;color:#e8edf7;font:15px Arial,sans-serif}
+header{padding:24px 6%;background:#111a2e;border-bottom:1px solid #26334d}
+h1{margin:0;color:#70a5ff;font-size:27px}
+header p{color:#aab8d0;margin:8px 0 0}
+main{max-width:1100px;margin:auto;padding:25px 18px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.card,.panel{background:#141e32;border:1px solid #293751;border-radius:12px;padding:18px}
+.card span{color:#9eacc4;font-size:13px}
+.card strong{display:block;font-size:26px;margin-top:10px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:25px 0}
+button{background:#243552;color:#eaf1ff;border:0;border-radius:8px;padding:11px 15px;cursor:pointer}
+button.active,button:hover{background:#3269bd}
+input,select{background:#0d1628;color:white;border:1px solid #34435f;padding:11px;border-radius:8px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+th,td{text-align:left;padding:13px 9px;border-bottom:1px solid #293751}
+th{color:#91a6c8;font-size:13px}
+.muted{color:#9eacc4}
+.tag{background:#233e38;color:#85dfb1;padding:5px 8px;border-radius:6px;font-size:12px}
+.hidden{display:none}
+.notice{background:#342d1c;color:#f5d58b;padding:12px;border-radius:8px;margin:16px 0}
+@media(max-width:650px){table{font-size:12px}th,td{padding:9px 5px}}
+</style>
+</head>
+<body>
+<header>
+<h1>InsiderGov</h1>
+<p>U.S. Congressional Financial Disclosure Tracker</p>
+</header>
+<main>
+<div class="notice">DEMO VERSION — записи ниже вымышлены и не являются реальными финансовыми раскрытиями.</div>
+<section class="stats">
+<div class="card"><span>Демо-записей</span><strong id="count">4</strong></div>
+<div class="card"><span>Политиков</span><strong>3</strong></div>
+<div class="card"><span>В Watchlist</span><strong id="watchCount">0</strong></div>
+<div class="card"><span>Обновление</span><strong style="font-size:17px">Demo</strong></div>
+</section>
+<nav>
+<button class="active" onclick="showTab('trades',this)">Transactions</button>
+<button onclick="showTab('watch',this)">Watchlist</button>
+<button onclick="showTab('about',this)">About</button>
+</nav>
+<section id="trades" class="panel">
+<h2>Disclosed transactions</h2>
+<div class="filters">
+<input id="search" placeholder="Поиск политика или компании" oninput="render()">
+<select id="party" onchange="render()">
+<option value="">Все политики</option>
+<option>Nancy Pelosi</option>
+<option>Michael McCaul</option>
+<option>Marjorie Taylor Greene</option>
+</select>
+</div>
+<div style="overflow-x:auto">
+<table>
+<thead><tr><th>Политик</th><th>Компания</th><th>Тип</th><th>Дата</th><th>Диапазон</th><th>Watchlist</th></tr></thead>
+<tbody id="rows"></tbody>
+</table>
+</div>
+</section>
+<section id="watch" class="panel hidden">
+<h2>Watchlist</h2>
+<p class="muted">Сохранённые в этом браузере политики.</p>
+<div id="watchRows"></div>
+</section>
+<section id="about" class="panel hidden">
+<h2>О проекте InsiderGov</h2>
+<p>Проект предназначен для изучения публичных финансовых раскрытий членов Конгресса США.</p>
+<p>В этой версии используются только демонстрационные записи. Автоматический сбор и проверка официальных документов ещё не подключены.</p>
+<p>Официальные источники:</p>
+<ul>
+<li><a href="https://disclosures-clerk.house.gov/" target="_blank" rel="noopener">U.S. House Financial Disclosures</a></li>
+<li><a href="https://efdsearch.senate.gov/" target="_blank" rel="noopener">U.S. Senate Financial Disclosures</a></li>
+</ul>
+</section>
+</main>
+<script>
+const trades=[
+{person:"Nancy Pelosi",company:"Example Technology",type:"Purchase",date:"2026-01-12",amount:"$1,001–$15,000"},
+{person:"Michael McCaul",company:"Example Energy",type:"Sale",date:"2026-02-03",amount:"$15,001–$50,000"},
+{person:"Marjorie Taylor Greene",company:"Example Retail",type:"Purchase",date:"2026-02-18",amount:"$1,001–$15,000"},
+{person:"Nancy Pelosi",company:"Example Health",type:"Sale",date:"2026-03-02",amount:"$50,001–$100,000"}
+];
+let watch=JSON.parse(localStorage.getItem("ig-watch")||"[]");
+function render(){
+const q=document.getElementById("search").value.toLowerCase();
+const p=document.getElementById("party").value;
+const list=trades.filter(t=>(!p||t.person===p)&&(t.person+" "+t.company).toLowerCase().includes(q));
+document.getElementById("rows").innerHTML=list.map(t=>`<tr><td>${t.person}</td><td>${t.company}</td><td><span class="tag">${t.type}</span></td><td>${t.date}</td><td>${t.amount}</td><td><button onclick="toggleWatch('${t.person}')">${watch.includes(t.person)?"★":"☆"}</button></td></tr>`).join("")||'<tr><td colspan="6">Ничего не найдено</td></tr>';
+document.getElementById("watchCount").textContent=watch.length;
+document.getElementById("watchRows").innerHTML=watch.map(n=>`<p>${n} <button onclick="toggleWatch('${n}')">Удалить</button></p>`).join("")||"<p>Список пока пуст.</p>";
+}
+function toggleWatch(n){watch=watch.includes(n)?watch.filter(x=>x!==n):[...watch,n];localStorage.setItem("ig-watch",JSON.stringify(watch));render()}
+function showTab(id,b){document.querySelectorAll("main>section.panel").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active")}
+render();
+</script>
+</body>
+</html>
+
