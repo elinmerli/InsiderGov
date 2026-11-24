@@ -84,12 +84,7 @@ th{color:#91a6c8;font-size:13px}
 </section>
 </main>
 <script>
-const trades=[
-{person:"Nancy Pelosi",company:"Example Technology",type:"Purchase",date:"2026-01-12",amount:"$1,001–$15,000"},
-{person:"Michael McCaul",company:"Example Energy",type:"Sale",date:"2026-02-03",amount:"$15,001–$50,000"},
-{person:"Marjorie Taylor Greene",company:"Example Retail",type:"Purchase",date:"2026-02-18",amount:"$1,001–$15,000"},
-{person:"Nancy Pelosi",company:"Example Health",type:"Sale",date:"2026-03-02",amount:"$50,001–$100,000"}
-];
+const trades=[];
 let watch=JSON.parse(localStorage.getItem("ig-watch")||"[]");
 function render(){
 const q=document.getElementById("search").value.toLowerCase();
