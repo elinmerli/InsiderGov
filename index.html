@@ -1,396 +1,463 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#17151a">
-<title>InsiderGov — The Capitol Ledger</title>
+<meta name="theme-color" content="#191519">
+<title>InsiderGov — Congressional Ledger</title>
 <style>
 :root{
---bg:#17151a;--panel:#211e24;--panel2:#29242a;--line:#463a35;
---paper:#e9ddc8;--muted:#aa9a87;--gold:#b69a70;
---green:#83a68a;--red:#bd7771;--shadow:0 12px 35px #0005;
+ --bg:#191519;--panel:#241e22;--panel2:#2d2426;
+ --gold:#c4a36b;--gold2:#e4cca0;--text:#e9deca;
+ --muted:#a99a85;--line:#514237;--green:#9eae83;
+ --red:#c77d70;--olive:#737b5c;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--paper);
-font-family:Georgia,'Times New Roman',serif}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 button,input,select{font:inherit}
 button{cursor:pointer}
-.layout{display:flex;min-height:100vh}
-aside{width:245px;background:#131217;border-right:1px solid var(--line);
-padding:25px 17px;flex-shrink:0}
-.logo{font-size:24px;letter-spacing:3px;font-weight:bold}
-.logo span{color:var(--gold)}
-.eyebrow{font:10px Arial,sans-serif;letter-spacing:3px;color:var(--gold)}
-nav{display:grid;gap:5px;margin-top:35px}
-nav button{background:none;border:0;color:var(--muted);text-align:left;
-padding:13px;border-radius:3px;font:12px Arial,sans-serif;letter-spacing:1px}
-nav button.active,nav button:hover{background:#302a2d;color:var(--paper);
-border-left:2px solid var(--gold)}
-.sidefoot{margin-top:50px;color:var(--muted);font-size:12px;line-height:1.8}
-main{flex:1;min-width:0;padding:30px clamp(15px,3vw,43px)}
-header{display:flex;justify-content:space-between;align-items:center;
-gap:15px;flex-wrap:wrap;border-bottom:1px solid var(--line);
-padding-bottom:22px;margin-bottom:24px}
-h1{font-size:30px;font-weight:normal;margin:0 0 6px}
-h2{font-size:17px;font-weight:normal;margin:0}
-h3{font-size:13px;font-weight:normal;color:var(--gold);margin:0}
-.sub{font:11px Arial,sans-serif;color:var(--muted);letter-spacing:1px}
-.status{font:10px Arial,sans-serif;color:var(--muted);
-border:1px solid var(--line);padding:9px 12px}
-.dot{display:inline-block;width:7px;height:7px;border-radius:50%;
-background:var(--green);margin-right:7px}
-.dot.err{background:var(--red)}
-.hero{height:180px;position:relative;overflow:hidden;margin-bottom:20px;
-background:linear-gradient(90deg,#17151aee,#17151a55),
-url('https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1500')
-center 48%/cover;border:1px solid var(--line);display:flex;
-flex-direction:column;justify-content:end;padding:24px}
-.hero h2{font-size:30px;letter-spacing:1px}
-.hero p{font:10px Arial,sans-serif;letter-spacing:2px;color:var(--gold)}
-.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;
-margin-bottom:15px}
-.card,.panel{background:var(--panel);border:1px solid var(--line);
-box-shadow:var(--shadow);padding:17px}
-.card .label{font:10px Arial,sans-serif;letter-spacing:1px;color:var(--muted)}
-.value{font-size:27px;margin-top:12px}
-.hint{font:10px Arial,sans-serif;color:var(--muted);margin-top:7px}
-.green{color:var(--green)}.red{color:var(--red)}.gold{color:var(--gold)}
-.grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
-.panel{margin-bottom:15px;min-width:0}
-.panelhead{display:flex;justify-content:space-between;align-items:center;
-gap:10px;flex-wrap:wrap;margin-bottom:17px}
-.controls{display:flex;gap:7px;flex-wrap:wrap}
-input,select{background:#17151a;color:var(--paper);border:1px solid var(--line);
-padding:9px;border-radius:2px;font:11px Arial,sans-serif}
-button.action{background:#302a2d;color:var(--paper);border:1px solid var(--line);
-padding:9px 12px;font:10px Arial,sans-serif;letter-spacing:1px}
-button.action:hover{border-color:var(--gold)}
-.periods{display:flex;gap:6px;flex-wrap:wrap}
-.periods button{padding:8px 12px;background:#17151a;color:var(--muted);
-border:1px solid var(--line);font:10px Arial,sans-serif}
-.periods button.active{background:#554431;color:#fff0d7;border-color:var(--gold)}
-.chart{height:185px;display:flex;align-items:end;gap:5px;
-padding:12px 2px 0;border-bottom:1px solid var(--line)}
-.barwrap{height:100%;flex:1;min-width:3px;display:flex;align-items:end;
-position:relative}
-.bar{width:100%;background:linear-gradient(#c3a478,#73583f);
-min-height:2px}
-.barwrap small{position:absolute;bottom:-19px;left:50%;
-transform:translateX(-50%);font:9px Arial,sans-serif;color:var(--muted)}
-table{width:100%;border-collapse:collapse;min-width:680px}
-.tablewrap{overflow:auto}
-th{text-align:left;color:var(--gold);font:9px Arial,sans-serif;
-letter-spacing:1px;text-transform:uppercase}
-td,th{padding:12px 9px;border-bottom:1px solid var(--line)}
-td{font-size:12px}
-td a{color:var(--gold);text-decoration:none}
-td a:hover{text-decoration:underline}
-.tag{color:var(--gold);border:1px solid var(--line);padding:4px 6px;
-font:9px Arial,sans-serif}
-.notice{color:var(--muted);font:11px/1.7 Arial,sans-serif}
-.hidden{display:none!important}
-.empty{text-align:center;color:var(--muted);padding:25px}
-.meter{height:6px;background:#151319;margin-top:8px}
-.meter span{display:block;height:100%;background:var(--gold)}
-.rank{display:grid;gap:13px}
-.rankrow{display:grid;grid-template-columns:110px 1fr 35px;gap:8px;
-align-items:center;font:11px Arial,sans-serif}
-footer{padding:15px 0;color:var(--muted);font:10px Arial,sans-serif;
-line-height:1.7}
-@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}
-.grid2{grid-template-columns:1fr}}
-@media(max-width:650px){.layout{display:block}aside{width:100%;padding:13px}
-.logo{font-size:20px}nav{display:flex;overflow:auto;margin-top:13px}
-nav button{white-space:nowrap;padding:10px}
-.sidefoot{display:none}main{padding:18px 12px}.hero{height:145px}
-h1{font-size:24px}.value{font-size:22px}.card{padding:12px}}
+.layout{min-height:100vh;display:grid;grid-template-columns:245px 1fr}
+.sidebar{background:#201a1e;border-right:1px solid var(--line);padding:25px 17px;position:sticky;top:0;height:100vh}
+.brand{font:28px Georgia,serif;color:var(--gold2);letter-spacing:1px}
+.brand-sub{font-size:9px;letter-spacing:3px;color:var(--muted);margin:8px 0 35px}
+.nav-label{font-size:10px;color:#8d7961;letter-spacing:2px;margin:25px 10px 9px}
+.nav button{display:block;width:100%;text-align:left;background:none;border:0;color:#c9bca6;padding:12px 13px;margin:3px 0;border-left:2px solid transparent}
+.nav button:hover,.nav button.active{background:#30262a;color:var(--gold2);border-left-color:var(--gold)}
+.sidebar-foot{position:absolute;bottom:20px;left:20px;right:20px;color:#897e70;font-size:11px;line-height:1.7}
+main{padding:30px;max-width:1700px;width:100%;margin:auto}
+.topline{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
+.kicker{color:var(--gold);font-size:10px;letter-spacing:3px}
+h1{font:clamp(30px,4vw,48px) Georgia,serif;color:var(--gold2);margin:9px 0}
+.subtitle{color:var(--muted);font:14px Georgia,serif}
+.status{font-size:11px;border:1px solid var(--line);padding:10px 13px;color:var(--muted)}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:8px}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:26px 0 16px}
+input,select{background:#211b20;color:var(--text);border:1px solid #65533e;padding:12px;min-width:150px;outline:none}
+input:focus,select:focus{border-color:var(--gold)}
+.toolbar input{flex:1;min-width:220px}
+.btn{background:#59432f;border:1px solid #98794e;color:#f0dfbd;padding:11px 15px}
+.btn:hover{background:#70563a}
+.btn.secondary{background:transparent}
+.notice{padding:13px 16px;background:#30251f;border-left:3px solid var(--gold);color:#d4c3a5;font-size:12px;line-height:1.6;margin:16px 0}
+.error{background:#38201f;border-color:var(--red);color:#f0c5b9}
+.cards{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:12px;margin:18px 0}
+.card,.panel{background:var(--panel);border:1px solid var(--line);padding:19px;min-width:0}
+.card small{display:block;color:var(--gold);font-size:9px;letter-spacing:1.5px}
+.card strong{display:block;font:30px Georgia,serif;color:var(--gold2);margin-top:12px;overflow-wrap:anywhere}
+.card span{font-size:10px;color:var(--muted)}
+.panel{margin:16px 0}
+.panel h2{font:22px Georgia,serif;color:var(--gold2);margin:0 0 17px}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.rank{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #493b32;color:#cbbda5;font-size:13px}
+.rank b{color:var(--gold2)}
+.chart{height:205px;display:flex;align-items:end;gap:12px;overflow-x:auto;padding:10px 0}
+.barcol{min-width:42px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bar{width:24px;background:linear-gradient(#c2a16a,#66503c);min-height:3px}
+.barcol small,.barval{font-size:10px;color:#c4b394}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:12px}
+th{text-align:left;color:#c8a873;background:#30251f;padding:12px}
+td{padding:12px;border-bottom:1px solid #40352e;color:#d9cbb3}
+td a{color:#d6b77f}
+.tag{font-size:10px;text-transform:uppercase}
+.tag.buy{color:var(--green)}.tag.sell{color:var(--red)}
+.muted{color:var(--muted);font-size:12px}
+.section{display:none}.section.active{display:block}
+.footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#948875;font-size:10px;padding:20px 0}
+.empty{text-align:center;padding:30px;color:var(--muted)}
+.watch-btn{background:transparent;color:var(--gold);border:1px solid var(--line);padding:6px 9px}
+@media(max-width:1050px){.cards{grid-template-columns:repeat(3,1fr)}.columns{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){
+ .layout{display:block}.sidebar{position:relative;height:auto;padding:15px;border-right:0;border-bottom:1px solid var(--line)}
+ .brand{font-size:23px}.brand-sub{margin-bottom:12px}
+ .nav{display:flex;overflow:auto;gap:5px}.nav-label,.sidebar-foot{display:none}
+ .nav button{white-space:nowrap;width:auto;padding:9px;border-left:0;border-bottom:2px solid transparent}
+ .nav button.active{border-bottom-color:var(--gold)}
+ main{padding:15px}.cards{grid-template-columns:repeat(2,1fr)}.columns{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 <div class="layout">
-<aside>
- <div class="logo">INSIDER<span>GOV</span></div>
- <div class="eyebrow">THE CAPITOL LEDGER</div>
- <nav>
-  <button class="active" data-page="overview">THE LEDGER</button>
-  <button data-page="transactions">DISCLOSURES</button>
-  <button data-page="campaigns">CAMPAIGNS</button>
-  <button data-page="analytics">ANALYTICS</button>
-  <button data-page="watchlist">WATCHLIST</button>
-  <button data-page="about">ARCHIVES</button>
+<aside class="sidebar">
+ <div class="brand">InsiderGov</div>
+ <div class="brand-sub">THE PUBLIC LEDGER · EST. 2026</div>
+ <div class="nav-label">THE ARCHIVES</div>
+ <nav class="nav">
+  <button class="active" data-page="overview">Overview / Ledger</button>
+  <button data-page="transactions">Transactions</button>
+  <button data-page="campaigns">Campaigns</button>
+  <button data-page="analytics">Analytics</button>
+  <button data-page="watchlist">Watchlist</button>
+  <button data-page="about">About / Archives</button>
  </nav>
- <div class="sidefoot">WASHINGTON, D.C.<br>PUBLIC RECORDS OFFICE<br><br>
- Records are not recommendations.<br>Sources and dates matter.</div>
+ <div class="sidebar-foot">PUBLIC RECORDS<br>UNITED STATES CONGRESS<br>Independent public-data project</div>
 </aside>
+
 <main>
-<header>
- <div><h1 id="title">The Capitol Ledger</h1>
- <div class="sub">CONGRESSIONAL FINANCIAL DISCLOSURES · UNITED STATES</div></div>
- <div class="status" id="status"><span class="dot"></span>CONNECTING</div>
-</header>
+<div class="topline">
+ <div>
+  <div class="kicker">THE UNITED STATES · PUBLIC FINANCIAL RECORD</div>
+  <h1>Congressional Ledger</h1>
+  <div class="subtitle">A record of disclosures, transactions and public accountability.</div>
+ </div>
+ <div class="status" id="status"><span class="dot"></span>Ожидание загрузки</div>
+</div>
 
-<section id="overview">
- <div class="hero"><h2>The public ledger.</h2>
- <p>FOLLOW THE RECORD. NOT THE RUMOR.</p></div>
+<div class="toolbar">
+ <input id="search" placeholder="Поиск политика, компании или тикера…">
+ <select id="period">
+  <option value="1">24 часа</option>
+  <option value="7">7 дней</option>
+  <option value="30" selected>30 дней</option>
+  <option value="365">1 год</option>
+  <option value="1825">5 лет</option>
+  <option value="all">Вся доступная история</option>
+ </select>
+ <button class="btn" id="refresh">Обновить</button>
+ <button class="btn secondary" id="export">Экспорт CSV</button>
+</div>
+
+<div id="global-notice" class="notice">
+ Данные загружаются из внешнего источника. Официальные раскрытия публикуются с задержкой.
+ Дата сделки и дата подачи документа — разные даты.
+</div>
+
+<section class="section active" id="overview">
+ <div class="cards" id="cards"></div>
  <div class="panel">
-  <div class="panelhead"><h2>Reporting period</h2>
-   <div class="periods" id="periods">
-    <button data-days="1">1 DAY</button>
-    <button data-days="7">1 WEEK</button>
-    <button data-days="30" class="active">1 MONTH</button>
-    <button data-days="365">1 YEAR</button>
-    <button data-days="1825">5 YEARS</button>
-   </div>
-  </div>
-  <div class="notice" id="periodNote">Choose a reporting period.</div>
+  <h2>Disclosure activity</h2>
+  <div id="chart" class="chart"></div>
  </div>
- <div class="cards">
-  <div class="card"><div class="label">DISCLOSURES</div>
-   <div class="value" id="total">—</div><div class="hint" id="totalChange">Selected period</div></div>
-  <div class="card"><div class="label">PURCHASES</div>
-   <div class="value green" id="buys">—</div><div class="hint">Reported purchases</div></div>
-  <div class="card"><div class="label">SALES</div>
-   <div class="value red" id="sells">—</div><div class="hint">Reported sales</div></div>
-  <div class="card"><div class="label">POLITICIANS</div>
-   <div class="value" id="members">—</div><div class="hint">Unique filers</div></div>
+ <div class="columns">
+  <div class="panel"><h2>По партиям</h2><div id="parties"></div></div>
+  <div class="panel"><h2>По штатам</h2><div id="states"></div></div>
+  <div class="panel"><h2>Популярные активы</h2><div id="assets"></div></div>
  </div>
- <div class="grid2">
-  <div class="panel">
-   <div class="panelhead"><h2>Disclosure activity</h2>
-    <span class="tag" id="chartPeriod">30 DAYS</span></div>
-   <div class="chart" id="activity"></div>
-   <div class="notice" id="chartNote" style="margin-top:27px"></div>
-  </div>
-  <div class="panel">
-   <div class="panelhead"><h2>Transaction composition</h2></div>
-   <div id="composition" class="rank"></div>
-   <div class="notice" style="margin-top:18px">Calculated from loaded records only.</div>
-  </div>
- </div>
- <div class="grid2">
-  <div class="panel"><div class="panelhead"><h2>Most active filers</h2></div>
-   <div id="topMembers" class="rank"></div></div>
-  <div class="panel"><div class="panelhead"><h2>Most reported assets</h2></div>
-   <div id="topAssets" class="rank"></div></div>
- </div>
- <div class="panel"><div class="panelhead"><h2>Latest disclosures</h2>
-  <button class="action" onclick="page('transactions')">VIEW ALL</button></div>
-  <div class="tablewrap"><table><thead><tr><th>Filer</th><th>Asset</th>
-   <th>Type</th><th>Trade date</th><th>Filed</th><th>Value range</th></tr></thead>
-   <tbody id="latest"></tbody></table></div>
- </div>
-</section>
-
-<section id="transactions" class="hidden">
  <div class="panel">
-  <div class="panelhead"><h2>Disclosure archive</h2>
-   <div class="controls"><input id="search" placeholder="Search name / ticker">
-    <select id="type"><option value="">All types</option>
-     <option value="buy">Purchases</option><option value="sell">Sales</option>
-     <option value="exchange">Exchanges</option></select>
-    <button class="action" onclick="csv()">EXPORT CSV</button></div>
-  </div>
-  <div class="tablewrap"><table><thead><tr><th>Politician</th><th>Party / State</th>
-   <th>Asset</th><th>Type</th><th>Trade date</th><th>Filed</th>
-   <th>Value range</th><th>Original</th><th>★</th></tr></thead>
-   <tbody id="rows"></tbody></table></div>
-  <p class="notice" id="count"></p>
+  <div class="panel-head"><h2>Последние раскрытия</h2><span class="muted" id="count"></span></div>
+  <div class="table-wrap"><table><thead><tr>
+   <th>Политик</th><th>Партия</th><th>Штат</th><th>Актив</th>
+   <th>Тип</th><th>Дата сделки</th><th>Дата подачи</th><th>Сумма</th><th>Документ</th>
+  </tr></thead><tbody id="table"></tbody></table></div>
  </div>
 </section>
 
-<section id="campaigns" class="hidden">
- <div class="cards">
-  <div class="card"><div class="label">FEC RECEIPTS</div><div class="value" id="receipts">—</div><div class="hint">Not yet connected</div></div>
-  <div class="card"><div class="label">FEC DISBURSEMENTS</div><div class="value" id="spending">—</div><div class="hint">Not yet connected</div></div>
-  <div class="card"><div class="label">CASH ON HAND</div><div class="value" id="cash">—</div><div class="hint">Not yet connected</div></div>
-  <div class="card"><div class="label">COMMITTEES</div><div class="value" id="committees">—</div><div class="hint">Not yet connected</div></div>
- </div>
- <div class="panel"><h2>Campaign finance records</h2>
-  <p class="notice">Campaign money is separate from personal assets and stock disclosures. FEC data requires its own verified data feed. No invented campaign totals are shown here.</p>
-  <a href="https://www.fec.gov/data/" target="_blank" rel="noopener" style="color:var(--gold)">OFFICIAL FEC DATA ↗</a>
+<section class="section" id="transactions">
+ <div class="panel"><h2>Transactions & Disclosures</h2>
+ <p class="muted">Публичные записи о финансовых сделках. Суммы показываются в том виде, в котором они раскрыты источником.</p>
+ <div class="table-wrap"><table><thead><tr>
+  <th>Политик</th><th>Партия</th><th>Штат</th><th>Актив</th>
+  <th>Тип</th><th>Дата сделки</th><th>Дата подачи</th><th>Сумма</th><th>Документ</th>
+ </tr></thead><tbody id="table-all"></tbody></table></div></div>
+</section>
+
+<section class="section" id="campaigns">
+ <div class="panel"><h2>Campaign finance archives</h2>
+ <div class="notice">Финансирование избирательных кампаний — отдельная категория данных. Оно не является личным доходом, состоянием или сделками политика.</div>
+ <p>Данные FEC в этой версии не подключены. Просматривать официальные сведения можно на <a href="https://www.fec.gov/data/" target="_blank" rel="noopener">официальном портале FEC ↗</a>.</p>
  </div>
 </section>
 
-<section id="analytics" class="hidden">
- <div class="panel"><div class="panelhead"><h2>Statistical overview</h2>
-  <span class="tag" id="analyticsPeriod">30 DAYS</span></div>
-  <div class="cards">
-   <div class="card"><div class="label">UNIQUE ASSETS</div><div class="value" id="uniqueAssets">—</div></div>
-   <div class="card"><div class="label">HOUSE FILINGS</div><div class="value" id="house">—</div></div>
-   <div class="card"><div class="label">SENATE FILINGS</div><div class="value" id="senate">—</div></div>
-   <div class="card"><div class="label">AVERAGE / FILER</div><div class="value" id="average">—</div></div>
-  </div></div>
- <div class="grid2">
-  <div class="panel"><h2>Activity by party</h2><div id="party" class="rank" style="margin-top:18px"></div></div>
-  <div class="panel"><h2>Activity by chamber</h2><div id="chamber" class="rank" style="margin-top:18px"></div></div>
- </div>
- <div class="panel"><h2>Activity by state</h2><div id="states" class="rank" style="margin-top:18px"></div></div>
- <div class="panel"><h2>Period comparison</h2><div id="comparison" class="rank"></div>
-  <p class="notice">Comparison is calculated only when records are available for both periods. An incomplete source window is never treated as zero activity.</p>
+<section class="section" id="analytics">
+ <div class="panel"><h2>Historical analytics</h2>
+ <p class="muted">Статистика ниже рассчитывается только по загруженным записям. Она не является полной исторической оценкой рынка.</p>
+ <div class="cards" id="analytics-cards"></div>
+ <h2>Активность по месяцам</h2><div class="chart" id="analytics-chart"></div>
  </div>
 </section>
 
-<section id="watchlist" class="hidden">
- <div class="panel"><h2>Watched disclosures</h2>
-  <div class="cards" style="margin-top:15px">
-   <div class="card"><div class="label">WATCHED RECORDS LOADED</div><div class="value" id="watchCount">0</div></div>
-   <div class="card"><div class="label">WATCHED FILERS</div><div class="value" id="watchPeople">0</div></div>
-  </div>
-  <div class="tablewrap"><table><thead><tr><th>Filer</th><th>Asset</th><th>Type</th>
-   <th>Filed</th><th>Source</th><th>Remove</th></tr></thead>
-   <tbody id="watchRows"></tbody></table></div>
+<section class="section" id="watchlist">
+ <div class="panel"><h2>Watchlist</h2>
+ <p class="muted">Добавляйте политиков в список наблюдения. Список хранится в браузере на этом устройстве.</p>
+ <div id="watchlist-content"></div>
  </div>
 </section>
 
-<section id="about" class="hidden">
- <div class="panel"><h2>The archives</h2>
-  <p class="notice">InsiderGov is a public-records research dashboard. It separates personal financial disclosures from campaign finance records.</p>
-  <h3>DATA SOURCES</h3>
-  <p><a href="https://www.veridionmarkets.com/data-api/docs" style="color:var(--gold)">Veridion Disclosure API</a></p>
-  <p><a href="https://disclosures-clerk.house.gov/" style="color:var(--gold)">U.S. House disclosures</a></p>
-  <p><a href="https://efdsearch.senate.gov/" style="color:var(--gold)">U.S. Senate disclosures</a></p>
-  <p><a href="https://www.fec.gov/data/" style="color:var(--gold)">Federal Election Commission</a></p>
-  <h3>DATA FRESHNESS</h3><p class="notice" id="updated">No successful data load yet.</p>
-  <h3>LIMITATIONS</h3><p class="notice">Reported values may be ranges, not exact amounts. Transaction date and filing date are different. The anonymous API tier does not provide a complete five-year archive. Missing records are not evidence of no activity.</p>
+<section class="section" id="about">
+ <div class="panel"><h2>About the archives</h2>
+ <p>InsiderGov — независимый интерфейс для изучения публичных финансовых раскрытий и политического финансирования США.</p>
+ <h2>Источники</h2>
+ <ul>
+  <li><a href="https://disclosures-clerk.house.gov/" target="_blank" rel="noopener">U.S. House Financial Disclosures</a></li>
+  <li><a href="https://efdsearch.senate.gov/" target="_blank" rel="noopener">U.S. Senate Financial Disclosures</a></li>
+  <li><a href="https://www.fec.gov/data/" target="_blank" rel="noopener">Federal Election Commission</a></li>
+ </ul>
+ <div class="notice">Данные могут быть неполными, запаздывать или содержать диапазоны вместо точных сумм. InsiderGov не является официальным государственным реестром.</div>
  </div>
 </section>
-<footer>INSIDERGOV · THE CAPITOL LEDGER · PUBLIC RECORDS · NOT INVESTMENT ADVICE</footer>
-</main></div>
+
+<div class="footer">
+ <span>INSIDERGOV · PUBLIC INFORMATION</span>
+ <span id="updated">Последняя синхронизация: ещё не выполнялась</span>
+</div>
+</main>
+</div>
+
 <script>
-const API="https://www.veridionmarkets.com/api/v1";
-let all=[],view=[],days=30,updated=null;
-let watch=new Set(JSON.parse(localStorage.getItem("ig-watch")||"[]"));
+(() => {
+"use strict";
+
+const API="https://www.veridionmarkets.com/api/v1/disclosures";
+const CACHE="insidergov_cache_v3";
+const WATCH="insidergov_watch_v1";
+const PAGE_SIZE=25;
+const MAX_PAGES=40;
+
+let records=[];
+let loading=false;
+let period="30";
+let query="";
+let watchlist=[];
+let lastSync=null;
+
 const $=id=>document.getElementById(id);
-const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const date=x=>{if(!x)return null;let d=new Date(x);return isNaN(d)?null:d};
-const dateStr=x=>date(x)?.toLocaleDateString()||"—";
-const norm=r=>({id:r.disclosure_id,member:r.member||{},asset:r.asset||{},
-transaction:r.transaction||{},filing:r.filing||{},amount:r.amount||{},
-receipt:r.receipt||{},change:r.change||{}});
-function range(r){
- let a=r.amount;if(a.verbatim_text)return a.verbatim_text;
- let l=a.range_low,h=a.range_high;
- const f=n=>"$"+Number(n).toLocaleString("en-US");
- if(l!=null&&h!=null)return f(l)+" – "+f(h);
- if(l!=null)return f(l)+"+";
- if(h!=null)return "Up to "+f(h);
- return "Not reported";
+const esc=v=>String(v??"—").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+})[c]);
+
+function dateValue(row){
+ return row.transaction?.date || row.transaction_date || null;
 }
-function tradeDate(r){return date(r.transaction.date)||date(r.filing.filed_date)}
-function selected(){
- let cutoff=Date.now()-days*86400000;
- return all.filter(r=>tradeDate(r)&&tradeDate(r).getTime()>=cutoff);
+function filedValue(row){
+ return row.filing?.filed_date || row.filed_date || null;
 }
-function countBy(arr,fn){
- let m={};arr.forEach(x=>{let k=fn(x)||"Not reported";m[k]=(m[k]||0)+1});
- return Object.entries(m).sort((a,b)=>b[1]-a[1]);
+function person(row){
+ return row.member?.full_name || row.member?.name || "Не указано";
 }
-function rankHTML(items){
- if(!items.length)return '<p class="notice">No records available.</p>';
- let max=Math.max(1,...items.map(x=>x[1]));
- return items.slice(0,8).map(([name,n])=>'<div class="rankrow"><span>'+esc(name)+'</span><div class="meter"><span style="width:'+(n/max*100)+'%"></span></div><b>'+n+'</b></div>').join("");
+function party(row){return row.member?.party || "—"}
+function state(row){return row.member?.state || "—"}
+function asset(row){return row.asset?.ticker || row.asset?.name || "—"}
+function type(row){return row.transaction?.type || "—"}
+function amountText(row){
+ const a=row.amount||{};
+ if(a.verbatim_text)return a.verbatim_text;
+ const f=n=>n==null?null:"$"+Number(n).toLocaleString("en-US");
+ if(a.range_low!=null&&a.range_high!=null)
+  return f(a.range_low)+" – "+f(a.range_high);
+ if(a.range_low!=null)return "От "+f(a.range_low);
+ return "Не указано";
 }
-function periodLabel(){return days===1?"1 DAY":days===7?"1 WEEK":days===30?"1 MONTH":days===365?"1 YEAR":"5 YEARS"}
+function midpoint(row){
+ const a=row.amount||{};
+ if(Number.isFinite(Number(a.midpoint)))return Number(a.midpoint);
+ if(Number.isFinite(Number(a.range_low))&&Number.isFinite(Number(a.range_high)))
+  return (Number(a.range_low)+Number(a.range_high))/2;
+ return 0;
+}
+function dateLabel(d){
+ if(!d)return "—";
+ const x=new Date(d+"T00:00:00");
+ return Number.isNaN(x.getTime())?"—":x.toLocaleDateString("ru-RU");
+}
+function filtered(){
+ const cutoff=new Date();
+ cutoff.setDate(cutoff.getDate()-(period==="all"?365000:Number(period)));
+ const q=query.trim().toLowerCase();
+ return records.filter(r=>{
+  const d=dateValue(r);
+  if(!d)return false;
+  if(new Date(d+"T23:59:59")<cutoff)return false;
+  if(!q)return true;
+  return [person(r),party(r),state(r),asset(r),type(r)]
+   .join(" ").toLowerCase().includes(q);
+ });
+}
+function rank(rows,fn){
+ const counts={};
+ rows.forEach(r=>{
+  const k=fn(r)||"Не указано";
+  counts[k]=(counts[k]||0)+1;
+ });
+ const list=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
+ return list.length?list.map(([k,v])=>
+  `<div class="rank"><span>${esc(k)}</span><b>${v}</b></div>`
+ ).join(""):'<p class="muted">Нет записей</p>';
+}
+function chart(rows,target){
+ const buckets={};
+ rows.forEach(r=>{
+  const d=dateValue(r);
+  if(d){const k=d.slice(0,7);buckets[k]=(buckets[k]||0)+1}
+ });
+ const list=Object.entries(buckets).sort((a,b)=>a[0].localeCompare(b[0])).slice(-12);
+ if(!list.length){$(target).innerHTML='<p class="muted">Нет данных для графика</p>';return}
+ const max=Math.max(1,...list.map(x=>x[1]));
+ $(target).innerHTML=list.map(([k,v])=>
+ `<div class="barcol"><span class="barval">${v}</span>
+ <div class="bar" style="height:${Math.max(3,v/max*145)}px"></div>
+ <small>${esc(k)}</small></div>`).join("");
+}
+function tableHTML(rows){
+ if(!rows.length)return '<tr><td colspan="9">Нет доступных записей за выбранный период.</td></tr>';
+ return rows.slice(0,500).map(r=>{
+  const url=r.receipt?.url||r.filing?.url||r.document_url;
+  const t=String(type(r)).toLowerCase();
+  return `<tr>
+   <td>${esc(person(r))}<br><button class="watch-btn" data-watch="${esc(person(r))}">☆ Следить</button></td>
+   <td>${esc(party(r))}</td><td>${esc(state(r))}</td>
+   <td>${esc(asset(r))}</td>
+   <td><span class="tag ${esc(t)}">${esc(type(r))}</span></td>
+   <td>${esc(dateLabel(dateValue(r)))}</td>
+   <td>${esc(dateLabel(filedValue(r)))}</td>
+   <td>${esc(amountText(r))}</td>
+   <td>${url?`<a href="${esc(url)}" target="_blank" rel="noopener">Документ ↗</a>`:"—"}</td>
+  </tr>`;
+ }).join("");
+}
 function render(){
- let a=selected(),buys=a.filter(r=>r.transaction.type==="buy"),
- sells=a.filter(r=>r.transaction.type==="sell");
- let people=new Set(a.map(r=>r.member.person_id||r.member.member_id||r.member.full_name));
- $("total").textContent=a.length;$("buys").textContent=buys.length;
- $("sells").textContent=sells.length;$("members").textContent=people.size;
- $("totalChange").textContent="of "+all.length+" loaded records";
- $("periodNote").textContent="Showing "+periodLabel()+". "+(days>30?
- "Source history is limited; this is not a complete historical census.":"Records in the currently loaded source window.");
- $("chartPeriod").textContent=periodLabel();$("analyticsPeriod").textContent=periodLabel();
- chart(a);composition(a);rank(a);analytics(a);tables();
+ const rows=filtered();
+ const people=new Set(rows.map(person));
+ const tickers=new Set(rows.map(asset));
+ const buys=rows.filter(r=>String(type(r)).toLowerCase()==="buy").length;
+ const sells=rows.filter(r=>String(type(r)).toLowerCase()==="sell").length;
+ const cards=[
+  ["ЗАПИСЕЙ",rows.length,"Загруженные раскрытия"],
+  ["ПОЛИТИКОВ",people.size,"Уникальные имена"],
+  ["ПОКУПКИ",buys,"Тип сделки buy"],
+  ["ПРОДАЖИ",sells,"Тип сделки sell"],
+  ["АКТИВЫ",tickers.size,"Тикеры и названия"]
+ ];
+ $("cards").innerHTML=cards.map(c=>
+  `<article class="card"><small>${c[0]}</small><strong>${c[1].toLocaleString("en-US")}</strong><span>${c[2]}</span></article>`
+ ).join("");
+ $("parties").innerHTML=rank(rows,party);
+ $("states").innerHTML=rank(rows,state);
+ $("assets").innerHTML=rank(rows,asset);
+ chart(rows,"chart");
+ $("table").innerHTML=tableHTML(rows);
+ $("table-all").innerHTML=tableHTML(rows);
+ $("count").textContent=rows.length+" записей";
+ $("analytics-cards").innerHTML=`
+  <article class="card"><small>ЗАПИСЕЙ</small><strong>${rows.length}</strong></article>
+  <article class="card"><small>УНИКАЛЬНЫХ ЛИЦ</small><strong>${people.size}</strong></article>
+  <article class="card"><small>ТИКЕРОВ / АКТИВОВ</small><strong>${tickers.size}</strong></article>`;
+ chart(rows,"analytics-chart");
+ renderWatchlist();
 }
-function chart(a){
- let bins=days<=1?24:days<=7?7:days<=30?10:days<=365?12:20;
- let vals=Array(bins).fill(0),span=days*86400000;
- a.forEach(r=>{let d=tradeDate(r);if(!d)return;
- let age=Date.now()-d.getTime(),i=bins-1-Math.min(bins-1,Math.floor(age/span*bins));
- if(i>=0)vals[i]++});
- let max=Math.max(1,...vals);
- $("activity").innerHTML=vals.map((v,i)=>'<div class="barwrap"><div class="bar" style="height:'+Math.max(2,v/max*100)+'%" title="'+v+' disclosures"></div><small>'+(i+1)+'</small></div>').join("");
- $("chartNote").textContent=a.length+" matching loaded records. Bars are relative to the largest bucket.";
+function renderWatchlist(){
+ const names=watchlist;
+ $("watchlist-content").innerHTML=names.length?names.map(n=>
+  `<div class="rank"><span>${esc(n)}</span><button class="watch-btn" data-unwatch="${esc(n)}">Удалить</button></div>`
+ ).join(""):'<p class="muted">Список пока пуст. Добавляйте политиков кнопкой ☆ в реестре.</p>';
 }
-function composition(a){
- let types=countBy(a,r=>r.transaction.type);
- $("composition").innerHTML=rankHTML(types);
+function saveWatch(){
+ localStorage.setItem(WATCH,JSON.stringify(watchlist));
+ renderWatchlist();
 }
-function rank(a){
- $("topMembers").innerHTML=rankHTML(countBy(a,r=>r.member.full_name||"Unknown filer"));
- $("topAssets").innerHTML=rankHTML(countBy(a,r=>r.asset.ticker||r.asset.name));
+function exportCSV(){
+ const rows=filtered();
+ const cols=[
+  ["Politician",person],["Party",party],["State",state],
+  ["Asset",asset],["Transaction type",type],
+  ["Transaction date",dateValue],["Filing date",filedValue],
+  ["Amount",amountText],["Document",r=>r.receipt?.url||r.filing?.url||""]
+ ];
+ const csv=[cols.map(c=>c[0]),...rows.map(r=>cols.map(c=>c[1](r)??""))]
+  .map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(","))
+  .join("\r\n");
+ const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download="insidergov-disclosures.csv";a.click();
+ URL.revokeObjectURL(url);
 }
-function analytics(a){
- $("uniqueAssets").textContent=new Set(a.map(r=>r.asset.ticker||r.asset.name).filter(Boolean)).size;
- $("house").textContent=a.filter(r=>r.member.chamber==="house").length;
- $("senate").textContent=a.filter(r=>r.member.chamber==="senate").length;
- let p=new Set(a.map(r=>r.member.person_id||r.member.member_id||r.member.full_name).filter(Boolean));
- $("average").textContent=p.size?(a.length/p.size).toFixed(1):"—";
- $("party").innerHTML=rankHTML(countBy(a,r=>r.member.party));
- $("chamber").innerHTML=rankHTML(countBy(a,r=>r.member.chamber));
- $("states").innerHTML=rankHTML(countBy(a,r=>r.member.state));
- let previous=all.filter(r=>{let d=tradeDate(r);return d&&d.getTime()>=Date.now()-days*2*86400000&&d.getTime()<Date.now()-days*86400000});
- let current=a.length,prior=previous.length;
- $("comparison").innerHTML=rankHTML([["Current period",current],["Previous period loaded",prior]]);
-}
-function tableRow(r){
- let m=r.member,a=r.asset,t=r.transaction,f=r.filing;
- return '<tr><td>'+esc(m.full_name||"Unknown")+'</td><td>'+esc([m.party,m.state].filter(Boolean).join(" / ")||"—")+'</td><td>'+esc(a.ticker||a.name||"—")+'</td><td>'+esc(t.type||"—")+'</td><td>'+dateStr(t.date)+'</td><td>'+dateStr(f.filed_date)+'</td><td>'+esc(range(r))+'</td><td>'+(r.receipt.url?'<a target="_blank" rel="noopener" href="'+esc(r.receipt.url)+'">DOCUMENT ↗</a>':"—")+'</td><td><button class="action" onclick="toggle(\''+esc(r.id)+'\')">'+(watch.has(r.id)?"★":"☆")+'</button></td></tr>';
-}
-function tables(){
- let q=$("search")?.value.toLowerCase()||"",type=$("type")?.value||"";
- view=selected().filter(r=>(!type||r.transaction.type===type)&&
- [r.member.full_name,r.member.state,r.member.party,r.asset.ticker,r.asset.name].join(" ").toLowerCase().includes(q));
- $("rows").innerHTML=view.map(tableRow).join("")||'<tr><td colspan="9" class="empty">No matching records in the selected period.</td></tr>';
- $("count").textContent="Showing "+view.length+" of "+selected().length+" loaded records.";
- $("latest").innerHTML=selected().slice(0,8).map(r=>'<tr><td>'+esc(r.member.full_name||"Unknown")+'</td><td>'+esc(r.asset.ticker||r.asset.name||"—")+'</td><td>'+esc(r.transaction.type||"—")+'</td><td>'+dateStr(r.transaction.date)+'</td><td>'+dateStr(r.filing.filed_date)+'</td><td>'+esc(range(r))+'</td></tr>').join("")||'<tr><td colspan="6" class="empty">No records in this period.</td></tr>';
- let w=all.filter(r=>watch.has(r.id));
- $("watchCount").textContent=w.length;
- $("watchPeople").textContent=new Set(w.map(r=>r.member.full_name)).size;
- $("watchRows").innerHTML=w.map(r=>'<tr><td>'+esc(r.member.full_name)+'</td><td>'+esc(r.asset.ticker||r.asset.name)+'</td><td>'+esc(r.transaction.type)+'</td><td>'+dateStr(r.filing.filed_date)+'</td><td>'+(r.receipt.url?'<a href="'+esc(r.receipt.url)+'" target="_blank">DOCUMENT ↗</a>':"—")+'</td><td><button class="action" onclick="toggle(\''+esc(r.id)+'\')">REMOVE</button></td></tr>').join("")||'<tr><td colspan="6" class="empty">No watched records in current source data.</td></tr>';
-}
-function toggle(id){watch.has(id)?watch.delete(id):watch.add(id);localStorage.setItem("ig-watch",JSON.stringify([...watch]));tables()}
-function csv(){
- let rows=[["Politician","Party","State","Ticker","Asset","Type","Trade date","Filing date","Value range","Source URL"]];
- view.forEach(r=>rows.push([r.member.full_name,r.member.party,r.member.state,r.asset.ticker,r.asset.name,r.transaction.type,r.transaction.date,r.filing.filed_date,range(r),r.receipt.url]));
- let text=rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\n");
- let blob=new Blob(["\ufeff"+text],{type:"text/csv;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");
- a.href=u;a.download="insidergov.csv";a.click();URL.revokeObjectURL(u);
-}
-function page(name){
- document.querySelectorAll("main section").forEach(x=>x.classList.add("hidden"));
- $(name).classList.remove("hidden");
- document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===name));
- $("title").textContent=({overview:"The Capitol Ledger",transactions:"Disclosure Archive",campaigns:"Campaign Finance",analytics:"Statistical Archives",watchlist:"Watchlist",about:"The Archives"})[name];
-}
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
-document.querySelectorAll("#periods button").forEach(b=>b.onclick=()=>{
- days=Number(b.dataset.days);document.querySelectorAll("#periods button").forEach(x=>x.classList.toggle("active",x===b));render();
-});
-$("search").oninput=tables;$("type").onchange=tables;
 async function load(){
+ if(loading)return;
+ loading=true;
+ $("status").textContent="Загрузка данных…";
+ $("refresh").disabled=true;
  try{
-  let res=await fetch(API+"/disclosures?limit=25",{headers:{Accept:"application/json"}});
-  if(!res.ok)throw Error("Source returned HTTP "+res.status);
-  let data=await res.json();if(!Array.isArray(data.data))throw Error("Unexpected data format");
-  all=data.data.filter(r=>r.change?.state!=="withdrawn").map(r=>norm(r));
-  updated=new Date();
-  $("status").innerHTML='<span class="dot"></span>CONNECTED · '+all.length+' RECORDS';
-  $("updated").textContent="Last successful update: "+updated.toLocaleString();
+  const fresh=[];
+  let cursor=null;
+  for(let i=0;i<MAX_PAGES;i++){
+   const url=new URL(API);
+   url.searchParams.set("limit",String(PAGE_SIZE));
+   if(cursor)url.searchParams.set("cursor",cursor);
+   const response=await fetch(url.toString(),{
+    headers:{"Accept":"application/json"},cache:"no-store"
+   });
+   if(!response.ok)throw new Error("HTTP "+response.status);
+   const body=await response.json();
+   if(!Array.isArray(body.data))throw new Error("Неожиданный формат ответа API");
+   fresh.push(...body.data.filter(r=>r&&r.member));
+   cursor=body.page?.next_cursor||null;
+   if(!body.page?.has_more||!cursor)break;
+   await new Promise(resolve=>setTimeout(resolve,350));
+  }
+  const unique=new Map();
+  fresh.forEach((r,i)=>{
+   const id=r.disclosure_id||r.id||`${person(r)}-${dateValue(r)}-${asset(r)}-${i}`;
+   unique.set(id,r);
+  });
+  records=[...unique.values()];
+  lastSync=new Date();
+  localStorage.setItem(CACHE,JSON.stringify({
+   savedAt:lastSync.toISOString(),records
+  }));
+  $("status").innerHTML='<span class="dot"></span>Источник ответил';
+  $("global-notice").className="notice";
+  $("global-notice").textContent=
+   `Успешно загружено ${records.length} записей. Данные источника могут быть неполными и публикуются с задержкой.`;
+ }catch(error){
+  $("status").textContent="Ошибка источника";
+  $("global-notice").className="notice error";
+  $("global-notice").textContent=
+   "Не удалось получить новые данные: "+error.message+
+   ". Если записи сохранены ранее, они останутся доступными. Проверьте доступность API и CORS.";
+  console.error("InsiderGov API:",error);
+ }finally{
+  loading=false;
+  $("refresh").disabled=false;
+  $("updated").textContent="Последняя успешная синхронизация: "+
+   (lastSync?lastSync.toLocaleString("ru-RU"):"нет данных");
   render();
- }catch(e){
-  $("status").innerHTML='<span class="dot err"></span>'+esc(e.message);
-  $("periodNote").textContent="Data source unavailable. Statistics cannot be calculated until real records load.";
-  ["total","buys","sells","members","uniqueAssets","house","senate","average"].forEach(id=>$(id).textContent="—");
-  $("latest").innerHTML='<tr><td colspan="6" class="empty">Data source unavailable.</td></tr>';
-  $("rows").innerHTML='<tr><td colspan="9" class="empty">Data source unavailable.</td></tr>';
  }
 }
+
+document.querySelectorAll(".nav button").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  btn.classList.add("active");
+  $(btn.dataset.page).classList.add("active");
+ });
+});
+$("search").addEventListener("input",e=>{query=e.target.value;render()});
+$("period").addEventListener("change",e=>{period=e.target.value;render()});
+$("refresh").addEventListener("click",load);
+$("export").addEventListener("click",exportCSV);
+
+document.addEventListener("click",e=>{
+ const add=e.target.closest("[data-watch]");
+ const remove=e.target.closest("[data-unwatch]");
+ if(add){
+  const name=add.dataset.watch;
+  if(!watchlist.includes(name)){watchlist.push(name);saveWatch()}
+ }
+ if(remove){
+  watchlist=watchlist.filter(n=>n!==remove.dataset.unwatch);
+  saveWatch();
+ }
+});
+
+try{
+ const cached=JSON.parse(localStorage.getItem(CACHE)||"null");
+ if(cached&&Array.isArray(cached.records)){
+  records=cached.records;
+  $("status").textContent="Показан сохранённый архив";
+  lastSync=cached.savedAt?new Date(cached.savedAt):null;
+ }
+ watchlist=JSON.parse(localStorage.getItem(WATCH)||"[]");
+ if(!Array.isArray(watchlist))watchlist=[];
+}catch(e){console.warn("Не удалось прочитать локальный архив",e)}
+
+render();
 load();
-// Poll no more than twice an hour on the free anonymous tier.
 setInterval(load,30*60*1000);
+})();
 </script>
-</body></html>
+</body>
+</html>
