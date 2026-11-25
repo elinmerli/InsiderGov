@@ -1,20 +1,18 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>InsiderGov — The Public Ledger</title>
-<link rel="icon" type="image/png" href="./favicon.png?v=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
 
 <style>
-:root{
+:root {
   --bg:#171516;--panel:#211d1d;--panel2:#292323;
   --paper:#e1d4b8;--paper-dim:#a99a7d;
   --gold:#b69a62;--gold2:#79633e;--line:#4a3c31;
-  --red:#a45c50;--green:#829071;--muted:#8e8375;--ink:#26211c;
+  --red:#a45c50;--green:#829071;--muted:#8e8375;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -45,7 +43,6 @@ a:hover{color:#e0c58c}
 h2{font-family:'Cinzel',serif;font-weight:500;font-size:27px;line-height:1.35;margin:7px 0 8px;color:#eadfc9}
 .subtitle{color:var(--muted);font-size:11px;margin:0 0 27px}
 .rule{height:1px;background:linear-gradient(90deg,var(--gold2),transparent);margin:20px 0 25px}
-.section-heading{font-family:'Cinzel',serif;font-size:13px;letter-spacing:1.5px;font-weight:500;color:#d8c8a9;margin:0 0 15px}
 .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:22px 0}
 .stat-card{background:linear-gradient(145deg,#292323,#211d1d);border:1px solid var(--line);padding:18px 17px;min-height:112px;position:relative}
 .stat-card:before{content:"";position:absolute;top:0;left:0;width:32px;height:1px;background:var(--gold)}
@@ -66,6 +63,7 @@ select{min-width:130px}
 .btn:hover{background:#493a2d}
 .btn.secondary{background:transparent;border-color:var(--line);color:var(--paper-dim)}
 .btn.danger{border-color:#70433d;color:#c78a7c}
+.btn:disabled{opacity:.35;cursor:not-allowed}
 .table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;min-width:650px}
 th{text-align:left;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;color:var(--gold);font-weight:500;padding:11px 10px;border-bottom:1px solid var(--gold2)}
@@ -77,8 +75,6 @@ tbody tr:hover{background:#2b2422}
 .tag{display:inline-block;border:1px solid #65533a;padding:2px 6px;font-size:9px;color:#c9b58c}
 .empty{padding:25px;text-align:center;color:var(--muted);font-size:11px}
 .pagination{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding-top:15px;color:var(--muted);font-size:10px}
-
-/* Linear charts */
 .chart-box{width:100%;overflow:hidden}
 .line-chart{display:block;width:100%;height:auto;min-height:230px}
 .chart-grid{stroke:#544638;stroke-width:.7;stroke-dasharray:3 5}
@@ -88,7 +84,6 @@ tbody tr:hover{background:#2b2422}
 .chart-point{fill:#d8bd83;stroke:#2b2422;stroke-width:2}
 .chart-point:hover{fill:#fff0c9}
 .chart-label{fill:#b5a58b;font-family:'Source Code Pro',monospace;font-size:10px}
-.chart-value{fill:#e4d3b2;font-family:'Source Code Pro',monospace;font-size:10px}
 .chart-legend{font-size:10px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
 .legend-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#c2a66e;margin-right:6px}
 .chart-caption{font-size:9px;color:var(--muted);margin-top:10px}
@@ -100,7 +95,6 @@ tbody tr:hover{background:#2b2422}
 .source-item p{font-size:10px;color:var(--muted);margin:5px 0}
 .notice{border-left:2px solid var(--gold2);padding:12px 15px;background:#26201e;color:#bcae96;font-size:10px;margin:15px 0}
 .footer{border-top:1px solid var(--line);padding-top:18px;margin-top:35px;color:var(--muted);font-size:9px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
-.mobile-menu{display:none}
 @media(max-width:900px){
  .layout{grid-template-columns:1fr}
  .sidebar{position:relative;height:auto;padding:15px;display:block}
@@ -124,6 +118,7 @@ tbody tr:hover{background:#2b2422}
 }
 </style>
 </head>
+
 <body>
 <div class="layout">
 <aside class="sidebar">
@@ -186,7 +181,7 @@ tbody tr:hover{background:#2b2422}
   <p class="subtitle">Search and examine reported campaign finance totals.</p>
   <div class="rule"></div>
   <div class="filters">
-    <input id="searchInput" class="search" placeholder="Search candidate or committee…">
+    <input id="searchInput" class="search" placeholder="Search name, candidate ID, party, state or district…">
     <select id="partyFilter"><option value="">All parties</option></select>
     <select id="stateFilter"><option value="">All states</option></select>
     <button class="btn" id="exportCsv">Export CSV</button>
@@ -267,6 +262,7 @@ const $ = id => document.getElementById(id);
 let allRecords = [];
 let filteredRecords = [];
 let currentPage = 1;
+let sourceMetadata = {};
 const pageSize = 50;
 let watchlist = loadWatchlist();
 
@@ -274,26 +270,31 @@ function loadWatchlist(){
   try{return JSON.parse(localStorage.getItem("insidergov-watchlist")||"[]");}
   catch{return [];}
 }
+
 function saveWatchlist(){
   localStorage.setItem("insidergov-watchlist",JSON.stringify(watchlist));
 }
+
 function escapeHTML(value){
   return String(value??"").replace(/[&<>"']/g,c=>({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[c]);
 }
+
 function numberValue(value){
   if(typeof value==="number") return Number.isFinite(value)?value:0;
   if(value===null||value===undefined||value==="") return 0;
   const n=Number(String(value).replace(/[$,%\s,]/g,""));
   return Number.isFinite(n)?n:0;
 }
+
 function firstValue(obj,keys,fallback=""){
   for(const key of keys){
     if(obj[key]!==undefined&&obj[key]!==null&&obj[key]!=="") return obj[key];
   }
   return fallback;
 }
+
 function money(value){
   const n=numberValue(value);
   return new Intl.NumberFormat("en-US",{
@@ -301,19 +302,48 @@ function money(value){
     notation:Math.abs(n)>=1000000?"compact":"standard"
   }).format(n);
 }
+
 function normalizeRecord(row){
-  const name=firstValue(row,["candidate_name","cand_name","name","candidate","candidateName","committee_name"],"Unknown candidate");
+  const name=firstValue(row,[
+    "candidate_name","cand_name","name","candidate",
+    "candidateName","committee_name"
+  ],"Unknown candidate");
+
   return {
-    id:String(firstValue(row,["candidate_id","cand_id","candidateId","committee_id","id"],name)),
+    id:String(firstValue(row,[
+      "candidate_id","cand_id","candidateId","committee_id","id"
+    ],name)),
     name:String(name),
-    party:String(firstValue(row,["party","party_affiliation","party_full"],"—")),
-    state:String(firstValue(row,["state","candidate_state","state_abbreviation"],"—")),
-    receipts:numberValue(firstValue(row,["receipts","total_receipts","total_receipts_amount","candidate_receipts"],0)),
-    spending:numberValue(firstValue(row,["disbursements","total_disbursements","total_disbursements_amount","candidate_disbursements"],0)),
-    cash:numberValue(firstValue(row,["cash_on_hand","cash_on_hand_end_period","cash"],0)),
-    debt:numberValue(firstValue(row,["debts_owed_by","debts_owed_by_committee","debt"],0))
+    party:String(firstValue(row,[
+      "party","party_affiliation","party_full","party_code"
+    ],"—")),
+    partyCode:String(firstValue(row,["party_code"],"")),
+    state:String(firstValue(row,[
+      "state","candidate_state","state_abbreviation"
+    ],"—")),
+    district:String(firstValue(row,[
+      "district","candidate_district"
+    ],"")),
+    incumbentStatus:String(firstValue(row,[
+      "incumbent_status"
+    ],"")),
+    receipts:numberValue(firstValue(row,[
+      "receipts","total_receipts","total_receipts_amount","candidate_receipts"
+    ],0)),
+    spending:numberValue(firstValue(row,[
+      "disbursements","total_disbursements",
+      "total_disbursements_amount","candidate_disbursements"
+    ],0)),
+    cash:numberValue(firstValue(row,[
+      "cash_on_hand","cash_on_hand_end_period","cash"
+    ],0)),
+    debt:numberValue(firstValue(row,[
+      "debts_owed","debts_owed_by",
+      "debts_owed_by_committee","debt"
+    ],0))
   };
 }
+
 function extractRecords(data){
   if(Array.isArray(data)) return data;
   if(data&&Array.isArray(data.records)) return data.records;
@@ -321,79 +351,159 @@ function extractRecords(data){
   if(data&&Array.isArray(data.data)) return data.data;
   return [];
 }
+
 async function loadData(){
   const status=$("dataStatus");
+
   try{
-    const response=await fetch("./data/fec-campaigns.json?updated="+Date.now(),{cache:"no-store"});
+    const response=await fetch(
+      "./data/fec-campaigns.json?updated="+Date.now(),
+      {cache:"no-store"}
+    );
+
     if(!response.ok) throw new Error("HTTP "+response.status);
+
     const data=await response.json();
+
+    sourceMetadata={
+      source:data&&data.source?String(data.source):"Federal Election Commission",
+      updatedAt:data&&data.updated_at?String(data.updated_at):"",
+      sourceUrl:data&&data.source_url?String(data.source_url):""
+    };
+
     const rows=extractRecords(data);
-    allRecords=rows.map(normalizeRecord).filter(r=>r.name!=="Unknown candidate");
+    if(!rows.length) throw new Error("The JSON file contains no candidate records.");
+
+    allRecords=rows
+      .map(normalizeRecord)
+      .filter(r=>r.name!=="Unknown candidate");
+
     allRecords.sort((a,b)=>b.receipts-a.receipts);
     filteredRecords=[...allRecords];
-    status.textContent="● RECORDS LOADED";
+
+    status.textContent="● FEC RECORDS LOADED";
     status.style.color="var(--green)";
-    $("sidebarUpdated").textContent=allRecords.length+" records loaded";
+
+    const updatedLabel=sourceMetadata.updatedAt
+      ? "Updated "+new Date(sourceMetadata.updatedAt).toLocaleString(
+          "en-US",
+          {dateStyle:"medium",timeStyle:"short",timeZone:"UTC"}
+        )+" UTC"
+      : allRecords.length+" records loaded";
+
+    $("sidebarUpdated").textContent=
+      allRecords.length.toLocaleString("en-US")+" records · "+updatedLabel;
+
     populateFilters();
     updateEverything();
+
   }catch(error){
     status.textContent="● DATA UNAVAILABLE";
     status.style.color="var(--red)";
     $("sidebarUpdated").textContent="Could not load dataset";
-    $("candidateTable").innerHTML='<tr><td colspan="7" class="empty">Could not load data/fec-campaigns.json. Check that the file exists and is valid JSON.</td></tr>';
+
+    $("candidateTable").innerHTML=
+      '<tr><td colspan="7" class="empty">Could not load ./data/fec-campaigns.json. Upload the JSON file inside a folder named data, with the exact filename fec-campaigns.json.</td></tr>';
+
     ["overviewChart","receiptsChart","spendingChart","partyChart"].forEach(id=>{
       $(id).innerHTML='<div class="empty">No source data available.</div>';
     });
+
     console.error("InsiderGov data loading error:",error);
   }
 }
+
 function populateFilters(){
-  const parties=[...new Set(allRecords.map(r=>r.party).filter(x=>x&&x!=="—"))].sort();
-  const states=[...new Set(allRecords.map(r=>r.state).filter(x=>x&&x!=="—"))].sort();
-  $("partyFilter").innerHTML='<option value="">All parties</option>'+parties.map(x=>`<option value="${escapeHTML(x)}">${escapeHTML(x)}</option>`).join("");
-  $("stateFilter").innerHTML='<option value="">All states</option>'+states.map(x=>`<option value="${escapeHTML(x)}">${escapeHTML(x)}</option>`).join("");
+  const parties=[...new Set(
+    allRecords.map(r=>r.party).filter(x=>x&&x!=="—")
+  )].sort();
+
+  const states=[...new Set(
+    allRecords.map(r=>r.state).filter(x=>x&&x!=="—")
+  )].sort();
+
+  $("partyFilter").innerHTML=
+    '<option value="">All parties</option>'+
+    parties.map(x=>
+      `<option value="${escapeHTML(x)}">${escapeHTML(x)}</option>`
+    ).join("");
+
+  $("stateFilter").innerHTML=
+    '<option value="">All states</option>'+
+    states.map(x=>
+      `<option value="${escapeHTML(x)}">${escapeHTML(x)}</option>`
+    ).join("");
 }
+
 function applyFilters(){
-  const q=$("searchInput").value.trim().toLowerCase();
+  const q=$("searchInput").value.trim().toLocaleLowerCase("en-US");
+  const terms=q.split(/\s+/).filter(Boolean);
   const party=$("partyFilter").value;
   const state=$("stateFilter").value;
-  filteredRecords=allRecords.filter(r=>
-    (!q||r.name.toLowerCase().includes(q)||r.id.toLowerCase().includes(q))&&
-    (!party||r.party===party)&&(!state||r.state===state)
-  );
+
+  filteredRecords=allRecords.filter(r=>{
+    const searchable=[
+      r.name,r.id,r.party,r.partyCode,
+      r.state,r.district,r.incumbentStatus
+    ].join(" ").toLocaleLowerCase("en-US");
+
+    const matchesSearch=
+      !terms.length||terms.every(term=>searchable.includes(term));
+
+    return matchesSearch&&
+      (!party||r.party===party)&&
+      (!state||r.state===state);
+  });
+
   currentPage=1;
   renderTable();
 }
+
 function updateStats(){
   const totalReceipts=allRecords.reduce((s,r)=>s+r.receipts,0);
   const totalSpending=allRecords.reduce((s,r)=>s+r.spending,0);
   const totalCash=allRecords.reduce((s,r)=>s+r.cash,0);
+
   $("statCandidates").textContent=allRecords.length.toLocaleString("en-US");
   $("statReceipts").textContent=money(totalReceipts);
   $("statSpending").textContent=money(totalSpending);
   $("statCash").textContent=money(totalCash);
+
   $("overviewSummary").innerHTML=`
     <div class="watch-row"><span class="muted">Records in dataset</span><strong>${allRecords.length.toLocaleString("en-US")}</strong></div>
     <div class="watch-row"><span class="muted">Party labels</span><strong>${new Set(allRecords.map(r=>r.party)).size}</strong></div>
     <div class="watch-row"><span class="muted">State labels</span><strong>${new Set(allRecords.map(r=>r.state)).size}</strong></div>
     <div class="watch-row"><span class="muted">Source</span><strong>FEC dataset</strong></div>`;
 }
+
 function renderTable(){
   const start=(currentPage-1)*pageSize;
   const rows=filteredRecords.slice(start,start+pageSize);
-  $("tableCount").textContent=filteredRecords.length.toLocaleString("en-US")+" matching records";
-  $("pageInfo").textContent=`Page ${currentPage} of ${Math.max(1,Math.ceil(filteredRecords.length/pageSize))}`;
+  const totalPages=Math.max(1,Math.ceil(filteredRecords.length/pageSize));
+
+  $("tableCount").textContent=
+    filteredRecords.length.toLocaleString("en-US")+" matching records";
+
+  $("pageInfo").textContent=`Page ${currentPage} of ${totalPages}`;
   $("prevPage").disabled=currentPage<=1;
-  $("nextPage").disabled=currentPage>=Math.ceil(filteredRecords.length/pageSize);
+  $("nextPage").disabled=currentPage>=totalPages;
+
   if(!rows.length){
-    $("candidateTable").innerHTML='<tr><td colspan="7" class="empty">No matching records.</td></tr>';
+    $("candidateTable").innerHTML=
+      '<tr><td colspan="7" class="empty">No matching records.</td></tr>';
     return;
   }
+
   $("candidateTable").innerHTML=rows.map(r=>{
     const saved=watchlist.includes(r.id);
+
     return `<tr>
-      <td><span class="candidate-name">${escapeHTML(r.name)}</span><br><span class="muted">${escapeHTML(r.id)}</span></td>
-      <td>${escapeHTML(r.party)}</td><td>${escapeHTML(r.state)}</td>
+      <td>
+        <span class="candidate-name">${escapeHTML(r.name)}</span><br>
+        <span class="muted">${escapeHTML(r.id)}</span>
+      </td>
+      <td>${escapeHTML(r.party)}</td>
+      <td>${escapeHTML(r.state)}</td>
       <td class="money">${money(r.receipts)}</td>
       <td class="money">${money(r.spending)}</td>
       <td class="money">${money(r.cash)}</td>
@@ -401,38 +511,55 @@ function renderTable(){
     </tr>`;
   }).join("");
 }
+
 function makeLineChart(elementId,items){
   const el=$(elementId);
+
   if(!items.length){
     el.innerHTML='<div class="empty">No records available for this diagram.</div>';
     return;
   }
+
   const width=900,height=310,left=76,right=25,top=25,bottom=65;
-  const plotW=width-left-right,plotH=height-top-bottom;
+  const plotW=width-left-right;
+  const plotH=height-top-bottom;
   const max=Math.max(1,...items.map(x=>x.value));
   const ticks=4;
+
   const points=items.map((item,i)=>{
     const x=left+(items.length===1?plotW/2:i*plotW/(items.length-1));
     const y=top+plotH-(item.value/max)*plotH;
     return {...item,x,y};
   });
+
   let grid="";
+
   for(let i=0;i<=ticks;i++){
     const y=top+i*plotH/ticks;
     const value=max*(1-i/ticks);
+
     grid+=`<line class="chart-grid" x1="${left}" y1="${y}" x2="${width-right}" y2="${y}"/>`;
     grid+=`<text class="chart-label" x="${left-10}" y="${y+4}" text-anchor="end">${shortMoney(value)}</text>`;
   }
-  const path=points.map((p,i)=>(i?"L":"M")+p.x+" "+p.y).join(" ");
-  const area=path+` L ${points[points.length-1].x} ${top+plotH} L ${points[0].x} ${top+plotH} Z`;
+
+  const path=points.map((p,i)=>
+    (i?"L":"M")+p.x+" "+p.y
+  ).join(" ");
+
+  const area=path+
+    ` L ${points[points.length-1].x} ${top+plotH}`+
+    ` L ${points[0].x} ${top+plotH} Z`;
+
   const pointMarkup=points.map((p,i)=>{
     const label=p.label.length>13?p.label.slice(0,12)+"…":p.label;
     const anchor=i===0?"start":i===points.length-1?"end":"middle";
+
     return `<circle class="chart-point" cx="${p.x}" cy="${p.y}" r="5">
       <title>${escapeHTML(p.label)}: ${money(p.value)}</title>
     </circle>
     <text class="chart-label" x="${p.x}" y="${top+plotH+20}" text-anchor="${anchor}">${escapeHTML(label)}</text>`;
   }).join("");
+
   el.innerHTML=`
     <svg class="line-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Linear chart">
       ${grid}
@@ -446,94 +573,186 @@ function makeLineChart(elementId,items){
     </svg>
     <div class="chart-caption">Each point represents a reported source value. Hover over a point to inspect its exact figure.</div>`;
 }
+
 function shortMoney(n){
   if(n>=1e9)return "$"+(n/1e9).toFixed(1)+"B";
   if(n>=1e6)return "$"+(n/1e6).toFixed(1)+"M";
   if(n>=1e3)return "$"+(n/1e3).toFixed(0)+"K";
   return "$"+Math.round(n);
 }
+
 function renderCharts(){
-  const topReceipts=[...allRecords].sort((a,b)=>b.receipts-a.receipts).slice(0,12);
-  const topSpending=[...allRecords].sort((a,b)=>b.spending-a.spending).slice(0,12);
-  makeLineChart("overviewChart",topReceipts.slice(0,10).map(r=>({label:r.name,value:r.receipts})));
-  makeLineChart("receiptsChart",topReceipts.map(r=>({label:r.name,value:r.receipts})));
-  makeLineChart("spendingChart",topSpending.map(r=>({label:r.name,value:r.spending})));
+  const topReceipts=[...allRecords]
+    .sort((a,b)=>b.receipts-a.receipts).slice(0,12);
+
+  const topSpending=[...allRecords]
+    .sort((a,b)=>b.spending-a.spending).slice(0,12);
+
+  makeLineChart(
+    "overviewChart",
+    topReceipts.slice(0,10).map(r=>({label:r.name,value:r.receipts}))
+  );
+
+  makeLineChart(
+    "receiptsChart",
+    topReceipts.map(r=>({label:r.name,value:r.receipts}))
+  );
+
+  makeLineChart(
+    "spendingChart",
+    topSpending.map(r=>({label:r.name,value:r.spending}))
+  );
+
   const groups={};
+
   allRecords.forEach(r=>{
     const party=r.party||"Unknown";
     groups[party]=(groups[party]||0)+r.receipts;
   });
-  const partyItems=Object.entries(groups).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([label,value])=>({label,value}));
+
+  const partyItems=Object.entries(groups)
+    .sort((a,b)=>b[1]-a[1])
+    .slice(0,10)
+    .map(([label,value])=>({label,value}));
+
   makeLineChart("partyChart",partyItems);
 }
+
 function updateEverything(){
   updateStats();
   renderTable();
   renderCharts();
   renderWatchlist();
 }
+
 function toggleWatch(id){
-  if(watchlist.includes(id))watchlist=watchlist.filter(x=>x!==id);
-  else watchlist.push(id);
+  if(watchlist.includes(id)){
+    watchlist=watchlist.filter(x=>x!==id);
+  }else{
+    watchlist.push(id);
+  }
+
   saveWatchlist();
   renderTable();
   renderWatchlist();
 }
+
 function renderWatchlist(){
-  const records=watchlist.map(id=>allRecords.find(r=>r.id===id)).filter(Boolean);
+  const records=watchlist
+    .map(id=>allRecords.find(r=>r.id===id))
+    .filter(Boolean);
+
   if(!records.length){
-    $("watchlistContent").innerHTML='<div class="empty">No candidates saved yet. Use the Save button in the Campaign Register.</div>';
+    $("watchlistContent").innerHTML=
+      '<div class="empty">No candidates saved yet. Use the Save button in the Campaign Register.</div>';
     return;
   }
+
   $("watchlistContent").innerHTML=records.map(r=>`
     <div class="watch-row">
-      <div><strong class="candidate-name">${escapeHTML(r.name)}</strong><br><span class="muted">${escapeHTML(r.party)} · ${escapeHTML(r.state)}</span></div>
+      <div>
+        <strong class="candidate-name">${escapeHTML(r.name)}</strong><br>
+        <span class="muted">${escapeHTML(r.party)} · ${escapeHTML(r.state)}</span>
+      </div>
       <div class="money">${money(r.receipts)}</div>
       <button class="btn secondary" data-unwatch="${escapeHTML(r.id)}">Remove</button>
     </div>`).join("");
 }
+
 function exportCSV(){
-  const headers=["Candidate ID","Candidate","Party","State","Receipts USD","Disbursements USD","Cash on Hand USD","Debt USD"];
-  const rows=filteredRecords.map(r=>[r.id,r.name,r.party,r.state,r.receipts,r.spending,r.cash,r.debt]);
-  const csv=[headers,...rows].map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\n");
-  const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+  const headers=[
+    "Candidate ID","Candidate","Party","State",
+    "Receipts USD","Disbursements USD","Cash on Hand USD","Debt USD"
+  ];
+
+  const rows=filteredRecords.map(r=>[
+    r.id,r.name,r.party,r.state,
+    r.receipts,r.spending,r.cash,r.debt
+  ]);
+
+  const csv=[headers,...rows].map(row=>
+    row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")
+  ).join("\n");
+
+  const blob=new Blob(["\uFEFF"+csv],{
+    type:"text/csv;charset=utf-8"
+  });
+
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
-  a.href=url;a.download="insidergov-campaign-records.csv";a.click();
+
+  a.href=url;
+  a.download="insidergov-campaign-records.csv";
+  a.click();
+
   URL.revokeObjectURL(url);
 }
+
 function showPage(name){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".page").forEach(p=>
+    p.classList.remove("active")
+  );
+
   const page=$("page-"+name);
   if(page)page.classList.add("active");
-  document.querySelectorAll(".nav-link").forEach(a=>a.classList.toggle("active",a.dataset.page===name));
+
+  document.querySelectorAll(".nav-link").forEach(a=>
+    a.classList.toggle("active",a.dataset.page===name)
+  );
+
   window.location.hash=name;
 }
+
 document.querySelectorAll("[data-page]").forEach(link=>{
   link.addEventListener("click",event=>{
     event.preventDefault();
     showPage(link.dataset.page);
   });
 });
+
 $("searchInput").addEventListener("input",applyFilters);
 $("partyFilter").addEventListener("change",applyFilters);
 $("stateFilter").addEventListener("change",applyFilters);
-$("prevPage").addEventListener("click",()=>{if(currentPage>1){currentPage--;renderTable();}});
-$("nextPage").addEventListener("click",()=>{if(currentPage<Math.ceil(filteredRecords.length/pageSize)){currentPage++;renderTable();}});
-$("exportCsv").addEventListener("click",exportCSV);
-$("clearWatchlist").addEventListener("click",()=>{
-  if(confirm("Clear all saved candidates from this browser?")){
-    watchlist=[];saveWatchlist();renderWatchlist();renderTable();
+
+$("prevPage").addEventListener("click",()=>{
+  if(currentPage>1){
+    currentPage--;
+    renderTable();
   }
 });
+
+$("nextPage").addEventListener("click",()=>{
+  if(currentPage<Math.ceil(filteredRecords.length/pageSize)){
+    currentPage++;
+    renderTable();
+  }
+});
+
+$("exportCsv").addEventListener("click",exportCSV);
+
+$("clearWatchlist").addEventListener("click",()=>{
+  if(confirm("Clear all saved candidates from this browser?")){
+    watchlist=[];
+    saveWatchlist();
+    renderWatchlist();
+    renderTable();
+  }
+});
+
 document.addEventListener("click",event=>{
   const watch=event.target.closest("[data-watch]");
   const unwatch=event.target.closest("[data-unwatch]");
+
   if(watch)toggleWatch(watch.dataset.watch);
   if(unwatch)toggleWatch(unwatch.dataset.unwatch);
 });
+
 const initialPage=location.hash.replace("#","");
-if(["overview","campaigns","analytics","watchlist","sources"].includes(initialPage))showPage(initialPage);
+
+if(["overview","campaigns","analytics","watchlist","sources"].includes(initialPage)){
+  showPage(initialPage);
+}
+
 loadData();
 </script>
 </body>
