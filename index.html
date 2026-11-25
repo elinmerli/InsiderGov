@@ -3,466 +3,394 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#080e19">
-<title>InsiderGov — Congressional Financial Intelligence</title>
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#17151a">
+<title>InsiderGov — The Capitol Ledger</title>
 <style>
-:root {
-  --bg:#080e19;--panel:#101a2a;--panel2:#131f32;
-  --border:#213047;--text:#edf3fc;--muted:#8796ad;
-  --cyan:#39c6d8;--green:#37c98a;--red:#f16d78;
+:root{
+--bg:#17151a;--panel:#211e24;--panel2:#29242a;--line:#463a35;
+--paper:#e9ddc8;--muted:#aa9a87;--gold:#b69a70;
+--green:#83a68a;--red:#bd7771;--shadow:0 12px 35px #0005;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-font:14px Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+body{margin:0;background:var(--bg);color:var(--paper);
+font-family:Georgia,'Times New Roman',serif}
 button,input,select{font:inherit}
 button{cursor:pointer}
 .layout{display:flex;min-height:100vh}
-.sidebar{width:230px;flex-shrink:0;background:#0b1422;
-border-right:1px solid var(--border);padding:25px 16px}
-.brand{font-size:20px;font-weight:800;letter-spacing:-.7px;
-padding:5px 10px 28px}
-.brand span{color:var(--cyan)}
-.brand small{display:block;font-size:10px;color:var(--muted);
-letter-spacing:2px;margin-top:5px}
-.nav{display:grid;gap:7px}
-.nav button{border:0;background:transparent;color:var(--muted);
-text-align:left;padding:12px;border-radius:9px}
-.nav button.active,.nav button:hover{background:#17263a;color:white}
-.nav button.active{border-left:3px solid var(--cyan)}
-.sidebar-note{margin:35px 9px;color:var(--muted);
-font-size:11px;line-height:1.7}
-main{flex:1;min-width:0;padding:30px clamp(16px,3vw,42px)}
-.top{display:flex;justify-content:space-between;align-items:center;
-gap:16px;flex-wrap:wrap;margin-bottom:28px}
-h1{font-size:25px;margin:0 0 7px;letter-spacing:-.6px}
-.sub{color:var(--muted);font-size:12px}
-.status{border:1px solid var(--border);border-radius:30px;
-padding:8px 12px;color:var(--muted);font-size:11px}
+aside{width:245px;background:#131217;border-right:1px solid var(--line);
+padding:25px 17px;flex-shrink:0}
+.logo{font-size:24px;letter-spacing:3px;font-weight:bold}
+.logo span{color:var(--gold)}
+.eyebrow{font:10px Arial,sans-serif;letter-spacing:3px;color:var(--gold)}
+nav{display:grid;gap:5px;margin-top:35px}
+nav button{background:none;border:0;color:var(--muted);text-align:left;
+padding:13px;border-radius:3px;font:12px Arial,sans-serif;letter-spacing:1px}
+nav button.active,nav button:hover{background:#302a2d;color:var(--paper);
+border-left:2px solid var(--gold)}
+.sidefoot{margin-top:50px;color:var(--muted);font-size:12px;line-height:1.8}
+main{flex:1;min-width:0;padding:30px clamp(15px,3vw,43px)}
+header{display:flex;justify-content:space-between;align-items:center;
+gap:15px;flex-wrap:wrap;border-bottom:1px solid var(--line);
+padding-bottom:22px;margin-bottom:24px}
+h1{font-size:30px;font-weight:normal;margin:0 0 6px}
+h2{font-size:17px;font-weight:normal;margin:0}
+h3{font-size:13px;font-weight:normal;color:var(--gold);margin:0}
+.sub{font:11px Arial,sans-serif;color:var(--muted);letter-spacing:1px}
+.status{font:10px Arial,sans-serif;color:var(--muted);
+border:1px solid var(--line);padding:9px 12px}
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
 background:var(--green);margin-right:7px}
-.dot.bad{background:var(--red)}
-.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-gap:13px;margin-bottom:16px}
-.card,.panel{background:var(--panel);border:1px solid var(--border);
-border-radius:13px;padding:18px}
-.card .label{color:var(--muted);font-size:11px}
-.card .value{font-size:27px;font-weight:750;margin-top:12px}
-.card .hint{color:var(--muted);font-size:10px;margin-top:7px}
-.panel{margin-bottom:16px}
-.panel-head{display:flex;justify-content:space-between;align-items:center;
-gap:12px;flex-wrap:wrap;margin-bottom:15px}
-.panel h2{font-size:14px;margin:0}
-.controls{display:flex;gap:9px;flex-wrap:wrap}
-input,select{background:#0b1524;color:var(--text);
-border:1px solid var(--border);border-radius:8px;padding:10px 11px;
-outline:none;min-width:0}
-input:focus,select:focus{border-color:var(--cyan)}
-button.action{background:#15263b;color:var(--text);
-border:1px solid var(--border);padding:9px 12px;border-radius:8px}
-button.action:hover{border-color:var(--cyan)}
-button.primary{background:var(--cyan);color:#06131c;border:0;
-font-weight:700}
-.table-wrap{overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:720px}
-th{text-align:left;color:var(--muted);font-size:10px;
-font-weight:600;text-transform:uppercase;letter-spacing:.6px}
-td,th{padding:13px 11px;border-bottom:1px solid var(--border)}
+.dot.err{background:var(--red)}
+.hero{height:180px;position:relative;overflow:hidden;margin-bottom:20px;
+background:linear-gradient(90deg,#17151aee,#17151a55),
+url('https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1500')
+center 48%/cover;border:1px solid var(--line);display:flex;
+flex-direction:column;justify-content:end;padding:24px}
+.hero h2{font-size:30px;letter-spacing:1px}
+.hero p{font:10px Arial,sans-serif;letter-spacing:2px;color:var(--gold)}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;
+margin-bottom:15px}
+.card,.panel{background:var(--panel);border:1px solid var(--line);
+box-shadow:var(--shadow);padding:17px}
+.card .label{font:10px Arial,sans-serif;letter-spacing:1px;color:var(--muted)}
+.value{font-size:27px;margin-top:12px}
+.hint{font:10px Arial,sans-serif;color:var(--muted);margin-top:7px}
+.green{color:var(--green)}.red{color:var(--red)}.gold{color:var(--gold)}
+.grid2{display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
+.panel{margin-bottom:15px;min-width:0}
+.panelhead{display:flex;justify-content:space-between;align-items:center;
+gap:10px;flex-wrap:wrap;margin-bottom:17px}
+.controls{display:flex;gap:7px;flex-wrap:wrap}
+input,select{background:#17151a;color:var(--paper);border:1px solid var(--line);
+padding:9px;border-radius:2px;font:11px Arial,sans-serif}
+button.action{background:#302a2d;color:var(--paper);border:1px solid var(--line);
+padding:9px 12px;font:10px Arial,sans-serif;letter-spacing:1px}
+button.action:hover{border-color:var(--gold)}
+.periods{display:flex;gap:6px;flex-wrap:wrap}
+.periods button{padding:8px 12px;background:#17151a;color:var(--muted);
+border:1px solid var(--line);font:10px Arial,sans-serif}
+.periods button.active{background:#554431;color:#fff0d7;border-color:var(--gold)}
+.chart{height:185px;display:flex;align-items:end;gap:5px;
+padding:12px 2px 0;border-bottom:1px solid var(--line)}
+.barwrap{height:100%;flex:1;min-width:3px;display:flex;align-items:end;
+position:relative}
+.bar{width:100%;background:linear-gradient(#c3a478,#73583f);
+min-height:2px}
+.barwrap small{position:absolute;bottom:-19px;left:50%;
+transform:translateX(-50%);font:9px Arial,sans-serif;color:var(--muted)}
+table{width:100%;border-collapse:collapse;min-width:680px}
+.tablewrap{overflow:auto}
+th{text-align:left;color:var(--gold);font:9px Arial,sans-serif;
+letter-spacing:1px;text-transform:uppercase}
+td,th{padding:12px 9px;border-bottom:1px solid var(--line)}
 td{font-size:12px}
-td a{color:var(--cyan);text-decoration:none}
+td a{color:var(--gold);text-decoration:none}
 td a:hover{text-decoration:underline}
-.muted{color:var(--muted)}
-.tag{display:inline-block;border-radius:5px;padding:4px 7px;
-font-size:10px;background:#1b3042;color:var(--cyan)}
-.buy{color:var(--green)}.sell{color:var(--red)}
-.chart{height:190px;display:flex;align-items:end;gap:5px;
-padding:15px 3px 0;border-bottom:1px solid var(--border)}
-.bar-wrap{flex:1;min-width:5px;height:100%;display:flex;
-align-items:end;position:relative}
-.bar{width:100%;background:var(--cyan);opacity:.8;
-border-radius:4px 4px 0 0;min-height:2px}
-.bar-wrap span{position:absolute;bottom:-20px;left:50%;
-transform:translateX(-50%);font-size:9px;color:var(--muted)}
-.empty{padding:35px 10px;text-align:center;color:var(--muted)}
-.notice{font-size:11px;color:var(--muted);line-height:1.7}
+.tag{color:var(--gold);border:1px solid var(--line);padding:4px 6px;
+font:9px Arial,sans-serif}
+.notice{color:var(--muted);font:11px/1.7 Arial,sans-serif}
 .hidden{display:none!important}
-.watch{color:var(--cyan);border:0;background:none;font-size:17px}
-.footer{padding:15px 4px;color:var(--muted);font-size:10px;
+.empty{text-align:center;color:var(--muted);padding:25px}
+.meter{height:6px;background:#151319;margin-top:8px}
+.meter span{display:block;height:100%;background:var(--gold)}
+.rank{display:grid;gap:13px}
+.rankrow{display:grid;grid-template-columns:110px 1fr 35px;gap:8px;
+align-items:center;font:11px Arial,sans-serif}
+footer{padding:15px 0;color:var(--muted);font:10px Arial,sans-serif;
 line-height:1.7}
-.mobile-brand{display:none}
-@media(max-width:900px){
- .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
- .sidebar{width:190px}
-}
-@media(max-width:650px){
- .layout{display:block}.sidebar{width:100%;padding:12px;
- border-right:0;border-bottom:1px solid var(--border)}
- .brand{padding:5px 8px 12px}.brand small{display:inline;margin-left:8px}
- .nav{display:flex;overflow:auto;gap:5px}
- .nav button{white-space:nowrap;padding:9px}
- .sidebar-note{display:none}
- main{padding:20px 13px}
- .cards{gap:8px}.card{padding:13px}
- .card .value{font-size:22px}
-}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}
+.grid2{grid-template-columns:1fr}}
+@media(max-width:650px){.layout{display:block}aside{width:100%;padding:13px}
+.logo{font-size:20px}nav{display:flex;overflow:auto;margin-top:13px}
+nav button{white-space:nowrap;padding:10px}
+.sidefoot{display:none}main{padding:18px 12px}.hero{height:145px}
+h1{font-size:24px}.value{font-size:22px}.card{padding:12px}}
 </style>
 </head>
 <body>
 <div class="layout">
-<aside class="sidebar">
-  <div class="brand">INSIDER<span>GOV</span>
-    <small>FINANCIAL INTELLIGENCE</small>
-  </div>
-  <nav class="nav">
-    <button class="active" data-page="overview">Overview</button>
-    <button data-page="transactions">Transactions</button>
-    <button data-page="campaigns">Campaigns</button>
-    <button data-page="analytics">Analytics</button>
-    <button data-page="watchlist">Watchlist</button>
-    <button data-page="about">About</button>
-  </nav>
-  <div class="sidebar-note">
-    PUBLIC DISCLOSURE TRACKER<br>
-    Data is sourced from public records.<br>
-    Estimates are not exact transaction values.
-  </div>
+<aside>
+ <div class="logo">INSIDER<span>GOV</span></div>
+ <div class="eyebrow">THE CAPITOL LEDGER</div>
+ <nav>
+  <button class="active" data-page="overview">THE LEDGER</button>
+  <button data-page="transactions">DISCLOSURES</button>
+  <button data-page="campaigns">CAMPAIGNS</button>
+  <button data-page="analytics">ANALYTICS</button>
+  <button data-page="watchlist">WATCHLIST</button>
+  <button data-page="about">ARCHIVES</button>
+ </nav>
+ <div class="sidefoot">WASHINGTON, D.C.<br>PUBLIC RECORDS OFFICE<br><br>
+ Records are not recommendations.<br>Sources and dates matter.</div>
 </aside>
-
 <main>
-<header class="top">
- <div>
-  <h1 id="pageTitle">Market Overview</h1>
-  <div class="sub">U.S. congressional financial disclosures</div>
- </div>
- <div class="status" id="status"><span class="dot"></span>Connecting to data source…</div>
+<header>
+ <div><h1 id="title">The Capitol Ledger</h1>
+ <div class="sub">CONGRESSIONAL FINANCIAL DISCLOSURES · UNITED STATES</div></div>
+ <div class="status" id="status"><span class="dot"></span>CONNECTING</div>
 </header>
 
 <section id="overview">
+ <div class="hero"><h2>The public ledger.</h2>
+ <p>FOLLOW THE RECORD. NOT THE RUMOR.</p></div>
+ <div class="panel">
+  <div class="panelhead"><h2>Reporting period</h2>
+   <div class="periods" id="periods">
+    <button data-days="1">1 DAY</button>
+    <button data-days="7">1 WEEK</button>
+    <button data-days="30" class="active">1 MONTH</button>
+    <button data-days="365">1 YEAR</button>
+    <button data-days="1825">5 YEARS</button>
+   </div>
+  </div>
+  <div class="notice" id="periodNote">Choose a reporting period.</div>
+ </div>
  <div class="cards">
-  <div class="card"><div class="label">Loaded disclosures</div>
-   <div class="value" id="total">—</div>
-   <div class="hint">Records returned by source</div></div>
-  <div class="card"><div class="label">Politicians represented</div>
-   <div class="value" id="members">—</div>
-   <div class="hint">Unique filers in loaded records</div></div>
-  <div class="card"><div class="label">Purchases</div>
-   <div class="value buy" id="buys">—</div>
-   <div class="hint">Reported buy transactions</div></div>
-  <div class="card"><div class="label">Sales</div>
-   <div class="value sell" id="sells">—</div>
-   <div class="hint">Reported sell transactions</div></div>
+  <div class="card"><div class="label">DISCLOSURES</div>
+   <div class="value" id="total">—</div><div class="hint" id="totalChange">Selected period</div></div>
+  <div class="card"><div class="label">PURCHASES</div>
+   <div class="value green" id="buys">—</div><div class="hint">Reported purchases</div></div>
+  <div class="card"><div class="label">SALES</div>
+   <div class="value red" id="sells">—</div><div class="hint">Reported sales</div></div>
+  <div class="card"><div class="label">POLITICIANS</div>
+   <div class="value" id="members">—</div><div class="hint">Unique filers</div></div>
  </div>
- <div class="panel">
-  <div class="panel-head"><h2>Disclosure activity</h2>
-   <select id="period">
-    <option value="1">Last 1 day</option>
-    <option value="7">Last 1 week</option>
-    <option value="30" selected>Last 1 month</option>
-    <option value="365">Last 1 year</option>
-    <option value="1095">Last 3 years</option>
-    <option value="1825">Last 5 years</option>
-    <option value="3650">Last 10 years</option>
-   </select>
+ <div class="grid2">
+  <div class="panel">
+   <div class="panelhead"><h2>Disclosure activity</h2>
+    <span class="tag" id="chartPeriod">30 DAYS</span></div>
+   <div class="chart" id="activity"></div>
+   <div class="notice" id="chartNote" style="margin-top:27px"></div>
   </div>
-  <div class="chart" id="chart"></div>
-  <div class="notice" id="chartNote" style="margin-top:28px"></div>
+  <div class="panel">
+   <div class="panelhead"><h2>Transaction composition</h2></div>
+   <div id="composition" class="rank"></div>
+   <div class="notice" style="margin-top:18px">Calculated from loaded records only.</div>
+  </div>
  </div>
- <div class="panel">
-  <div class="panel-head"><h2>Latest disclosures</h2>
-   <button class="action" onclick="showPage('transactions')">All transactions →</button>
-  </div>
-  <div class="table-wrap"><table>
-   <thead><tr><th>Politician</th><th>Asset</th><th>Type</th>
-   <th>Transaction date</th><th>Filed</th><th>Reported range</th></tr></thead>
-   <tbody id="latest"></tbody>
-  </table></div>
+ <div class="grid2">
+  <div class="panel"><div class="panelhead"><h2>Most active filers</h2></div>
+   <div id="topMembers" class="rank"></div></div>
+  <div class="panel"><div class="panelhead"><h2>Most reported assets</h2></div>
+   <div id="topAssets" class="rank"></div></div>
+ </div>
+ <div class="panel"><div class="panelhead"><h2>Latest disclosures</h2>
+  <button class="action" onclick="page('transactions')">VIEW ALL</button></div>
+  <div class="tablewrap"><table><thead><tr><th>Filer</th><th>Asset</th>
+   <th>Type</th><th>Trade date</th><th>Filed</th><th>Value range</th></tr></thead>
+   <tbody id="latest"></tbody></table></div>
  </div>
 </section>
 
 <section id="transactions" class="hidden">
  <div class="panel">
-  <div class="panel-head"><h2>Transaction records</h2>
-   <div class="controls">
-    <input id="search" placeholder="Search politician, ticker…" />
-    <select id="typeFilter">
-     <option value="">All types</option><option value="buy">Buy</option>
-     <option value="sell">Sell</option><option value="exchange">Exchange</option>
-    </select>
-    <button class="action" onclick="exportCSV()">Export CSV</button>
-   </div>
+  <div class="panelhead"><h2>Disclosure archive</h2>
+   <div class="controls"><input id="search" placeholder="Search name / ticker">
+    <select id="type"><option value="">All types</option>
+     <option value="buy">Purchases</option><option value="sell">Sales</option>
+     <option value="exchange">Exchanges</option></select>
+    <button class="action" onclick="csv()">EXPORT CSV</button></div>
   </div>
-  <div class="table-wrap"><table>
-   <thead><tr><th>Politician</th><th>Party / State</th><th>Asset</th>
-   <th>Type</th><th>Transaction</th><th>Filing date</th>
-   <th>Amount range</th><th>Source</th><th>Watch</th></tr></thead>
-   <tbody id="transactionsBody"></tbody>
-  </table></div>
-  <div class="notice" id="resultNote"></div>
+  <div class="tablewrap"><table><thead><tr><th>Politician</th><th>Party / State</th>
+   <th>Asset</th><th>Type</th><th>Trade date</th><th>Filed</th>
+   <th>Value range</th><th>Original</th><th>★</th></tr></thead>
+   <tbody id="rows"></tbody></table></div>
+  <p class="notice" id="count"></p>
  </div>
 </section>
 
 <section id="campaigns" class="hidden">
- <div class="panel">
-  <h2>Campaign finance</h2>
-  <p class="notice">Campaign receipts and expenditures are not personal stock trades or personal wealth. FEC data is not connected in this version, so no campaign totals are displayed as if they were verified.</p>
-  <p><a href="https://www.fec.gov/data/" target="_blank" rel="noopener" style="color:var(--cyan)">Open official FEC campaign finance data ↗</a></p>
-  <p class="notice">Official bulk datasets are updated on schedules that vary from daily to weekly. A separate data ingestion process is required to calculate reliable campaign statistics.</p>
+ <div class="cards">
+  <div class="card"><div class="label">FEC RECEIPTS</div><div class="value" id="receipts">—</div><div class="hint">Not yet connected</div></div>
+  <div class="card"><div class="label">FEC DISBURSEMENTS</div><div class="value" id="spending">—</div><div class="hint">Not yet connected</div></div>
+  <div class="card"><div class="label">CASH ON HAND</div><div class="value" id="cash">—</div><div class="hint">Not yet connected</div></div>
+  <div class="card"><div class="label">COMMITTEES</div><div class="value" id="committees">—</div><div class="hint">Not yet connected</div></div>
+ </div>
+ <div class="panel"><h2>Campaign finance records</h2>
+  <p class="notice">Campaign money is separate from personal assets and stock disclosures. FEC data requires its own verified data feed. No invented campaign totals are shown here.</p>
+  <a href="https://www.fec.gov/data/" target="_blank" rel="noopener" style="color:var(--gold)">OFFICIAL FEC DATA ↗</a>
  </div>
 </section>
 
 <section id="analytics" class="hidden">
- <div class="panel">
-  <h2>Analytics methodology</h2>
-  <p class="notice">Statistics on this page are calculated only from records actually returned by the connected source. They are not a census of all congressional activity.</p>
-  <div class="cards" style="margin-top:16px">
-   <div class="card"><div class="label">Loaded records</div><div class="value" id="aTotal">—</div></div>
-   <div class="card"><div class="label">Unique tickers</div><div class="value" id="tickers">—</div></div>
-   <div class="card"><div class="label">House records</div><div class="value" id="house">—</div></div>
-   <div class="card"><div class="label">Senate records</div><div class="value" id="senate">—</div></div>
-  </div>
+ <div class="panel"><div class="panelhead"><h2>Statistical overview</h2>
+  <span class="tag" id="analyticsPeriod">30 DAYS</span></div>
+  <div class="cards">
+   <div class="card"><div class="label">UNIQUE ASSETS</div><div class="value" id="uniqueAssets">—</div></div>
+   <div class="card"><div class="label">HOUSE FILINGS</div><div class="value" id="house">—</div></div>
+   <div class="card"><div class="label">SENATE FILINGS</div><div class="value" id="senate">—</div></div>
+   <div class="card"><div class="label">AVERAGE / FILER</div><div class="value" id="average">—</div></div>
+  </div></div>
+ <div class="grid2">
+  <div class="panel"><h2>Activity by party</h2><div id="party" class="rank" style="margin-top:18px"></div></div>
+  <div class="panel"><h2>Activity by chamber</h2><div id="chamber" class="rank" style="margin-top:18px"></div></div>
+ </div>
+ <div class="panel"><h2>Activity by state</h2><div id="states" class="rank" style="margin-top:18px"></div></div>
+ <div class="panel"><h2>Period comparison</h2><div id="comparison" class="rank"></div>
+  <p class="notice">Comparison is calculated only when records are available for both periods. An incomplete source window is never treated as zero activity.</p>
  </div>
 </section>
 
 <section id="watchlist" class="hidden">
- <div class="panel">
-  <div class="panel-head"><h2>Your watchlist</h2>
-   <span class="notice">Saved in this browser</span></div>
-  <div class="table-wrap"><table>
-   <thead><tr><th>Politician</th><th>Asset</th><th>Type</th>
-   <th>Filing date</th><th>Source</th><th>Remove</th></tr></thead>
-   <tbody id="watchBody"></tbody>
-  </table></div>
+ <div class="panel"><h2>Watched disclosures</h2>
+  <div class="cards" style="margin-top:15px">
+   <div class="card"><div class="label">WATCHED RECORDS LOADED</div><div class="value" id="watchCount">0</div></div>
+   <div class="card"><div class="label">WATCHED FILERS</div><div class="value" id="watchPeople">0</div></div>
+  </div>
+  <div class="tablewrap"><table><thead><tr><th>Filer</th><th>Asset</th><th>Type</th>
+   <th>Filed</th><th>Source</th><th>Remove</th></tr></thead>
+   <tbody id="watchRows"></tbody></table></div>
  </div>
 </section>
 
 <section id="about" class="hidden">
- <div class="panel">
-  <h2>About InsiderGov</h2>
-  <p class="notice">InsiderGov tracks publicly available financial disclosure records. It does not provide investment advice and does not infer intent from reported transactions.</p>
-  <h2 style="margin-top:22px">Data source</h2>
-  <p class="notice">Congressional disclosure records: Veridion Disclosure API.
-  <a href="https://www.veridionmarkets.com/data-api/docs" target="_blank" rel="noopener" style="color:var(--cyan)">API documentation ↗</a></p>
-  <p class="notice">Official House documents:
-  <a href="https://disclosures-clerk.house.gov/" target="_blank" rel="noopener" style="color:var(--cyan)">House Clerk ↗</a></p>
-  <p class="notice">Official Senate documents:
-  <a href="https://efdsearch.senate.gov/" target="_blank" rel="noopener" style="color:var(--cyan)">Senate eFD ↗</a></p>
-  <p class="notice">Campaign finance:
-  <a href="https://www.fec.gov/data/" target="_blank" rel="noopener" style="color:var(--cyan)">Federal Election Commission ↗</a></p>
-  <h2 style="margin-top:22px">Important limitations</h2>
-  <p class="notice">The anonymous API tier is limited to recent filings and a small number of rows per request. Periods longer than 30 days are not represented as complete historical data. Missing records must not be interpreted as zero activity.</p>
-  <p class="notice" id="updated">Last successful update: not yet loaded.</p>
+ <div class="panel"><h2>The archives</h2>
+  <p class="notice">InsiderGov is a public-records research dashboard. It separates personal financial disclosures from campaign finance records.</p>
+  <h3>DATA SOURCES</h3>
+  <p><a href="https://www.veridionmarkets.com/data-api/docs" style="color:var(--gold)">Veridion Disclosure API</a></p>
+  <p><a href="https://disclosures-clerk.house.gov/" style="color:var(--gold)">U.S. House disclosures</a></p>
+  <p><a href="https://efdsearch.senate.gov/" style="color:var(--gold)">U.S. Senate disclosures</a></p>
+  <p><a href="https://www.fec.gov/data/" style="color:var(--gold)">Federal Election Commission</a></p>
+  <h3>DATA FRESHNESS</h3><p class="notice" id="updated">No successful data load yet.</p>
+  <h3>LIMITATIONS</h3><p class="notice">Reported values may be ranges, not exact amounts. Transaction date and filing date are different. The anonymous API tier does not provide a complete five-year archive. Missing records are not evidence of no activity.</p>
  </div>
 </section>
-
-<div class="footer">
- INSIDERGOV · Public records research · Not investment advice<br>
- Data attribution: Veridion Disclosure API. Reported amount ranges are shown as filed.
-</div>
-</main>
-</div>
-
+<footer>INSIDERGOV · THE CAPITOL LEDGER · PUBLIC RECORDS · NOT INVESTMENT ADVICE</footer>
+</main></div>
 <script>
-const API = "https://www.veridionmarkets.com/api/v1";
-let records = [];
-let filtered = [];
-let lastUpdated = null;
-let sourceStatus = "loading";
-let watchlist = new Set(JSON.parse(localStorage.getItem("ig-watchlist") || "[]"));
-
-const $ = id => document.getElementById(id);
-const esc = value => String(value ?? "").replace(/[&<>"']/g,
- c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-
-function dateText(value) {
- if (!value) return "—";
- const d = new Date(value + (String(value).length === 10 ? "T00:00:00Z" : ""));
- return Number.isNaN(d.getTime()) ? "—" : d.toLocaleDateString();
+const API="https://www.veridionmarkets.com/api/v1";
+let all=[],view=[],days=30,updated=null;
+let watch=new Set(JSON.parse(localStorage.getItem("ig-watch")||"[]"));
+const $=id=>document.getElementById(id);
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const date=x=>{if(!x)return null;let d=new Date(x);return isNaN(d)?null:d};
+const dateStr=x=>date(x)?.toLocaleDateString()||"—";
+const norm=r=>({id:r.disclosure_id,member:r.member||{},asset:r.asset||{},
+transaction:r.transaction||{},filing:r.filing||{},amount:r.amount||{},
+receipt:r.receipt||{},change:r.change||{}});
+function range(r){
+ let a=r.amount;if(a.verbatim_text)return a.verbatim_text;
+ let l=a.range_low,h=a.range_high;
+ const f=n=>"$"+Number(n).toLocaleString("en-US");
+ if(l!=null&&h!=null)return f(l)+" – "+f(h);
+ if(l!=null)return f(l)+"+";
+ if(h!=null)return "Up to "+f(h);
+ return "Not reported";
 }
-function amountText(a) {
- if (!a) return "Not reported";
- if (a.verbatim_text) return a.verbatim_text;
- const lo = a.range_low, hi = a.range_high;
- if (lo == null && hi == null) return "Not reported";
- const money = n => "$" + Number(n).toLocaleString("en-US");
- if (lo != null && hi != null) return money(lo) + " – " + money(hi);
- if (lo != null) return money(lo) + "+";
- return "Up to " + money(hi);
+function tradeDate(r){return date(r.transaction.date)||date(r.filing.filed_date)}
+function selected(){
+ let cutoff=Date.now()-days*86400000;
+ return all.filter(r=>tradeDate(r)&&tradeDate(r).getTime()>=cutoff);
 }
-function normalize(row) {
- return {
-  id: row.disclosure_id,
-  member: row.member || {},
-  asset: row.asset || {},
-  transaction: row.transaction || {},
-  filing: row.filing || {},
-  amount: row.amount || {},
-  receipt: row.receipt || {},
-  change: row.change || {},
-  provenance: row.provenance || {}
- };
+function countBy(arr,fn){
+ let m={};arr.forEach(x=>{let k=fn(x)||"Not reported";m[k]=(m[k]||0)+1});
+ return Object.entries(m).sort((a,b)=>b[1]-a[1]);
 }
-async function loadData() {
- const status = $("status");
- status.innerHTML = '<span class="dot"></span>Updating…';
- try {
-  const url = API + "/disclosures?limit=25";
-  const response = await fetch(url, {headers:{"Accept":"application/json"}});
-  if (!response.ok) {
-   let detail = "";
-   try { const e = await response.json(); detail = e.detail || e.code || ""; } catch {}
-   throw new Error("API " + response.status + (detail ? ": " + detail : ""));
-  }
-  const payload = await response.json();
-  if (!Array.isArray(payload.data)) throw new Error("Unexpected API response");
-  records = payload.data
-   .filter(r => r.change?.state !== "withdrawn")
-   .map(normalize);
-  lastUpdated = new Date();
-  sourceStatus = "ok";
-  status.innerHTML = '<span class="dot"></span>Live source connected';
-  $("updated").textContent = "Last successful update: " + lastUpdated.toLocaleString();
-  renderAll();
- } catch (error) {
-  sourceStatus = "error";
-  status.innerHTML = '<span class="dot bad"></span>' + esc(error.message);
-  $("chartNote").textContent = "Data source unavailable. No sample data has been substituted.";
-  $("latest").innerHTML = '<tr><td colspan="6" class="empty">Unable to load records.</td></tr>';
-  $("transactionsBody").innerHTML = '<tr><td colspan="9" class="empty">Source unavailable. Try again later.</td></tr>';
+function rankHTML(items){
+ if(!items.length)return '<p class="notice">No records available.</p>';
+ let max=Math.max(1,...items.map(x=>x[1]));
+ return items.slice(0,8).map(([name,n])=>'<div class="rankrow"><span>'+esc(name)+'</span><div class="meter"><span style="width:'+(n/max*100)+'%"></span></div><b>'+n+'</b></div>').join("");
+}
+function periodLabel(){return days===1?"1 DAY":days===7?"1 WEEK":days===30?"1 MONTH":days===365?"1 YEAR":"5 YEARS"}
+function render(){
+ let a=selected(),buys=a.filter(r=>r.transaction.type==="buy"),
+ sells=a.filter(r=>r.transaction.type==="sell");
+ let people=new Set(a.map(r=>r.member.person_id||r.member.member_id||r.member.full_name));
+ $("total").textContent=a.length;$("buys").textContent=buys.length;
+ $("sells").textContent=sells.length;$("members").textContent=people.size;
+ $("totalChange").textContent="of "+all.length+" loaded records";
+ $("periodNote").textContent="Showing "+periodLabel()+". "+(days>30?
+ "Source history is limited; this is not a complete historical census.":"Records in the currently loaded source window.");
+ $("chartPeriod").textContent=periodLabel();$("analyticsPeriod").textContent=periodLabel();
+ chart(a);composition(a);rank(a);analytics(a);tables();
+}
+function chart(a){
+ let bins=days<=1?24:days<=7?7:days<=30?10:days<=365?12:20;
+ let vals=Array(bins).fill(0),span=days*86400000;
+ a.forEach(r=>{let d=tradeDate(r);if(!d)return;
+ let age=Date.now()-d.getTime(),i=bins-1-Math.min(bins-1,Math.floor(age/span*bins));
+ if(i>=0)vals[i]++});
+ let max=Math.max(1,...vals);
+ $("activity").innerHTML=vals.map((v,i)=>'<div class="barwrap"><div class="bar" style="height:'+Math.max(2,v/max*100)+'%" title="'+v+' disclosures"></div><small>'+(i+1)+'</small></div>').join("");
+ $("chartNote").textContent=a.length+" matching loaded records. Bars are relative to the largest bucket.";
+}
+function composition(a){
+ let types=countBy(a,r=>r.transaction.type);
+ $("composition").innerHTML=rankHTML(types);
+}
+function rank(a){
+ $("topMembers").innerHTML=rankHTML(countBy(a,r=>r.member.full_name||"Unknown filer"));
+ $("topAssets").innerHTML=rankHTML(countBy(a,r=>r.asset.ticker||r.asset.name));
+}
+function analytics(a){
+ $("uniqueAssets").textContent=new Set(a.map(r=>r.asset.ticker||r.asset.name).filter(Boolean)).size;
+ $("house").textContent=a.filter(r=>r.member.chamber==="house").length;
+ $("senate").textContent=a.filter(r=>r.member.chamber==="senate").length;
+ let p=new Set(a.map(r=>r.member.person_id||r.member.member_id||r.member.full_name).filter(Boolean));
+ $("average").textContent=p.size?(a.length/p.size).toFixed(1):"—";
+ $("party").innerHTML=rankHTML(countBy(a,r=>r.member.party));
+ $("chamber").innerHTML=rankHTML(countBy(a,r=>r.member.chamber));
+ $("states").innerHTML=rankHTML(countBy(a,r=>r.member.state));
+ let previous=all.filter(r=>{let d=tradeDate(r);return d&&d.getTime()>=Date.now()-days*2*86400000&&d.getTime()<Date.now()-days*86400000});
+ let current=a.length,prior=previous.length;
+ $("comparison").innerHTML=rankHTML([["Current period",current],["Previous period loaded",prior]]);
+}
+function tableRow(r){
+ let m=r.member,a=r.asset,t=r.transaction,f=r.filing;
+ return '<tr><td>'+esc(m.full_name||"Unknown")+'</td><td>'+esc([m.party,m.state].filter(Boolean).join(" / ")||"—")+'</td><td>'+esc(a.ticker||a.name||"—")+'</td><td>'+esc(t.type||"—")+'</td><td>'+dateStr(t.date)+'</td><td>'+dateStr(f.filed_date)+'</td><td>'+esc(range(r))+'</td><td>'+(r.receipt.url?'<a target="_blank" rel="noopener" href="'+esc(r.receipt.url)+'">DOCUMENT ↗</a>':"—")+'</td><td><button class="action" onclick="toggle(\''+esc(r.id)+'\')">'+(watch.has(r.id)?"★":"☆")+'</button></td></tr>';
+}
+function tables(){
+ let q=$("search")?.value.toLowerCase()||"",type=$("type")?.value||"";
+ view=selected().filter(r=>(!type||r.transaction.type===type)&&
+ [r.member.full_name,r.member.state,r.member.party,r.asset.ticker,r.asset.name].join(" ").toLowerCase().includes(q));
+ $("rows").innerHTML=view.map(tableRow).join("")||'<tr><td colspan="9" class="empty">No matching records in the selected period.</td></tr>';
+ $("count").textContent="Showing "+view.length+" of "+selected().length+" loaded records.";
+ $("latest").innerHTML=selected().slice(0,8).map(r=>'<tr><td>'+esc(r.member.full_name||"Unknown")+'</td><td>'+esc(r.asset.ticker||r.asset.name||"—")+'</td><td>'+esc(r.transaction.type||"—")+'</td><td>'+dateStr(r.transaction.date)+'</td><td>'+dateStr(r.filing.filed_date)+'</td><td>'+esc(range(r))+'</td></tr>').join("")||'<tr><td colspan="6" class="empty">No records in this period.</td></tr>';
+ let w=all.filter(r=>watch.has(r.id));
+ $("watchCount").textContent=w.length;
+ $("watchPeople").textContent=new Set(w.map(r=>r.member.full_name)).size;
+ $("watchRows").innerHTML=w.map(r=>'<tr><td>'+esc(r.member.full_name)+'</td><td>'+esc(r.asset.ticker||r.asset.name)+'</td><td>'+esc(r.transaction.type)+'</td><td>'+dateStr(r.filing.filed_date)+'</td><td>'+(r.receipt.url?'<a href="'+esc(r.receipt.url)+'" target="_blank">DOCUMENT ↗</a>':"—")+'</td><td><button class="action" onclick="toggle(\''+esc(r.id)+'\')">REMOVE</button></td></tr>').join("")||'<tr><td colspan="6" class="empty">No watched records in current source data.</td></tr>';
+}
+function toggle(id){watch.has(id)?watch.delete(id):watch.add(id);localStorage.setItem("ig-watch",JSON.stringify([...watch]));tables()}
+function csv(){
+ let rows=[["Politician","Party","State","Ticker","Asset","Type","Trade date","Filing date","Value range","Source URL"]];
+ view.forEach(r=>rows.push([r.member.full_name,r.member.party,r.member.state,r.asset.ticker,r.asset.name,r.transaction.type,r.transaction.date,r.filing.filed_date,range(r),r.receipt.url]));
+ let text=rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\n");
+ let blob=new Blob(["\ufeff"+text],{type:"text/csv;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=u;a.download="insidergov.csv";a.click();URL.revokeObjectURL(u);
+}
+function page(name){
+ document.querySelectorAll("main section").forEach(x=>x.classList.add("hidden"));
+ $(name).classList.remove("hidden");
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===name));
+ $("title").textContent=({overview:"The Capitol Ledger",transactions:"Disclosure Archive",campaigns:"Campaign Finance",analytics:"Statistical Archives",watchlist:"Watchlist",about:"The Archives"})[name];
+}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
+document.querySelectorAll("#periods button").forEach(b=>b.onclick=()=>{
+ days=Number(b.dataset.days);document.querySelectorAll("#periods button").forEach(x=>x.classList.toggle("active",x===b));render();
+});
+$("search").oninput=tables;$("type").onchange=tables;
+async function load(){
+ try{
+  let res=await fetch(API+"/disclosures?limit=25",{headers:{Accept:"application/json"}});
+  if(!res.ok)throw Error("Source returned HTTP "+res.status);
+  let data=await res.json();if(!Array.isArray(data.data))throw Error("Unexpected data format");
+  all=data.data.filter(r=>r.change?.state!=="withdrawn").map(r=>norm(r));
+  updated=new Date();
+  $("status").innerHTML='<span class="dot"></span>CONNECTED · '+all.length+' RECORDS';
+  $("updated").textContent="Last successful update: "+updated.toLocaleString();
+  render();
+ }catch(e){
+  $("status").innerHTML='<span class="dot err"></span>'+esc(e.message);
+  $("periodNote").textContent="Data source unavailable. Statistics cannot be calculated until real records load.";
+  ["total","buys","sells","members","uniqueAssets","house","senate","average"].forEach(id=>$(id).textContent="—");
+  $("latest").innerHTML='<tr><td colspan="6" class="empty">Data source unavailable.</td></tr>';
+  $("rows").innerHTML='<tr><td colspan="9" class="empty">Data source unavailable.</td></tr>';
  }
 }
-function inPeriod(row, days) {
- const date = new Date(row.transaction.date || row.filing.filed_date);
- if (Number.isNaN(date.getTime())) return false;
- const age = (Date.now() - date.getTime()) / 86400000;
- return age >= 0 && age <= days;
-}
-function renderStats() {
- const members = new Set(records.map(r => r.member.person_id || r.member.member_id).filter(Boolean));
- const buys = records.filter(r => r.transaction.type === "buy").length;
- const sells = records.filter(r => r.transaction.type === "sell").length;
- $("total").textContent = records.length;
- $("members").textContent = members.size;
- $("buys").textContent = buys;
- $("sells").textContent = sells;
- $("aTotal").textContent = records.length;
- $("tickers").textContent = new Set(records.map(r => r.asset.ticker).filter(Boolean)).size;
- $("house").textContent = records.filter(r => r.member.chamber === "house").length;
- $("senate").textContent = records.filter(r => r.member.chamber === "senate").length;
-}
-function renderChart() {
- const days = Number($("period").value);
- const eligible = records.filter(r => inPeriod(r, days));
- const bins = days <= 7 ? 7 : days <= 30 ? 10 : 12;
- const counts = Array(bins).fill(0);
- eligible.forEach(r => {
-  const d = new Date(r.transaction.date || r.filing.filed_date);
-  const age = (Date.now() - d.getTime()) / 86400000;
-  const index = bins - 1 - Math.min(bins - 1, Math.floor(age / (days / bins)));
-  if (index >= 0) counts[index]++;
- });
- const max = Math.max(1, ...counts);
- $("chart").innerHTML = counts.map((v,i) =>
-  '<div class="bar-wrap"><div class="bar" style="height:' +
-  Math.max(2, v / max * 100) + '%" title="' + v + ' records"></div><span>' +
-  (i + 1) + '</span></div>').join("");
- const unsupported = days > 30;
- $("chartNote").textContent = unsupported
-  ? "The selected period exceeds the anonymous source's 30-day access window. The graph shows only matching records among the loaded recent records, not a complete historical series."
-  : "Records in the selected period: " + eligible.length +
-    ". Grouped into " + bins + " time buckets. Based only on records currently loaded.";
-}
-function rowHtml(r, compact=false) {
- const m = r.member, a = r.asset, t = r.transaction, f = r.filing;
- const type = t.type || "unknown";
- const source = r.receipt.url
-  ? '<a href="' + esc(r.receipt.url) + '" target="_blank" rel="noopener">Original filing ↗</a>'
-  : "Unavailable";
- const star = watchlist.has(r.id) ? "★" : "☆";
- if (compact) return '<tr><td>' + esc(m.full_name) + '</td><td>' +
-  esc(a.ticker || a.name || "—") + '</td><td class="' + esc(type) + '">' +
-  esc(type) + '</td><td>' + dateText(t.date) + '</td><td>' +
-  dateText(f.filed_date) + '</td><td>' + esc(amountText(r.amount)) + '</td></tr>';
- return '<tr><td>' + esc(m.full_name || "Unknown filer") +
-  '</td><td>' + esc([m.party,m.state].filter(Boolean).join(" / ") || "—") +
-  '</td><td>' + esc([a.ticker,a.name].filter(Boolean).join(" · ") || "—") +
-  '</td><td class="' + esc(type) + '">' + esc(type) +
-  '</td><td>' + dateText(t.date) + '</td><td>' + dateText(f.filed_date) +
-  '</td><td>' + esc(amountText(r.amount)) + '</td><td>' + source +
-  '</td><td><button class="watch" onclick="toggleWatch(\'' +
-  esc(r.id) + '\')">' + star + '</button></td></tr>';
-}
-function renderTables() {
- $("latest").innerHTML = records.slice(0,8).map(r => rowHtml(r,true)).join("") ||
-  '<tr><td colspan="6" class="empty">No records returned.</td></tr>';
- const q = $("search").value.toLowerCase().trim();
- const type = $("typeFilter").value;
- filtered = records.filter(r => {
-  const text = [r.member.full_name,r.member.state,r.member.party,
-   r.asset.ticker,r.asset.name,r.transaction.type].join(" ").toLowerCase();
-  return (!q || text.includes(q)) && (!type || r.transaction.type === type);
- });
- $("transactionsBody").innerHTML = filtered.map(r => rowHtml(r)).join("") ||
-  '<tr><td colspan="9" class="empty">No matching records.</td></tr>';
- $("resultNote").textContent = "Showing " + filtered.length + " of " +
-  records.length + " loaded records. Free API limit: 25 rows per request.";
-}
-function renderWatchlist() {
- const rows = records.filter(r => watchlist.has(r.id));
- $("watchBody").innerHTML = rows.map(r =>
-  '<tr><td>' + esc(r.member.full_name || "Unknown") +
-  '</td><td>' + esc(r.asset.ticker || r.asset.name || "—") +
-  '</td><td>' + esc(r.transaction.type || "—") +
-  '</td><td>' + dateText(r.filing.filed_date) +
-  '</td><td>' + (r.receipt.url ? '<a target="_blank" rel="noopener" href="' +
-  esc(r.receipt.url) + '">Original ↗</a>' : "—") +
-  '</td><td><button class="action" onclick="toggleWatch(\'' +
-  esc(r.id) + '\')">Remove</button></td></tr>'
- ).join("") || '<tr><td colspan="6" class="empty">No saved records in the current data window.</td></tr>';
-}
-function renderAll() {
- renderStats(); renderChart(); renderTables(); renderWatchlist();
-}
-function toggleWatch(id) {
- if (watchlist.has(id)) watchlist.delete(id); else watchlist.add(id);
- localStorage.setItem("ig-watchlist", JSON.stringify([...watchlist]));
- renderTables(); renderWatchlist();
-}
-function exportCSV() {
- const rows = [["Politician","Party","State","Chamber","Ticker","Asset",
- "Transaction type","Transaction date","Filing date","Reported amount range",
- "Official filing URL"]];
- filtered.forEach(r => rows.push([
-  r.member.full_name,r.member.party,r.member.state,r.member.chamber,
-  r.asset.ticker,r.asset.name,r.transaction.type,r.transaction.date,
-  r.filing.filed_date,amountText(r.amount),r.receipt.url
- ]));
- const csv = rows.map(row => row.map(v =>
-  '"' + String(v ?? "").replace(/"/g,'""') + '"').join(",")).join("\n");
- const blob = new Blob(["\uFEFF" + csv], {type:"text/csv;charset=utf-8"});
- const a = document.createElement("a");
- a.href = URL.createObjectURL(blob); a.download = "insidergov-transactions.csv";
- a.click(); URL.revokeObjectURL(a.href);
-}
-function showPage(name) {
- document.querySelectorAll("main section").forEach(s => s.classList.add("hidden"));
- $(name).classList.remove("hidden");
- document.querySelectorAll(".nav button").forEach(b =>
-  b.classList.toggle("active", b.dataset.page === name));
- const titles = {overview:"Market Overview",transactions:"Transactions",
- campaigns:"Campaign Finance",analytics:"Analytics",
- watchlist:"Watchlist",about:"About InsiderGov"};
- $("pageTitle").textContent = titles[name] || "InsiderGov";
-}
-document.querySelectorAll(".nav button").forEach(b =>
- b.addEventListener("click", () => showPage(b.dataset.page)));
-$("period").addEventListener("change", renderChart);
-$("search").addEventListener("input", renderTables);
-$("typeFilter").addEventListener("change", renderTables);
-
-loadData();
-// Refresh every 30 minutes to stay within the anonymous request budget.
-setInterval(loadData, 30 * 60 * 1000);
+load();
+// Poll no more than twice an hour on the free anonymous tier.
+setInterval(load,30*60*1000);
 </script>
-</body>
-</html>
+</body></html>
