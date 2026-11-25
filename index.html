@@ -1,69 +1,41 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>InsiderGov — The Public Ledger</title>
-
-<!-- InsiderGov favicon -->
 <link rel="icon" type="image/png" href="./favicon.png?v=1">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
-<style>
 
 <style>
 :root{
-  --bg:#171516;
-  --panel:#211d1d;
-  --panel2:#292323;
-  --paper:#e1d4b8;
-  --paper-dim:#a99a7d;
-  --gold:#b69a62;
-  --gold2:#79633e;
-  --line:#4a3c31;
-  --red:#a45c50;
-  --green:#829071;
-  --muted:#8e8375;
-  --ink:#26211c;
+  --bg:#171516;--panel:#211d1d;--panel2:#292323;
+  --paper:#e1d4b8;--paper-dim:#a99a7d;
+  --gold:#b69a62;--gold2:#79633e;--line:#4a3c31;
+  --red:#a45c50;--green:#829071;--muted:#8e8375;--ink:#26211c;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  margin:0;background:var(--bg);color:var(--paper);
-  font-family:'Libre Baskerville',Georgia,serif;font-size:13px;line-height:1.7;
-}
+body{margin:0;background:var(--bg);color:var(--paper);font-family:'Libre Baskerville',Georgia,serif;font-size:13px;line-height:1.7}
 button,input,select{font:inherit}
 button{cursor:pointer}
 a{color:var(--gold);text-decoration:none}
 a:hover{color:#e0c58c}
 .layout{min-height:100vh;display:grid;grid-template-columns:245px 1fr}
-.sidebar{
-  background:#1d1919;border-right:1px solid var(--line);
-  padding:28px 18px;position:sticky;top:0;height:100vh;
-  display:flex;flex-direction:column;overflow:auto;
-}
+.sidebar{background:#1d1919;border-right:1px solid var(--line);padding:28px 18px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;overflow:auto}
 .brand{padding:8px 12px 26px;border-bottom:1px solid var(--line)}
 .brand-mark{font-family:'Cinzel',serif;color:var(--gold);font-size:11px;letter-spacing:4px}
 .brand h1{font-family:'Cinzel',serif;font-size:24px;line-height:1.3;margin:8px 0 5px;font-weight:500}
 .brand p{font-size:9px;letter-spacing:2px;color:var(--muted);margin:0;text-transform:uppercase}
 .nav-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--muted);padding:24px 12px 9px}
-.nav-link{
-  display:flex;align-items:center;gap:12px;padding:10px 12px;
-  color:#b7aa95;border:1px solid transparent;font-size:11px;
-  letter-spacing:.4px;transition:.2s;margin:2px 0;
-}
+.nav-link{display:flex;align-items:center;gap:12px;padding:10px 12px;color:#b7aa95;border:1px solid transparent;font-size:11px;letter-spacing:.4px;transition:.2s;margin:2px 0}
 .nav-link:hover,.nav-link.active{background:#2b2422;border-color:#574733;color:#e4d2aa}
 .nav-icon{width:17px;text-align:center;color:var(--gold)}
 .sidebar-foot{margin-top:auto;padding:20px 12px 0;border-top:1px solid var(--line);color:var(--muted);font-size:10px}
 .main{min-width:0}
-.topbar{
-  min-height:64px;border-bottom:1px solid var(--line);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:12px 36px;background:#1b1818;gap:15px;
-}
+.topbar{min-height:64px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:12px 36px;background:#1b1818;gap:15px}
 .topbar-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;color:var(--paper-dim)}
 .status{font-family:'Source Code Pro',monospace;font-size:10px;color:var(--green)}
 .content{max-width:1450px;margin:auto;padding:34px 38px 70px}
@@ -75,11 +47,7 @@ h2{font-family:'Cinzel',serif;font-weight:500;font-size:27px;line-height:1.35;ma
 .rule{height:1px;background:linear-gradient(90deg,var(--gold2),transparent);margin:20px 0 25px}
 .section-heading{font-family:'Cinzel',serif;font-size:13px;letter-spacing:1.5px;font-weight:500;color:#d8c8a9;margin:0 0 15px}
 .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:22px 0}
-.stat-card{
-  background:linear-gradient(145deg,#292323,#211d1d);
-  border:1px solid var(--line);padding:18px 17px;min-height:112px;
-  position:relative;
-}
+.stat-card{background:linear-gradient(145deg,#292323,#211d1d);border:1px solid var(--line);padding:18px 17px;min-height:112px;position:relative}
 .stat-card:before{content:"";position:absolute;top:0;left:0;width:32px;height:1px;background:var(--gold)}
 .stat-label{font-family:'Cinzel',serif;font-size:9px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}
 .stat-value{font-family:'Source Code Pro',monospace;font-size:22px;color:var(--paper);margin-top:10px;overflow-wrap:anywhere}
@@ -89,28 +57,18 @@ h2{font-family:'Cinzel',serif;font-weight:500;font-size:27px;line-height:1.35;ma
 .panel-title{font-family:'Cinzel',serif;font-size:12px;letter-spacing:1.2px;color:#e0d1b4}
 .panel-sub{font-size:10px;color:var(--muted);margin-top:4px}
 .filters{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 20px}
-input,select{
-  background:#171515;color:var(--paper);border:1px solid #554638;
-  padding:10px 12px;outline:none;font-size:11px;min-width:0;
-}
+input,select{background:#171515;color:var(--paper);border:1px solid #554638;padding:10px 12px;outline:none;font-size:11px;min-width:0}
 input:focus,select:focus{border-color:var(--gold)}
 input::placeholder{color:#817566}
 .search{flex:1;min-width:190px}
 select{min-width:130px}
-.btn{
-  background:#332b25;border:1px solid var(--gold2);color:#e0cfad;
-  padding:9px 14px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;
-}
+.btn{background:#332b25;border:1px solid var(--gold2);color:#e0cfad;padding:9px 14px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px}
 .btn:hover{background:#493a2d}
 .btn.secondary{background:transparent;border-color:var(--line);color:var(--paper-dim)}
 .btn.danger{border-color:#70433d;color:#c78a7c}
 .table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;min-width:650px}
-th{
-  text-align:left;font-family:'Cinzel',serif;font-size:9px;
-  letter-spacing:1px;color:var(--gold);font-weight:500;
-  padding:11px 10px;border-bottom:1px solid var(--gold2);
-}
+th{text-align:left;font-family:'Cinzel',serif;font-size:9px;letter-spacing:1px;color:var(--gold);font-weight:500;padding:11px 10px;border-bottom:1px solid var(--gold2)}
 td{padding:12px 10px;border-bottom:1px solid #382f2a;font-size:10px;color:#d1c4ad}
 tbody tr:hover{background:#2b2422}
 .money{font-family:'Source Code Pro',monospace;white-space:nowrap}
@@ -119,7 +77,8 @@ tbody tr:hover{background:#2b2422}
 .tag{display:inline-block;border:1px solid #65533a;padding:2px 6px;font-size:9px;color:#c9b58c}
 .empty{padding:25px;text-align:center;color:var(--muted);font-size:11px}
 .pagination{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding-top:15px;color:var(--muted);font-size:10px}
-/* Textbook-style linear charts */
+
+/* Linear charts */
 .chart-box{width:100%;overflow:hidden}
 .line-chart{display:block;width:100%;height:auto;min-height:230px}
 .chart-grid{stroke:#544638;stroke-width:.7;stroke-dasharray:3 5}
@@ -181,10 +140,7 @@ tbody tr:hover{background:#2b2422}
     <a class="nav-link" href="#watchlist" data-page="watchlist"><span class="nav-icon">◇</span>Watchlist</a>
     <a class="nav-link" href="#sources" data-page="sources"><span class="nav-icon">▤</span>Archives & Sources</a>
   </nav>
-  <div class="sidebar-foot">
-    PUBLIC INFORMATION ARCHIVE<br>
-    <span id="sidebarUpdated">Awaiting records</span>
-  </div>
+  <div class="sidebar-foot">PUBLIC INFORMATION ARCHIVE<br><span id="sidebarUpdated">Awaiting records</span></div>
 </aside>
 
 <main class="main">
@@ -256,7 +212,7 @@ tbody tr:hover{background:#2b2422}
   <h2>Analytics</h2>
   <p class="subtitle">Linear diagrams of reported campaign finance figures.</p>
   <div class="rule"></div>
-  <div class="notice">The horizontal axis in these charts represents the ranked candidates or categories in the loaded dataset. It is not a timeline. Only figures present in the source file are plotted.</div>
+  <div class="notice">The horizontal axis represents ranked candidates or categories in the loaded dataset. It is not a timeline. Only figures present in the source file are plotted.</div>
   <div class="panel">
     <div class="panel-head"><div><div class="panel-title">I. Campaign Receipts</div><div class="panel-sub">Candidates ranked by reported receipts</div></div></div>
     <div id="receiptsChart" class="chart-box"></div>
